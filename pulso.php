@@ -4,7 +4,7 @@
 
 	$k = $_GET['k'];
 
-	if($k == 3641)
+	if($k == 5823)
 	{
 		chdir("/var/www/calculator/");
 		exec('sudo git pull origin master 2>&1', $output);
