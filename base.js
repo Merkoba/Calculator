@@ -206,6 +206,7 @@ function add_line()
 	$(input).focus(function()
 	{
 		focused.input = this;
+		focused.caretpos = this.selectionStart;
 		update_preval();
 		change_borders();
 	});
