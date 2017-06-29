@@ -2,6 +2,8 @@ var letters = "abcdefghijklmnopqrstuvwxyz";
 var $a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u,$v,$w,$x,$y,$z;
 
 var msg_open = false;
+// var site_root = 'http://calculator.merkoba.com/';
+var site_root = 'http://localhost:8000/';
 
 var focused = {
 	input: null,
@@ -13,13 +15,22 @@ function init()
 {
 	draw_buttons();
 	place_lines_container();
-	add_line();
 	key_detection();
 	resize_events();
 	overlay_clicked();
-	title_click();
+	title_click_events();
 
 	$('#nope')[0].volume = 0.7;
+
+	if(content === '')
+	{
+		add_line();
+	}
+
+	else
+	{
+		load_content();
+	}
 
 	console.log('Started.\n');
 }
@@ -147,47 +158,52 @@ function buttons_space()
 	$('#buttons').append(s);
 }
 
-function add_line()
+function add_line(letter=false, value=false)
 {
 	var num_lines = $('.line').length;
+
+	if(!letter)
+	{
+		var nextAll = $(focused.input).parent().nextAll('.line');
+
+		var exit = false;
+
+		$(nextAll).each(function()
+		{
+			var inp = $(this).find('.input');
+
+			if($(inp).val() === '')
+			{
+				focus_line(inp);
+				exit = true;
+				return false;
+			}
+		});
+
+		if(exit)
+		{
+			return;
+		}
+
+		for(var i=0; i<letters.length; i++)
+		{
+			if($('#' + letters[i]).length === 0)
+			{
+				var letter = letters[i];
+				break;
+			}
+		}
+
+		var value = '';
+	}
 
 	if((num_lines) >= letters.length)
 	{
 		return;
 	}
 
-	var nextAll = $(focused.input).parent().nextAll('.line');
-
-	var exit = false;
-
-	$(nextAll).each(function()
-	{
-		var inp = $(this).find('.input');
-
-		if($(inp).val() === '')
-		{
-			focus_line(inp);
-			exit = true;
-			return false;
-		}
-	});
-
-	if(exit)
-	{
-		return;
-	}
-
-	for(var i=0; i<letters.length; i++)
-	{
-		if($('#' + letters[i]).length === 0)
-		{
-			var letter = letters[i];
-			break;
-		}
-	}
-
 	var s = `<div class='line'><button class='button variable'>$${letter}</button>`;
-	s += `<input type='text' class='input' id='${letter}'><div class='result'></div></div>`;
+	s += `<input type='text' class='input' id='${letter}' value='${value}'><div class='result'></div></div>`;
 	$('#lines').append(s);
 
 	var input = $('.input').last();
@@ -697,18 +713,103 @@ function play(what)
 	$('#' + what)[0].play();
 }
 
-function title_click()
+function title_click_events()
 {
-	$('#title').click(function()
+	$('#lnk_new').click(function()
 	{
-		show_info();
+		document.location = site_root;
+	});	
+
+	$('#lnk_save').click(function()
+	{
+		save_sheet();
+	});	
+
+	$('#lnk_about').click(function()
+	{
+		show_about();
 	});
 }
 
-function show_info()
+function save_sheet()
+{
+	$.post('/save_sheet/',
+	{
+		content: stringify_sheet()
+	},
+	function(data)
+	{
+		on_save_response(data)
+	});
+}
+
+function on_save_response(data)
+{
+	if(data === 'empty')
+	{
+		msg("You can't save an empty sheet.");
+	}
+
+	else if(data === 'toobig')
+	{
+		msg("Sheet is too big.")
+	}
+
+	else
+	{
+		edit_url(data)
+
+		var s = "";
+
+		var url = site_root + data;
+
+
+		s += url + "<br><br>";
+		s += "<span class='linky2' onclick=\"copy_to_clipboard('" + url + "');hide_overlay()\">Copy To Clipboard</span>";
+
+		msg(s);
+	}
+}
+
+function copy_to_clipboard(s)
+{
+	var textareaEl = document.createElement('textarea');
+	document.body.appendChild(textareaEl);
+	textareaEl.value = s;
+	textareaEl.select();
+	document.execCommand('copy');
+	document.body.removeChild(textareaEl);
+	play('pup');
+}
+
+function edit_url(s)
+{
+	window.history.pushState({"pageTitle": "title", content: "etc"}, "", '/' + s);
+
+}
+
+function stringify_sheet()
+{
+	var s = "";
+
+	$('.input').each(function()
+	{
+		s += $(this).attr('id');
+		s += $(this).val();
+		s += "@!#";
+	});
+
+	s = s.substring(0, s.length - 3);
+
+	return s;
+}
+
+function show_about()
 {
 	var s = ""
 
+	s += "<b>Merkoba Calculator</b><br>";
+	s += "Version " + version + "<br><br>";
 	s += "This is a calculator that aims to empower users through a different workflow than what is found in most common calculator programs.<br><br>";
 	s += "It's based around multiple \"lines\" of calculations which can be reused and edited anytime.<br><br>";
 	s += "Calculations are done automatically in real time using topological sorting.<br><br>";
@@ -745,4 +846,24 @@ function msg(txt, temp_disable=false)
 	$('#msg').focus();
 	
 	msg_open = true;
+}
+
+function load_content()
+{
+	var splits = content.split('@!#');
+
+	for(var i=0; i<splits.length; i++)
+	{	
+		var line = splits[i];
+
+		console.log(line);
+
+		var letter = line[0];
+
+		var inp = line.substr(1);
+
+		add_line(letter, inp);
+	}
+
+	update_results();
 }
