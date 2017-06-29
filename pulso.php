@@ -1,6 +1,6 @@
 <?php
 	
-	// test 2
+	// test 3
 
 	$k = $_GET['k'];
 
