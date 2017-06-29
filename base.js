@@ -2,11 +2,11 @@ var letters = "abcdefghijklmnopqrstuvwxyz";
 var $a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u,$v,$w,$x,$y,$z;
 
 var msg_open = false;
-var preval;
 
 var focused = {
 	input: null,
-	caretpos: 0
+	caretpos: 0,
+	preval: ''
 }
 
 function init()
@@ -569,14 +569,15 @@ function update_results(input)
 
 function update_preval()
 {
-	preval = $(focused.input).val();
+	focused.preval = $(focused.input).val();
 }
 
 function not_acyc()
 {
 	console.log('Not Acyclic');
 
-	$(focused.input).val(preval);
+	$(focused.input).val(focused.preval);
+	focused.caretpos = focused.input.selectionStart;
 
 	play('nope');
 }
