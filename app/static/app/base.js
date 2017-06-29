@@ -233,6 +233,16 @@ function add_line(letter=false, value=false)
 		update_results();
 	});
 
+	$(input).keydown(function(e) 
+	{
+		var code = e.keyCode;
+
+		if(code === 38 || code === 40)
+		{
+			e.preventDefault();
+		}
+	});
+
 	$(input).data('variable', '$' + letter);
 	
 	$('#lines_container').scrollTop(10000000000);
@@ -302,6 +312,12 @@ function get_result(input)
 	{
 		var val = $(input).val();
 
+		if(val.startsWith('//'))
+		{
+			show_comment(input);
+			return;
+		}
+
 		if(val.length === 0)
 		{
 			update_variable(input, undefined);
@@ -331,6 +347,12 @@ function show_error(input)
 {
 	update_variable(input, undefined);
 	show_result(input, 'Error');
+}
+
+function show_comment(input)
+{
+	update_variable(input, undefined);
+	show_result(input, 'Comment');
 }
 
 function show_result(input, s)
@@ -452,6 +474,14 @@ function press(s)
 
 	var val = $(focused.input).val();
 
+	var selstart = focused.input.selectionStart;
+	var selend = focused.input.selectionEnd;
+
+	if(selstart !== selend)
+	{
+		val = val.slice(0, selstart) + val.slice(selend);
+	}
+	
 	var x = val.substr(0, focused.caretpos);
 	var y = val.substring(focused.caretpos);
 
@@ -498,6 +528,8 @@ function update_results(input)
 
 	$('.input').each(function()
 	{
+		var val = $(this).val();
+
 		var v = $(this).data('variable');
 		
 		variables[v] = {};
@@ -515,8 +547,19 @@ function update_results(input)
 		
 		var val = $(this).val();
 
+		if(val === '')
+		{
+			return true;
+		}
+
+		if(val.startsWith('//'))
+		{
+			return true;
+		}
+
 		for(var i=0; i<vars.length; i++)
 		{
+
 			if(val.indexOf(vars[i]) !== -1)
 			{
 				variables[v].edges.push(vars[i]);
@@ -607,11 +650,13 @@ function focus_line(input)
 function line_up()
 {
 	$($(focused.input).parent().prev('.line').find('.input')).focus();
+	move_caret_to_end();
 }
 
 function line_down()
 {
 	$($(focused.input).parent().next('.line').find('.input')).focus();
+	move_caret_to_end();
 }
 
 function change_borders()
@@ -655,6 +700,12 @@ function move_caret()
 		range.moveStart(distance);
 		range.select();
 	}
+}
+
+function move_caret_to_end()
+{
+	focused.caretpos = $(focused.input).val().length;
+	move_caret();
 }
 
 function erase()
@@ -735,7 +786,7 @@ function save_sheet()
 {
 	var content = stringify_sheet();
 
-	if(content.length < 2)
+	if(content.trim().length < 2)
 	{
 		msg("You can't save an empty sheet.");
 	}

@@ -73,7 +73,7 @@ def save_sheet(request):
 
 		content = request.POST.get('content', '')
 
-		if len(content) < 2:
+		if len(content.strip()) < 2:
 			return HttpResponse('empty')
 
 		if len(content) > 3000:
