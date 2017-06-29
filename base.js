@@ -426,7 +426,7 @@ function press(s)
 
 	else if(s === "pow")
 	{
-		s = "Math.pow(";
+		s = "**";
 	}
 
 	else if(s === "sqrt")
