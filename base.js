@@ -47,16 +47,24 @@ function key_detection()
 
 		else if(code === 27)
 		{
-			var result = $(focused.input).next('.result');
-
-			if($(focused.input).val() === '')
+			if(msg_open)
 			{
-				remove_line(focused.input);
+				hide_overlay();
 			}
 
 			else
 			{
-				clear_line(focused.input);
+				var result = $(focused.input).next('.result');
+
+				if($(focused.input).val() === '')
+				{
+					remove_line(focused.input);
+				}
+
+				else
+				{
+					clear_line(focused.input);
+				}
 			}
 		}
 
@@ -717,7 +725,7 @@ function overlay_clicked()
 	});
 }
 
-function hide_overlay(force=false)
+function hide_overlay()
 {
 	$('#overlay').css('display', 'none');
 	$('#msg').css('display', 'none');
