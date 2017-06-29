@@ -55,7 +55,10 @@ def main(request):
 
 def load_sheet(request, uid):
 
-	sheet = Sheet.objects.get(uid=uid)
+	try:
+		sheet = Sheet.objects.get(uid=uid)
+	except:
+		return HttpResponseRedirect('/')
 
 	c = {}
 

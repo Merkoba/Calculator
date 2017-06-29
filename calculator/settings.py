@@ -25,7 +25,7 @@ SECRET_KEY = '&y%)0e&qd28cyv4y4bmuoz7_maxyl$&y!r^_256t2#me3r_tvk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['calculator.merkoba.com',]
+ALLOWED_HOSTS = ['localhost', 'calculator.merkoba.com']
 
 
 # Application definition

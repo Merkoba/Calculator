@@ -2,8 +2,8 @@ var letters = "abcdefghijklmnopqrstuvwxyz";
 var $a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u,$v,$w,$x,$y,$z;
 
 var msg_open = false;
-// var site_root = 'http://calculator.merkoba.com/';
-var site_root = 'http://localhost:8000/';
+var site_root = 'http://calculator.merkoba.com/';
+// var site_root = 'http://localhost:8000/';
 
 var focused = {
 	input: null,
@@ -733,9 +733,21 @@ function title_click_events()
 
 function save_sheet()
 {
+	var content = stringify_sheet();
+
+	if(content.length < 2)
+	{
+		msg("You can't save an empty sheet.");
+	}
+
+	else if(content.length > 3000)
+	{
+		msg("Sheet is too big.")
+	}
+
 	$.post('/save_sheet/',
 	{
-		content: stringify_sheet()
+		content: content
 	},
 	function(data)
 	{
