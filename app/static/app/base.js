@@ -868,8 +868,6 @@ function load_content()
 	{	
 		var line = splits[i];
 
-		console.log(line);
-
 		var letter = line[0];
 
 		var inp = line.substr(1);
