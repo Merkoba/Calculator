@@ -71,7 +71,10 @@ function key_detection()
 
 				if($(focused.input).val() === '')
 				{
-					remove_line(focused.input);
+					if($('.input').last()[0] === focused.input)
+					{
+						remove_last_line();
+					}
 				}
 
 				else
@@ -121,7 +124,7 @@ function draw_buttons()
 	place_button_wider('Up');
 	place_button_wider('Down');
 	place_button_wider('New Line');
-	place_button_wider('Remove Line');
+	place_button_wider('Remove Last');
 	place_button_wider('Erase');
 	place_button_wider('Clear');
 
@@ -251,32 +254,27 @@ function add_line(letter=false, value=false)
 	$(input).focus();
 }
 
-function remove_line(input)
+function remove_last_line()
 {
 	if($('.line').length === 1)
 	{
 		return;
 	}
 
-	var id = $(input).attr('id');
+	var line = $('.line').last()[0];
 
-	var prev = $($(input).parent().prev('.line'));
+	var input = $('.input').last()[0];
 
-	if($(prev).length > 0)
+	var val = $(input).val();
+
+	if(input === focused.input)
 	{
-		$($(input).parent().prev('.line').find('.input')).focus();
-	}
-
-	else
-	{
-		$($(input).parent().next('.line').find('.input')).focus();
+		$($(line).prev('.line').find('.input')).focus();
 	}
 
 	update_variable(input, undefined);
 
-	var val = $(input).val();
-
-	$('#' + id).parent().remove();
+	$(line).remove();
 
 	if(val !== '')
 	{
@@ -419,21 +417,21 @@ function press(s)
 		return;
 	}
 
-	else if(s === "Remove Line")
+	else if(s === "Remove Last")
 	{
-		remove_line(focused.input);
+		remove_last_line();
 		return;
 	}
 
 	else if(s === "Up")
 	{
-		move_line_up();
+		line_up();
 		return;
 	}
 
 	else if(s === "Down")
 	{
-		move_line_down();
+		line_down();
 		return;
 	}
 
@@ -508,6 +506,8 @@ function clear_line(input)
 	{
 		focused.caretpos = 0;
 	}
+
+	focus_line(focused.input);
 
 	update_results();
 }
