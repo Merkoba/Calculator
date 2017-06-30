@@ -48,16 +48,6 @@ function key_detection()
 			add_line();
 		}
 
-		else if(code === 38)
-		{
-			line_up();
-		}
-
-		else if(code === 40)
-		{
-			line_down();
-		}
-
 		else if(code === 27)
 		{
 			if(msg_open)
@@ -90,6 +80,36 @@ function key_detection()
 			{
 				focused.caretpos = focused.input.selectionStart;
 			}
+		}
+	});
+
+	$(document).keydown(function(e)
+	{
+		var code = e.keyCode;
+
+		if(code === 9)
+		{
+			if(e.shiftKey)
+			{
+				cycle_inputs('up');
+			}
+
+			else
+			{
+				cycle_inputs('down');
+			}
+
+			e.preventDefault();
+		}
+
+		else if(code === 38)
+		{
+			line_up();
+		}
+
+		else if(code === 40)
+		{
+			line_down();
 		}
 	});
 }
@@ -676,6 +696,42 @@ function move_line_down()
 	}
 
 	focus_line(focused.input)
+}
+
+function cycle_inputs(direction)
+{
+	if($('.input').length === 1)
+	{
+		return;
+	}
+
+	var index = $(focused.input).parent().index();
+
+	if(direction === 'down')
+	{
+		if(index === ($('.input').length - 1))
+		{
+			focus_line($('.input').first()[0]);
+		}
+
+		else
+		{
+			$($(focused.input).parent().next('.line').find('.input')).focus();
+		}
+	}
+
+	else
+	{
+		if(index === 0)
+		{
+			focus_line($('.input').last()[0]);
+		}
+
+		else
+		{
+			$($(focused.input).parent().prev('.line').find('.input')).focus();
+		}
+	}
 }
 
 function change_borders()
