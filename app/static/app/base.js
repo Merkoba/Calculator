@@ -3,6 +3,7 @@ var $a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u,$v,$w,$x,$y,$
 
 var msg_open = false;
 var reference;
+var about;
 var site_root;
 var save_enabled = true;
 
@@ -895,7 +896,7 @@ function stringify_sheet()
 	return s;
 }
 
-function show_about()
+function create_about()
 {
 	var s = ""
 
@@ -905,9 +906,21 @@ function show_about()
 	s += "It's based around multiple \"lines\" of calculations which can be reused and edited anytime.<br><br>";
 	s += "Calculations are done automatically in real time using topological sorting.<br><br>";
 	s += "Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>";
-	s += "Calculations are simply JavaScript. You have all the Math module at your disposal. Only certain common functions are available as buttons but you can type anything you want.";
+	s += "Calculations are simply JavaScript. You have all the Math module at your disposal. Only certain common functions are available as buttons but you can type anything you want.<br><br>";
+	s += "There's a reference popup with the Math constants and methods.<br><br>";
+	s += "You can save a sheet for future use or sharing.";
 
-	msg(s);
+	about = s;
+}
+
+function show_about()
+{
+	if(about === undefined)
+	{
+		create_about();
+	}
+
+	msg(about);
 }
 
 function overlay_clicked()
