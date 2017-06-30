@@ -191,7 +191,12 @@ b
 {
 	letter-spacing: 0.1em;
 	font-size: 1.4em;
-	cursor: pointer;
+}
+
+.b2
+{
+	letter-spacing: 0.1em;
+	font-size: 1.4em;
 }
 
 .refitem

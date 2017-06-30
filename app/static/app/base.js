@@ -45,7 +45,18 @@ function key_detection()
 
 		if(code === 13)
 		{
-			add_line();
+			if(e.shiftKey)
+			{
+				var s = $(focused.input).data('variable');
+				focus_next_or_add();
+				press(s);
+			}
+
+			else
+			{
+				focus_next_or_add();
+			}
+
 		}
 
 		else if(code === 27)
@@ -110,6 +121,15 @@ function key_detection()
 		else if(code === 40)
 		{
 			line_down();
+		}
+
+		else if(code === 32)
+		{
+			if(e.shiftKey)
+			{
+				add_ans();
+				e.preventDefault();
+			}
 		}
 	});
 }
@@ -182,33 +202,36 @@ function buttons_space()
 	$('#buttons').append(s);
 }
 
+function focus_next_or_add()
+{
+	var nextAll = $(focused.input).parent().nextAll('.line');
+
+	var found_line = false;
+
+	$(nextAll).each(function()
+	{
+		var inp = $(this).find('.input');
+
+		if($(inp).val() === '')
+		{
+			focus_line(inp);
+			found_line = true;
+			return false;
+		}
+	});
+
+	if(!found_line)
+	{
+		add_line();
+	}
+}
+
 function add_line(letter=false, value=false)
 {
 	var num_lines = $('.line').length;
 
 	if(!letter)
 	{
-		var nextAll = $(focused.input).parent().nextAll('.line');
-
-		var exit = false;
-
-		$(nextAll).each(function()
-		{
-			var inp = $(this).find('.input');
-
-			if($(inp).val() === '')
-			{
-				focus_line(inp);
-				exit = true;
-				return false;
-			}
-		});
-
-		if(exit)
-		{
-			return;
-		}
-
 		for(var i=0; i<letters.length; i++)
 		{
 			if($('#' + letters[i]).length === 0)
@@ -433,7 +456,7 @@ function press(s)
 
 	else if(s === "New Line")
 	{
-		add_line();
+		focus_next_or_add();
 		return;
 	}
 
@@ -483,6 +506,11 @@ function press(s)
 	else if(s === "sqrt")
 	{
 		s = "Math.sqrt(";
+	}
+
+	if(s === $(focused.input).data('variable'))
+	{
+		focus_next_or_add();
 	}
 
 	var val = $(focused.input).val();
@@ -558,8 +586,18 @@ function update_results()
 		
 		var val = $(this).val();
 
-		if(val === '')
+		if(val.trim() === '')
 		{
+			if(val.length > 0)
+			{
+				$(this).val('');
+
+				if(this === focused.input)
+				{
+					focused.caretpos = 0;
+				}
+			}
+
 			return true;
 		}
 
@@ -1001,7 +1039,16 @@ function create_about()
 	s += "Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>";
 	s += "Calculations are simply JavaScript. You have all the Math module at your disposal. Only certain common functions are available as buttons but you can type anything you want.<br><br>";
 	s += "There's a reference popup with the Math constants and methods.<br><br>";
-	s += "You can save a sheet for future use or sharing.";
+	s += "You can save a sheet for future use or sharing.<br><br><br>";
+
+	s += "<span class='b2'>Shortcuts</span><br><br>";
+	s += "Up and Down arrows change the focus between lines.<br><br>";
+	s += "Tab or Shift + Tab cycles focus between lines.<br><br>";
+	s += "Enter will focus the next available empty line or create a new one.<br><br>";
+	s += "Shift + Enter does the same but also adds the previous line variable into the new one.<br><br>";
+	s += "Shift + Space adds the variable from the line above to the current line.<br><br>";
+	s += "Escape clears a line, removes the line if already cleared, and closes popups.<br><br>";
+	s += "Constants and methods in the Reference will be added to the current line when clicked.";
 
 	about = s;
 }
@@ -1289,4 +1336,14 @@ function get_site_root()
 function adjust_volumes()
 {
 	$('#nope')[0].volume = 0.7;
+}
+
+function add_ans()
+{
+	var variable = $($(focused.input).parent().prev('.line').find('.input')).data('variable');
+
+	if(variable !== undefined)
+	{
+		press(variable);
+	}
 }
