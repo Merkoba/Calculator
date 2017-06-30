@@ -2,6 +2,7 @@ var letters = "abcdefghijklmnopqrstuvwxyz";
 var $a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u,$v,$w,$x,$y,$z;
 
 var msg_open = false;
+var reference;
 var site_root = 'http://calculator.merkoba.com/';
 // var site_root = 'http://localhost:8000/';
 
@@ -776,6 +777,11 @@ function title_click_events()
 		save_sheet();
 	});	
 
+	$('#lnk_reference').click(function()
+	{
+		show_reference();
+	});	
+
 	$('#lnk_about').click(function()
 	{
 		show_about();
@@ -927,4 +933,219 @@ function load_content()
 	}
 
 	update_results();
+}
+
+function create_reference()
+{
+	var s = "";
+
+	s += "<b>Constants</b><br><br>";
+
+
+	s += "<div class='refitem'>Math.E</div>";
+	s += "Euler's constant and the base of natural logarithms, approximately 2.718.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.LN2</div>";
+	s += "Natural logarithm of 2, approximately 0.693.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.LN10</div>";
+	s += "Natural logarithm of 10, approximately 2.303.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.LOG2E</div>";
+	s += "Base 2 logarithm of E, approximately 1.443.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.LOG10E</div>";
+	s += "Base 10 logarithm of E, approximately 0.434.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.PI</div>";
+	s += "Ratio of the circumference of a circle to its diameter, approximately 3.14159.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.SQRT1_2</div>";
+	s += "Square root of 1/2; equivalently, 1 over the square root of 2, approximately 0.707.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.SQRT2</div>";
+	s += "Square root of 2, approximately 1.414.";
+	s += "<br><br>";
+
+
+	s += "<br><b>Methods</b><br><br>";
+
+
+	s += "<div class='refitem'>Math.abs(x)</div>"
+	s += "Returns the absolute value of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.acos(x)</div>"
+	s += "Returns the arccosine of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.acosh(x)</div>"
+	s += "Returns the hyperbolic arccosine of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.asin(x)</div>"
+	s += "Returns the arcsine of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.asinh(x)</div>"
+	s += "Returns the hyperbolic arcsine of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.atan(x)</div>"
+	s += "Returns the arctangent of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.atanh(x)</div>"
+	s += "Returns the hyperbolic arctangent of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.atan2(y, x)</div>"
+	s += "Returns the arctangent of the quotient of its arguments.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.cbrt(x)</div>"
+	s += "Returns the cube root of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.ceil(x)</div>"
+	s += "Returns the smallest integer greater than or equal to a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.clz32(x)</div>"
+	s += "Returns the number of leading zeroes of a 32-bit integer.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.cos(x)</div>"
+	s += "Returns the cosine of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.cosh(x)</div>"
+	s += "Returns the hyperbolic cosine of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.exp(x)</div>"
+	s += "Returns Ex, where x is the argument, and E is Euler's constant (2.718…), the base of the natural logarithm.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.expm1(x)</div>"
+	s += "Returns subtracting 1 from exp(x).";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.floor(x)</div>"
+	s += "Returns the largest integer less than or equal to a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.fround(x)</div>"
+	s += "Returns the nearest single precision float representation of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.hypot([x[, y[, …]]])</div>"
+	s += "Returns the square root of the sum of squares of its arguments.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.imul(x, y)</div>"
+	s += "Returns the result of a 32-bit integer multiplication.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.log(x)</div>"
+	s += "Returns the natural logarithm (loge, also ln) of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.log1p(x)</div>"
+	s += "Returns the natural logarithm (loge, also ln) of 1 + x for a number x.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.log10(x)</div>"
+	s += "Returns the base 10 logarithm of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.log2(x)</div>"
+	s += "Returns the base 2 logarithm of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.max([x[, y[, …]]])</div>"
+	s += "Returns the largest of zero or more numbers.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.min([x[, y[, …]]])</div>"
+	s += "Returns the smallest of zero or more numbers.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.pow(x, y)</div>"
+	s += "Returns base to the exponent power, that is, baseexponent.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.random()</div>"
+	s += "Returns a pseudo-random number between 0 and 1.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.round(x)</div>"
+	s += "Returns the value of a number rounded to the nearest integer.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.sign(x)</div>"
+	s += "Returns the sign of the x, indicating whether x is positive, negative or zero.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.sin(x)</div>"
+	s += "Returns the sine of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.sinh(x)</div>"
+	s += "Returns the hyperbolic sine of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.sqrt(x)</div>"
+	s += "Returns the positive square root of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.tan(x)</div>"
+	s += "Returns the tangent of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.tanh(x)</div>"
+	s += "Returns the hyperbolic tangent of a number.";
+	s += "<br><br>";
+
+	s += "<div class='refitem'>Math.trunc(x)</div>"
+	s += "Returns the integral part of the number x, removing any fractional digits.";
+	s += "<br><br>";
+
+	reference = s;
+}
+
+function show_reference()
+{
+	if(reference === undefined)
+	{
+		create_reference();
+	}
+
+	msg(reference);
+
+	$('.refitem').click(function()
+	{
+		var txt = $(this).text();
+
+		if(txt.indexOf('(') !== -1)
+		{
+			var s = txt.split('(')[0] + '(';
+		}
+
+		else
+		{
+			var s = txt;
+		}
+
+		press(s);
+
+		hide_overlay();
+	});
 }
