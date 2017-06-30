@@ -883,8 +883,7 @@ function show_about()
 	s += "It's based around multiple \"lines\" of calculations which can be reused and edited anytime.<br><br>";
 	s += "Calculations are done automatically in real time using topological sorting.<br><br>";
 	s += "Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>";
-	s += "Calculations are simply JavaScript. You have all the Math module at your disposal. Only certain common functions are available as buttons but you can type anything you want.<br><br>";
-	s += "<a target='_blank' href='https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Math'>JavaScript Math Module Reference</a>";
+	s += "Calculations are simply JavaScript. You have all the Math module at your disposal. Only certain common functions are available as buttons but you can type anything you want.";
 
 	msg(s);
 }
