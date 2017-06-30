@@ -410,7 +410,7 @@ function press(s)
 
 	else if(s === "Erase")
 	{
-		erase();
+		erase_character();
 		return;
 	}
 
@@ -434,13 +434,13 @@ function press(s)
 
 	else if(s === "Up")
 	{
-		line_up();
+		move_line_up();
 		return;
 	}
 
 	else if(s === "Down")
 	{
-		line_down();
+		move_line_down();
 		return;
 	}
 
@@ -661,6 +661,34 @@ function line_down()
 	move_caret_to_end();
 }
 
+function move_line_up()
+{
+	var line = $(focused.input).parent();
+
+	var index = $(line).index();
+
+	if(index > 0)
+	{
+		$(line).insertBefore($(line).prev('.line'));
+	}
+
+	focus_line(focused.input)
+}
+
+function move_line_down()
+{
+	var line = $(focused.input).parent();
+
+	var index = $(line).index();
+
+	if(index < ($('.line').length - 1))
+	{
+		$(line).insertAfter($(line).next('.line'));
+	}
+
+	focus_line(focused.input)
+}
+
 function change_borders()
 {
 	$('.input').each(function()
@@ -718,7 +746,7 @@ function move_caret_to_end()
 	move_caret();
 }
 
-function erase()
+function erase_character()
 {
 	var val = $(focused.input).val();
 
