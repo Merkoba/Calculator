@@ -258,6 +258,7 @@ function add_line(value=false)
 
 	var s = `<div class='line'><button class='button variable'>$${letter}</button>`;
 	s += `<input type='text' class='input' id='${letter}' value='${value}'><div class='result'></div></div>`;
+	
 	$('#lines').append(s);
 
 	var input = $('.input').last();
@@ -300,9 +301,7 @@ function add_line(value=false)
 
 	$(input).data('variable', '$' + letter);
 	
-	$('#lines_container').scrollTop(10000000000);
-
-	$(input).focus();
+	focus_line(input);
 }
 
 function remove_last_line()
@@ -822,7 +821,7 @@ function move_caret()
 
 	if(focused.input.setSelectionRange) 
 	{
-		focused.input.focus();
+		focus_line(focused.input);
 		focused.input.setSelectionRange(distance, distance);
 	} 
 
