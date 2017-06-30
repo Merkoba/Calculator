@@ -1120,35 +1120,35 @@ function create_reference()
 	s += "<b>Constants</b><br><br>";
 
 
-	s += "<div class='refitem'>Math.E</div>";
+	s += "<span class='refitem'>Math.E</span><br>";
 	s += "Euler's constant and the base of natural logarithms, approximately 2.718.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.LN2</div>";
+	s += "<span class='refitem'>Math.LN2</span><br>";
 	s += "Natural logarithm of 2, approximately 0.693.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.LN10</div>";
+	s += "<span class='refitem'>Math.LN10</span><br>";
 	s += "Natural logarithm of 10, approximately 2.303.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.LOG2E</div>";
+	s += "<span class='refitem'>Math.LOG2E</span><br>";
 	s += "Base 2 logarithm of E, approximately 1.443.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.LOG10E</div>";
+	s += "<span class='refitem'>Math.LOG10E</span><br>";
 	s += "Base 10 logarithm of E, approximately 0.434.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.PI</div>";
+	s += "<span class='refitem'>Math.PI</span><br>";
 	s += "Ratio of the circumference of a circle to its diameter, approximately 3.14159.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.SQRT1_2</div>";
+	s += "<span class='refitem'>Math.SQRT1_2</span><br>";
 	s += "Square root of 1/2; equivalently, 1 over the square root of 2, approximately 0.707.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.SQRT2</div>";
+	s += "<span class='refitem'>Math.SQRT2</span><br>";
 	s += "Square root of 2, approximately 1.414.";
 	s += "<br><br>";
 
@@ -1156,143 +1156,143 @@ function create_reference()
 	s += "<br><b>Methods</b><br><br>";
 
 
-	s += "<div class='refitem'>Math.abs(x)</div>"
+	s += "<span class='refitem'>Math.abs(x)</span><br>";
 	s += "Returns the absolute value of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.acos(x)</div>"
+	s += "<span class='refitem'>Math.acos(x)</span><br>";
 	s += "Returns the arccosine of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.acosh(x)</div>"
+	s += "<span class='refitem'>Math.acosh(x)</span><br>";
 	s += "Returns the hyperbolic arccosine of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.asin(x)</div>"
+	s += "<span class='refitem'>Math.asin(x)</span><br>";
 	s += "Returns the arcsine of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.asinh(x)</div>"
+	s += "<span class='refitem'>Math.asinh(x)</span><br>";
 	s += "Returns the hyperbolic arcsine of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.atan(x)</div>"
+	s += "<span class='refitem'>Math.atan(x)</span><br>";
 	s += "Returns the arctangent of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.atanh(x)</div>"
+	s += "<span class='refitem'>Math.atanh(x)</span><br>";
 	s += "Returns the hyperbolic arctangent of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.atan2(y, x)</div>"
+	s += "<span class='refitem'>Math.atan2(y, x)</span><br>";
 	s += "Returns the arctangent of the quotient of its arguments.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.cbrt(x)</div>"
+	s += "<span class='refitem'>Math.cbrt(x)</span><br>";
 	s += "Returns the cube root of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.ceil(x)</div>"
+	s += "<span class='refitem'>Math.ceil(x)</span><br>";
 	s += "Returns the smallest integer greater than or equal to a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.clz32(x)</div>"
+	s += "<span class='refitem'>Math.clz32(x)</span><br>";
 	s += "Returns the number of leading zeroes of a 32-bit integer.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.cos(x)</div>"
+	s += "<span class='refitem'>Math.cos(x)</span><br>";
 	s += "Returns the cosine of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.cosh(x)</div>"
+	s += "<span class='refitem'>Math.cosh(x)</span><br>";
 	s += "Returns the hyperbolic cosine of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.exp(x)</div>"
+	s += "<span class='refitem'>Math.exp(x)</span><br>";
 	s += "Returns Ex, where x is the argument, and E is Euler's constant (2.718…), the base of the natural logarithm.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.expm1(x)</div>"
+	s += "<span class='refitem'>Math.expm1(x)</span><br>";
 	s += "Returns subtracting 1 from exp(x).";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.floor(x)</div>"
+	s += "<span class='refitem'>Math.floor(x)</span><br>";
 	s += "Returns the largest integer less than or equal to a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.fround(x)</div>"
+	s += "<span class='refitem'>Math.fround(x)</span><br>";
 	s += "Returns the nearest single precision float representation of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.hypot([x[, y[, …]]])</div>"
+	s += "<span class='refitem'>Math.hypot([x[, y[, …]]])</span><br>";
 	s += "Returns the square root of the sum of squares of its arguments.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.imul(x, y)</div>"
+	s += "<span class='refitem'>Math.imul(x, y)</span><br>";
 	s += "Returns the result of a 32-bit integer multiplication.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.log(x)</div>"
+	s += "<span class='refitem'>Math.log(x)</span><br>";
 	s += "Returns the natural logarithm (loge, also ln) of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.log1p(x)</div>"
+	s += "<span class='refitem'>Math.log1p(x)</span><br>";
 	s += "Returns the natural logarithm (loge, also ln) of 1 + x for a number x.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.log10(x)</div>"
+	s += "<span class='refitem'>Math.log10(x)</span><br>";
 	s += "Returns the base 10 logarithm of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.log2(x)</div>"
+	s += "<span class='refitem'>Math.log2(x)</span><br>";
 	s += "Returns the base 2 logarithm of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.max([x[, y[, …]]])</div>"
+	s += "<span class='refitem'>Math.max([x[, y[, …]]])</span><br>";
 	s += "Returns the largest of zero or more numbers.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.min([x[, y[, …]]])</div>"
+	s += "<span class='refitem'>Math.min([x[, y[, …]]])</span><br>";
 	s += "Returns the smallest of zero or more numbers.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.pow(x, y)</div>"
+	s += "<span class='refitem'>Math.pow(x, y)</span><br>";
 	s += "Returns base to the exponent power, that is, baseexponent.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.random()</div>"
+	s += "<span class='refitem'>Math.random()</span><br>";
 	s += "Returns a pseudo-random number between 0 and 1.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.round(x)</div>"
+	s += "<span class='refitem'>Math.round(x)</span><br>";
 	s += "Returns the value of a number rounded to the nearest integer.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.sign(x)</div>"
+	s += "<span class='refitem'>Math.sign(x)</span><br>";
 	s += "Returns the sign of the x, indicating whether x is positive, negative or zero.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.sin(x)</div>"
+	s += "<span class='refitem'>Math.sin(x)</span><br>";
 	s += "Returns the sine of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.sinh(x)</div>"
+	s += "<span class='refitem'>Math.sinh(x)</span><br>";
 	s += "Returns the hyperbolic sine of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.sqrt(x)</div>"
+	s += "<span class='refitem'>Math.sqrt(x)</span><br>";
 	s += "Returns the positive square root of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.tan(x)</div>"
+	s += "<span class='refitem'>Math.tan(x)</span><br>";
 	s += "Returns the tangent of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.tanh(x)</div>"
+	s += "<span class='refitem'>Math.tanh(x)</span><br>";
 	s += "Returns the hyperbolic tangent of a number.";
 	s += "<br><br>";
 
-	s += "<div class='refitem'>Math.trunc(x)</div>"
+	s += "<span class='refitem'>Math.trunc(x)</span><br>";
 	s += "Returns the integral part of the number x, removing any fractional digits.";
 	s += "<br><br>";
 
