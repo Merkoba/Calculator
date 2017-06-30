@@ -1043,11 +1043,11 @@ function create_about()
 
 	s += "<span class='b2'>Shortcuts</span><br><br>";
 	s += "Up and Down arrows change the focus between lines.<br><br>";
-	s += "Tab or Shift + Tab cycles focus between lines.<br><br>";
+	s += "Tab or Shift + Tab cycles the focus between lines.<br><br>";
 	s += "Enter will focus the next available empty line or create a new one.<br><br>";
 	s += "Shift + Enter does the same but also adds the previous line's variable into the new one.<br><br>";
 	s += "Shift + Space adds the variable from the line above to the current line.<br><br>";
-	s += "Escape clears a line, removes the line if already cleared, and closes popups.<br><br>";
+	s += "Escape clears a line, removes the line if already cleared, or closes popups.<br><br>";
 	s += "Constants and methods in the Reference will be added to the current line when clicked.";
 
 	about = s;
