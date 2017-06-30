@@ -4,6 +4,7 @@ var $a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u,$v,$w,$x,$y,$
 var msg_open = false;
 var reference;
 var site_root;
+var save_enabled = true;
 
 var focused = {
 	input: null,
@@ -791,25 +792,40 @@ function title_click_events()
 
 function save_sheet()
 {
+	if(!save_enabled)
+	{
+		return;
+	}
+
 	var content = stringify_sheet();
 
 	if(content.trim().length < 2)
 	{
 		msg("You can't save an empty sheet.");
+		return;
 	}
 
-	else if(content.length > 3000)
+	else if(content.length > 20000)
 	{
-		msg("Sheet is too big.")
+		msg("Sheet is too big.");
+		return;
 	}
+
+	save_enabled = false;
 
 	$.post('/save_sheet/',
 	{
-		content: content
+		content: content,
+		error: function(xhr, text, error) 
+		{
+			msg('A network error occurred.');
+			save_enabled = true;
+		}
 	},
 	function(data)
 	{
 		on_save_response(data)
+		save_enabled = true;
 	});
 }
 

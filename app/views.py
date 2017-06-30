@@ -76,7 +76,7 @@ def save_sheet(request):
 		if len(content.strip()) < 2:
 			return HttpResponse('empty')
 
-		if len(content) > 3000:
+		if len(content) > 20000:
 			return HttpResponse('toobig')
 
 		else:
