@@ -734,6 +734,8 @@ function erase()
 	{
 		val = val.slice(0, selstart) + val.slice(selend);
 		$(focused.input).val(val);
+		focused.caretpos = selstart;
+
 	}
 
 	else
@@ -751,9 +753,9 @@ function erase()
 		}
 
 		focused.caretpos = caretpos;
-
-		move_caret();
 	}
+
+	move_caret();
 
 	update_results();
 }
