@@ -120,11 +120,10 @@ function draw_buttons()
 
 	place_button_wider('Up');
 	place_button_wider('Down');
-	place_button_wider('Add Line');
+	place_button_wider('New Line');
 	place_button_wider('Remove Line');
 	place_button_wider('Erase');
-	place_button('Clear');
-	place_button('Reset');
+	place_button_wider('Clear');
 
 	$('.button').each(function()
 	{
@@ -285,7 +284,7 @@ function remove_line(input)
 	}
 }
 
-function remove_all_lines()
+function reset_sheet()
 {
 	var conf = confirm("Are you sure you want to clear everything?");
 
@@ -414,7 +413,7 @@ function press(s)
 		return;
 	}
 
-	else if(s === "Add Line")
+	else if(s === "New Line")
 	{
 		add_line();
 		return;
@@ -423,12 +422,6 @@ function press(s)
 	else if(s === "Remove Line")
 	{
 		remove_line(focused.input);
-		return;
-	}
-
-	else if(s === "Reset")
-	{
-		remove_all_lines();
 		return;
 	}
 
@@ -509,22 +502,18 @@ function press(s)
 
 function clear_line(input)
 {
-	if($(input).val() !== '')
+	$(input).val('');
+
+	if(input === focused.input)
 	{
-		$(input).val('');
+		focused.caretpos = 0;
 	}
 
-	var result = $(input).next('.result');
-
-	$(result).html('');
-
-	update_variable(input, undefined);
-
-	update_results(input);
+	update_results();
 }
 
 
-function update_results(input)
+function update_results()
 {
 	var variables = {};
 
