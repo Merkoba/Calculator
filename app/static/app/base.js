@@ -932,6 +932,8 @@ function load_content()
 		add_line(letter, inp);
 	}
 
+	move_caret_to_end();
+
 	update_results();
 }
 
