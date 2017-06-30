@@ -21,10 +21,8 @@ function init()
 	resize_events();
 	overlay_clicked();
 	title_click_events();
-
-	$('#nope')[0].volume = 0.7;
-
-	site_root = window.location.href.match(/^.*\//)[0];
+	get_site_root();
+	adjust_volumes();
 
 	if(content === '')
 	{
@@ -1184,4 +1182,14 @@ function show_reference()
 
 		hide_overlay();
 	});
+}
+
+function get_site_root()
+{
+	site_root = window.location.href.match(/^.*\//)[0];
+}
+
+function adjust_volumes()
+{
+	$('#nope')[0].volume = 0.7;
 }
