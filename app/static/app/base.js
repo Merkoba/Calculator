@@ -1043,7 +1043,7 @@ function create_about()
 
 	s += "<span class='b2'>Shortcuts</span><br><br>";
 	s += "Up and Down arrows change the focus between lines.<br><br>";
-	s += "Tab or Shift + Tab cycles the focus between lines.<br><br>";
+	s += "Tab and Shift + Tab cycle the focus between lines.<br><br>";
 	s += "Enter will focus the next available empty line or create a new one.<br><br>";
 	s += "Shift + Enter does the same but also adds the previous line's variable into the new one.<br><br>";
 	s += "Shift + Space adds the variable from the line above to the current line.<br><br>";
