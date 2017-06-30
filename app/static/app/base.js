@@ -986,6 +986,8 @@ function on_save_response(response)
 
 	else
 	{
+		play('pup');
+		
 		edit_url(response)
 
 		var s = "";
@@ -1008,7 +1010,6 @@ function copy_to_clipboard(s)
 	textareaEl.select();
 	document.execCommand('copy');
 	document.body.removeChild(textareaEl);
-	play('pup');
 }
 
 function edit_url(s)
