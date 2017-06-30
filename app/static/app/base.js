@@ -136,10 +136,12 @@ function key_detection()
 
 function draw_buttons()
 {
-	for(var i=0; i<10; i++)
+	for(var i=1; i<10; i++)
 	{
 		place_button(i);
 	}
+
+	place_button(0);
 
 	place_button('.');
 	place_button(',');
@@ -226,27 +228,30 @@ function focus_next_or_add()
 	}
 }
 
-function add_line(letter=false, value=false)
+function add_line(value=false)
 {
 	var num_lines = $('.line').length;
 
-	if(!letter)
-	{
-		for(var i=0; i<letters.length; i++)
-		{
-			if($('#' + letters[i]).length === 0)
-			{
-				var letter = letters[i];
-				break;
-			}
-		}
+	var iterations = Math.floor(num_lines / letters.length);
 
-		var value = '';
-	}
-
-	if((num_lines) >= letters.length)
+	if(iterations > letters.length)
 	{
 		return;
+	}
+
+	if(iterations > 0)
+	{
+		var letter = letters[iterations - 1] + letters[num_lines - (iterations * letters.length)];
+	}
+
+	else
+	{
+		var letter = letters[num_lines];
+	}
+
+	if(!value)
+	{
+		value = '';
 	}
 
 	var s = `<div class='line'><button class='button variable'>$${letter}</button>`;
@@ -254,6 +259,7 @@ function add_line(letter=false, value=false)
 	$('#lines').append(s);
 
 	var input = $('.input').last();
+	
 	focused.input = input;
 
 	$('.variable').last().click(function()
@@ -1017,7 +1023,6 @@ function stringify_sheet()
 
 	$('.input').each(function()
 	{
-		s += $(this).attr('id');
 		s += $(this).val();
 		s += "@!#";
 	});
@@ -1099,13 +1104,9 @@ function load_content()
 
 	for(var i=0; i<splits.length; i++)
 	{	
-		var line = splits[i];
+		var value = splits[i];
 
-		var letter = line[0];
-
-		var inp = line.substr(1);
-
-		add_line(letter, inp);
+		add_line(value);
 	}
 
 	move_caret_to_end();
