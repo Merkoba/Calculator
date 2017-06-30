@@ -218,13 +218,13 @@ function add_line(letter=false, value=false)
 
 	$(input).click(function()
 	{
-		focused.caretpos = this.selectionStart;
+		set_caretpos();
 	});
 
 	$(input).focus(function()
 	{
 		focused.input = this;
-		focused.caretpos = this.selectionStart;
+		set_caretpos();
 		update_preval();
 		change_borders();
 	});
@@ -676,6 +676,14 @@ function place_lines_container()
 	$('#lines_container').css('height', ($(window).height() - $('#title').outerHeight() - $('#buttons').outerHeight()) + 'px');
 }
 
+function set_caretpos()
+{
+	setTimeout(function()
+	{
+		focused.caretpos = focused.input.selectionStart;
+	}, 10);
+}
+
 function move_caret() 
 {
 	var caretpos = focused.caretpos;
@@ -719,21 +727,33 @@ function erase()
 		return;
 	}
 
-	var x = val.substr(0, focused.caretpos - 1);
-	var y = val.substring(focused.caretpos);
+	var selstart = focused.input.selectionStart;
+	var selend = focused.input.selectionEnd;
 
-	$(focused.input).val(x + y);
-
-	var caretpos = focused.caretpos - 1;
-
-	if(caretpos < 0)
+	if(selstart !== selend)
 	{
-		caretpos = 0;
+		val = val.slice(0, selstart) + val.slice(selend);
+		$(focused.input).val(val);
 	}
 
-	focused.caretpos = caretpos;
+	else
+	{
+		var x = val.substr(0, focused.caretpos - 1);
+		var y = val.substring(focused.caretpos);
 
-	move_caret();
+		$(focused.input).val(x + y);
+
+		var caretpos = focused.caretpos - 1;
+
+		if(caretpos < 0)
+		{
+			caretpos = 0;
+		}
+
+		focused.caretpos = caretpos;
+
+		move_caret();
+	}
 
 	update_results();
 }
