@@ -947,13 +947,13 @@ function save_sheet()
 
 	var content = stringify_sheet();
 
-	if(content.trim().length < 2)
+	if(content.trim().length < 1)
 	{
 		msg("You can't save an empty sheet.");
 		return;
 	}
 
-	else if(content.length > 20000)
+	else if(content.length > 50000)
 	{
 		msg("Sheet is too big.");
 		return;
@@ -1390,8 +1390,8 @@ function show_more()
 {
 	var s = "";
 
-	s += "<button class='dialog_btn' id='more_options'>Options</button><br><br>";
-	s += "<button class='dialog_btn' id='more_about'>About</button>";
+	s += "<div class='linky2' id='more_options'>Options</div><br><br>";
+	s += "<div class='linky2' id='more_about'>About</div>";
 
 	msg(s);
 

@@ -76,10 +76,10 @@ def save_sheet(request):
 
 		data = {'response':'nothing'}
 
-		if len(content.strip()) < 2:
+		if len(content.strip()) < 1:
 			data['response'] = 'empty'
 
-		elif len(content) > 20000:
+		elif len(content) > 50000:
 			data['response'] = 'toobig'
 
 		else:
