@@ -219,3 +219,42 @@ b
 	cursor: pointer;
 	display: inline-block;
 }
+
+.dialog_btn
+{
+	display: inline-block;
+	color: #2F2F2F;
+	background-color: #eee;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	padding: 0.7em;
+	border-radius: 5px;
+	border: 1px solid rgba(0,0,0,0.3);
+	border-bottom-width: 3px;
+	font-size: 0.7em;
+	cursor: pointer;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.dialog_btn:hover 
+{
+	background-color: #e3e3e3;
+	border-color: rgba(0,0,0,0.5);
+}
+
+.dialog_btn:active 
+{
+	background-color: #CCC;
+	border-color: rgba(0,0,0,0.9);
+}
+
+input[type="checkbox"]
+{
+	width: 2em;
+	height: 2em;
+}

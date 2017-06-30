@@ -6,6 +6,7 @@ var reference;
 var about;
 var site_root;
 var save_enabled = true;
+var ls_options = 'options_v1';
 
 var focused = {
 	input: null,
@@ -23,6 +24,7 @@ function init()
 	title_click_events();
 	get_site_root();
 	adjust_volumes();
+	get_options();
 
 	if(content === '')
 	{
@@ -382,7 +384,7 @@ function get_result(input)
 
 		update_variable(input, result);
 
-		show_result(input, format(result));
+		show_result(input, format_result(result));
 	}
 
 	catch(err)
@@ -424,7 +426,7 @@ function round(num, places)
 	return Math.round(num * val) / val;
 }
 
-function format(n)
+function format_result(n)
 {
 	var ns = n.toString();
 
@@ -440,8 +442,13 @@ function format(n)
 		var whole = n.toString();
 		var decimal = '';
 	}
+
+	if(options.format)
+	{
+		whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
 	
-	return `<span class='whole'>${whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span><span class='decimal'>${decimal}</span>`
+	return `<span class='whole'>${whole}</span><span class='decimal'>${decimal}</span>`
 }
 
 function press(s)
@@ -900,9 +907,12 @@ var resize_timer = (function()
 
 function play(what)
 {
-	$('#' + what)[0].pause();
-	$('#' + what)[0].currentTime = 0;
-	$('#' + what)[0].play();
+	if(options.sounds)
+	{
+		$('#' + what)[0].pause();
+		$('#' + what)[0].currentTime = 0;
+		$('#' + what)[0].play();
+	}
 }
 
 function title_click_events()
@@ -922,9 +932,9 @@ function title_click_events()
 		show_reference();
 	});	
 
-	$('#lnk_about').click(function()
+	$('#lnk_more').click(function()
 	{
-		show_about();
+		show_more();
 	});
 }
 
@@ -981,21 +991,21 @@ function on_save_response(response)
 
 	else if(response === 'toobig')
 	{
-		msg("Sheet is too big.")
+		msg("Sheet is too big.");
 	}
 
 	else
 	{
 		play('pup');
-		
-		edit_url(response)
+
+		edit_url(response);
 
 		var s = "";
 
 		var url = site_root + response;
 
-
 		s += url + "<br><br>";
+
 		s += "<span class='linky2' onclick=\"copy_to_clipboard('" + url + "');hide_overlay()\">Copy To Clipboard</span>";
 
 		msg(s);
@@ -1035,7 +1045,7 @@ function stringify_sheet()
 
 function create_about()
 {
-	var s = ""
+	var s = "";
 
 	s += "<b>Merkoba Calculator</b><br>";
 	s += "Version " + version + "<br><br>";
@@ -1097,6 +1107,32 @@ function msg(txt, temp_disable=false)
 	$('#msg').focus();
 	
 	msg_open = true;
+}
+
+function msg_align_btns(alt=false)
+{
+	if(alt)
+	{
+		$('#msg').find('.dialog_btn').each(function()
+		{
+			$(this).width($(this).outerWidth());
+		});		
+	}
+
+	else
+	{
+		var w = 0;
+
+		$('#msg').find('.dialog_btn').each(function()
+		{
+			w = Math.max(w, $(this).outerWidth());
+		});
+
+		$('#msg').find('.dialog_btn').each(function()
+		{
+			$(this).width(w);
+		});
+	}
 }
 
 function load_content()
@@ -1347,5 +1383,87 @@ function add_ans()
 	if(variable !== undefined)
 	{
 		press(variable);
+	}
+}
+
+function show_more()
+{
+	var s = "";
+
+	s += "<button class='dialog_btn' id='more_options'>Options</button><br><br>";
+	s += "<button class='dialog_btn' id='more_about'>About</button>";
+
+	msg(s);
+
+	msg_align_btns();
+
+	$('#more_options').click(function()
+	{
+		show_options();
+	});
+
+	$('#more_about').click(function()
+	{
+		show_about();
+	});
+}
+
+function show_options()
+{
+	var s = "";
+
+	s += "Enable Sounds<br><br>";
+
+	if(options.sounds)
+	{
+		s += "<input id='chk_sounds' type='checkbox' checked>";
+	}
+
+	else
+	{
+		s += "<input id='chk_sounds' type='checkbox'>";
+	}
+
+	s += "<br><br><br>Format Results<br><br>";
+
+	if(options.format)
+	{
+		s += "<input id='chk_format' type='checkbox' checked>";
+	}
+
+	else
+	{
+		s += "<input id='chk_format' type='checkbox'>";
+	}
+
+	msg(s);
+
+	$('#chk_sounds').change(function()
+	{
+		options.sounds = $(this).prop('checked');
+		update_options();
+	});
+
+	$('#chk_format').change(function()
+	{
+		options.format = $(this).prop('checked');
+		update_options();
+		update_results();
+	});
+}
+
+function update_options()
+{
+	localStorage.setItem(ls_options, JSON.stringify(options));
+}
+
+function get_options()
+{
+	options = JSON.parse(localStorage.getItem(ls_options));
+
+	if(options === null)
+	{
+		options = {sounds: true, format: true};
+		update_options();
 	}
 }
