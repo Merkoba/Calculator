@@ -3,8 +3,7 @@ var $a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u,$v,$w,$x,$y,$
 
 var msg_open = false;
 var reference;
-var site_root = 'http://calculator.merkoba.com/';
-// var site_root = 'http://localhost:8000/';
+var site_root;
 
 var focused = {
 	input: null,
@@ -22,6 +21,8 @@ function init()
 	title_click_events();
 
 	$('#nope')[0].volume = 0.7;
+
+	site_root = window.location.href.match(/^.*\//)[0];
 
 	if(content === '')
 	{
