@@ -45,23 +45,7 @@ function key_detection()
 	{
 		var code = e.keyCode;
 
-		if(code === 13)
-		{
-			if(e.shiftKey)
-			{
-				var s = $(focused.input).data('variable');
-				focus_next_or_add();
-				press(s);
-			}
-
-			else
-			{
-				focus_next_or_add();
-			}
-
-		}
-
-		else if(code === 27)
+		if(code === 27)
 		{
 			if(msg_open)
 			{
@@ -100,7 +84,23 @@ function key_detection()
 	{
 		var code = e.keyCode;
 
-		if(code === 9)
+		if(code === 13)
+		{
+			if(e.shiftKey)
+			{
+				var s = $(focused.input).data('variable');
+				focus_next_or_add();
+				press(s);
+			}
+
+			else
+			{
+				focus_next_or_add();
+			}
+
+		}
+
+		else if(code === 9)
 		{
 			if(e.shiftKey)
 			{
