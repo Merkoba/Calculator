@@ -1,4 +1,5 @@
 import os
+import json
 import random
 import string
 import datetime
@@ -73,11 +74,13 @@ def save_sheet(request):
 
 		content = request.POST.get('content', '')
 
-		if len(content.strip()) < 2:
-			return HttpResponse('empty')
+		data = {'response':'nothing'}
 
-		if len(content) > 20000:
-			return HttpResponse('toobig')
+		if len(content.strip()) < 2:
+			data['response'] = 'empty'
+
+		elif len(content) > 20000:
+			data['response'] = 'toobig'
 
 		else:
 			sheet = Sheet(content=content, date=now())
@@ -90,12 +93,15 @@ def save_sheet(request):
 					sheet.save()
 				except IntegrityError:
 					failures += 1
-					if failures > 500:
+					if failures > 10:
 						raise
 					else:
 						sheet.uid = random_alpha(9)
 				else:
 					success = True
 
-			return HttpResponse(sheet.uid)
+			data['response'] = sheet.uid
+
+		return HttpResponse(json.dumps(data), content_type="application/json")
+			
 

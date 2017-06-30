@@ -816,38 +816,43 @@ function save_sheet()
 	$.post('/save_sheet/',
 	{
 		content: content,
-		error: function(xhr, text, error) 
-		{
-			msg('A network error occurred.');
-			save_enabled = true;
-		}
-	},
-	function(data)
+	})
+
+	.done(function(data)
 	{
-		on_save_response(data)
+		on_save_response(data.response);
+	})
+
+	.fail(function(data)
+	{
+		msg('A network error occurred.');
+	})
+
+	.always(function()
+	{
 		save_enabled = true;
 	});
 }
 
-function on_save_response(data)
+function on_save_response(response)
 {
-	if(data === 'empty')
+	if(response === 'empty')
 	{
 		msg("You can't save an empty sheet.");
 	}
 
-	else if(data === 'toobig')
+	else if(response === 'toobig')
 	{
 		msg("Sheet is too big.")
 	}
 
 	else
 	{
-		edit_url(data)
+		edit_url(response)
 
 		var s = "";
 
-		var url = site_root + data;
+		var url = site_root + response;
 
 
 		s += url + "<br><br>";
