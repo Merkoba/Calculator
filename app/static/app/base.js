@@ -936,6 +936,8 @@ function hide_overlay()
 	$('#msg').html('');
 
 	msg_open = false;
+
+	focus_line(focused.input);
 }
 
 function msg(txt, temp_disable=false)
