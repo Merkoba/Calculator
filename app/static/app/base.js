@@ -470,41 +470,45 @@ function format_result(n)
 
 function press(s, aux=false)
 {
-	focus_line(focused.input);
-
 	if(s === "Clear")
 	{
 		clear_line(focused.input);
+		focus_line(focused.input);
 		return;
 	}
 
 	else if(s === "Erase")
 	{
 		erase_character();
+		focus_line(focused.input);
 		return;
 	}
 
 	else if(s === "New Line")
 	{
 		focus_next_or_add();
+		focus_line(focused.input);
 		return;
 	}
 
 	else if(s === "Remove Last")
 	{
 		remove_last_line();
+		focus_line(focused.input);
 		return;
 	}
 
 	else if(s === "Up")
 	{
 		line_up();
+		focus_line(focused.input);
 		return;
 	}
 
 	else if(s === "Down")
 	{
 		line_down();
+		focus_line(focused.input);
 		return;
 	}
 
@@ -541,6 +545,12 @@ function press(s, aux=false)
 	if(aux)
 	{
 		s = check_aux(s, aux);
+
+		if(!s)
+		{
+			focus_line(focused.input);
+			return;
+		}
 	}
 
 	var v = $(focused.input).data('variable');
@@ -588,6 +598,14 @@ function press(s, aux=false)
 	move_caret();
 
 	update_results();
+
+	blur_focus();
+}
+
+function blur_focus()
+{
+	focused.input.blur();
+	focused.input.focus();
 }
 
 function check_aux(s, aux)
@@ -670,7 +688,7 @@ function check_aux(s, aux)
 		}
 	}
 
-	return s;
+	return false;
 }
 
 function clear_line(input)
