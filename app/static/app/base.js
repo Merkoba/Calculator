@@ -87,9 +87,7 @@ function key_detection()
 		{
 			if(e.shiftKey)
 			{
-				var s = $(focused.input).data('variable');
-				focus_next_or_add();
-				press(s);
+				press($(focused.input).data('variable'));
 			}
 
 			else
@@ -518,9 +516,18 @@ function press(s)
 		s = "Math.sqrt(";
 	}
 
-	if(s === $(focused.input).data('variable'))
+	var v = $(focused.input).data('variable');
+
+	if(s === v)
 	{
 		focus_next_or_add();
+
+		v = $(focused.input).data('variable');
+		
+		if(s === v)
+		{
+			return;
+		}
 	}
 
 	var val = $(focused.input).val();
