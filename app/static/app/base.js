@@ -158,7 +158,7 @@ function draw_buttons()
 	place_button('(');
 	place_button(')');
 	place_button('pow');
-	place_button('sqrt', 'Context: sqrt(2), Middle: sqrt(1/2)');
+	place_button('sqrt', 'Context: Cube Root');
 	place_button('sin', 'Context: asin, Middle: asinh');
 	place_button('cos', 'Context: acos, Middle: acosh');
 	place_button('tan', 'Context: atan, Middle: atanh');
@@ -622,7 +622,7 @@ function check_aux(s, aux)
 			}
 		}
 
-		if(s == "Math.cos(")
+		else if(s == "Math.cos(")
 		{
 			if(aux === 3)
 			{
@@ -635,7 +635,7 @@ function check_aux(s, aux)
 			}
 		}
 
-		if(s == "Math.tan(")
+		else if(s == "Math.tan(")
 		{
 			if(aux === 3)
 			{
@@ -648,7 +648,7 @@ function check_aux(s, aux)
 			}
 		}
 
-		if(s == "Math.sin(")
+		else if(s == "Math.sin(")
 		{
 			if(aux === 3)
 			{
@@ -661,16 +661,11 @@ function check_aux(s, aux)
 			}
 		}
 
-		if(s == "Math.sqrt(")
+		else if(s == "Math.sqrt(")
 		{
 			if(aux === 3)
 			{
-				 return "Math.SQRT2";
-			}
-
-			else if(aux === 2)
-			{
-				 return "Math.SQRT1_2";
+				 return "Math.cbrt(";
 			}
 		}
 	}
@@ -1176,7 +1171,8 @@ function create_about()
 	s += "Up and Down arrows change the focus between lines.<br><br>";
 	s += "Tab and Shift + Tab cycle the focus between lines.<br><br>";
 	s += "Escape clears a line, removes the line if already cleared, or closes popups.<br><br>";
-	s += "Constants and methods in the Reference will be added to the current line when clicked.";
+	s += "Constants and methods in the Reference will be added to the current line when clicked.<br><br>";
+	s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.";
 
 	about = s;
 }
