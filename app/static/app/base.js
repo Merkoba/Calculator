@@ -81,6 +81,11 @@ function key_detection()
 
 	$(document).keydown(function(e)
 	{
+		if(msg_open)
+		{
+			return;
+		}
+
 		var code = e.keyCode;
 
 		if(code === 13)
@@ -114,12 +119,32 @@ function key_detection()
 
 		else if(code === 38)
 		{
-			line_up();
+			if(e.shiftKey)
+			{
+				move_line_up();
+			}
+
+			else
+			{
+				line_up();
+			}
+
+			e.preventDefault();
 		}
 
 		else if(code === 40)
 		{
-			line_down();
+			if(e.shiftKey)
+			{
+				move_line_down();
+			}
+
+			else
+			{
+				line_down();
+			}
+
+			e.preventDefault();
 		}
 
 		else if(code === 32)
@@ -166,8 +191,8 @@ function draw_buttons()
 
 	buttons_br();
 
-	place_button_wider('Up');
-	place_button_wider('Down');
+	place_button_wider('Up', 'Context: Move Line Up');
+	place_button_wider('Down', 'Context: Move Line Down');
 	place_button_wider('New Line');
 	place_button_wider('Remove Last');
 	place_button_wider('Clear');
@@ -207,11 +232,9 @@ function place_button(s, title='')
 	$('#buttons').append(`<button title="${title}" class='button'>${s}</button>`);
 }
 
-function place_button_wider(i)
+function place_button_wider(s, title='')
 {
-	var s = `<button class='button wider'>${i}</button>`;
-
-	$('#buttons').append(s);
+	$('#buttons').append(`<button title="${title}" class='button wider'>${s}</button>`);
 }
 
 function buttons_br()
@@ -233,7 +256,7 @@ function focus_next_or_add()
 
 	$(nextAll).each(function()
 	{
-		var inp = $(this).find('.input');
+		var inp = $(this).find('.input')[0];
 
 		if($(inp).val() === '')
 		{
@@ -337,7 +360,7 @@ function remove_last_line()
 
 	if(input === focused.input)
 	{
-		$($(line).prev('.line').find('.input')).focus();
+		$(line).prev('.line').find('.input').focus();
 	}
 
 	update_variable(input, undefined);
@@ -470,6 +493,17 @@ function format_result(n)
 
 function press(s, aux=false)
 {
+	if(aux)
+	{
+		s = check_aux(s, aux);
+
+		if(!s)
+		{
+			focus_line(focused.input);
+			return;
+		}
+	}
+
 	if(s === "Clear")
 	{
 		clear_line(focused.input);
@@ -540,17 +574,6 @@ function press(s, aux=false)
 	else if(s === "sqrt")
 	{
 		s = "Math.sqrt(";
-	}
-
-	if(aux)
-	{
-		s = check_aux(s, aux);
-
-		if(!s)
-		{
-			focus_line(focused.input);
-			return;
-		}
 	}
 
 	var v = $(focused.input).data('variable');
@@ -684,6 +707,24 @@ function check_aux(s, aux)
 			if(aux === 3)
 			{
 				 return "Math.cbrt(";
+			}
+		}
+
+		else if(s == "Up")
+		{
+			if(aux === 3)
+			{
+				 move_line_up();
+				 return false;
+			}
+		}
+
+		else if(s == "Down")
+		{
+			if(aux === 3)
+			{
+				 move_line_down();
+				 return false;
 			}
 		}
 	}
@@ -836,42 +877,104 @@ function focus_line(input)
 
 function line_up()
 {
-	$($(focused.input).parent().prev('.line').find('.input')).focus();
+	$(focused.input).parent().prev('.line').find('.input').focus();
 	move_caret_to_end();
 }
 
 function line_down()
 {
-	$($(focused.input).parent().next('.line').find('.input')).focus();	
+	$(focused.input).parent().next('.line').find('.input').focus();	
 	move_caret_to_end();
 }
 
 function move_line_up()
 {
-	var line = $(focused.input).parent();
+	var index = $(focused.input).parent().index();
 
-	var index = $(line).index();
-
-	if(index > 0)
+	if(index === 0)
 	{
-		$(line).insertBefore($(line).prev('.line'));
+		return;
 	}
 
-	focus_line(focused.input)
+	var inp = focused.input;
+
+	ninp = $(inp).parent().prev('.line').find('.input')[0];
+
+	var val = inp.value;
+	var nval = ninp.value;
+
+	var v = $(inp).data('variable');
+	var nv = $(ninp).data('variable');
+
+	var cv = '$@!#' + v.substring(1);
+	var cnv = '$@!#' + nv.substring(1);
+
+	var re = new RegExp("\\$" + v.substring(1), 'g');
+	var re2 = new RegExp("\\$" + nv.substring(1), 'g');
+
+	$('.input').each(function()
+	{
+		this.value = this.value.replace(re, cnv);
+		this.value = this.value.replace(re2, cv);
+		this.value = this.value.replace(/@!#/g, '');
+	});
+
+	val = inp.value;
+	nval = ninp.value;
+
+	inp.value = nval;
+	ninp.value = val;
+
+	focused.input = ninp;
+
+	update_results();
+
+	blur_focus();
 }
 
 function move_line_down()
 {
-	var line = $(focused.input).parent();
+	var index = $(focused.input).parent().index();
 
-	var index = $(line).index();
-
-	if(index < ($('.line').length - 1))
+	if(index === ($('.line').length - 1))
 	{
-		$(line).insertAfter($(line).next('.line'));
+		return;
 	}
 
-	focus_line(focused.input)
+	var inp = focused.input;
+
+	ninp = $(inp).parent().next('.line').find('.input')[0];
+
+	var val = inp.value;
+	var nval = ninp.value;
+
+	var v = $(inp).data('variable');
+	var nv = $(ninp).data('variable');
+
+	var cv = '$@!#' + v.substring(1);
+	var cnv = '$@!#' + nv.substring(1);
+
+	var re = new RegExp("\\$" + v.substring(1), 'g');
+	var re2 = new RegExp("\\$" + nv.substring(1), 'g');
+
+	$('.input').each(function()
+	{
+		this.value = this.value.replace(re, cnv);
+		this.value = this.value.replace(re2, cv);
+		this.value = this.value.replace(/@!#/g, '');
+	});
+
+	val = inp.value;
+	nval = ninp.value;
+
+	inp.value = nval;
+	ninp.value = val;
+
+	focused.input = ninp;
+
+	update_results();
+
+	blur_focus();
 }
 
 function cycle_inputs(direction)
@@ -892,7 +995,7 @@ function cycle_inputs(direction)
 
 		else
 		{
-			$($(focused.input).parent().next('.line').find('.input')).focus();
+			$(focused.input).parent().next('.line').find('.input').focus();
 		}
 	}
 
@@ -905,7 +1008,7 @@ function cycle_inputs(direction)
 
 		else
 		{
-			$($(focused.input).parent().prev('.line').find('.input')).focus();
+			$(focused.input).parent().prev('.line').find('.input').focus();
 		}
 	}
 }
@@ -1187,6 +1290,7 @@ function create_about()
 	s += "Shift + Enter does the same but also adds the previous line's variable into the new one.<br><br>";
 	s += "Shift + Space adds the variable from the line above to the current line.<br><br>";
 	s += "Up and Down arrows change the focus between lines.<br><br>";
+	s += "Shift + Up and Shift + Down move the lines up or down.<br><br>";
 	s += "Tab and Shift + Tab cycle the focus between lines.<br><br>";
 	s += "Escape clears a line, removes the line if already cleared, or closes popups.<br><br>";
 	s += "Constants and methods in the Reference will be added to the current line when clicked.<br><br>";
@@ -1504,7 +1608,7 @@ function adjust_volumes()
 
 function add_ans()
 {
-	var variable = $($(focused.input).parent().prev('.line').find('.input')).data('variable');
+	var variable = $(focused.input).parent().prev('.line').find('.input').data('variable');
 
 	if(variable !== undefined)
 	{
@@ -1613,7 +1717,7 @@ function test1()
 	{
 		$(this).val($(this).val() + s);
 
-		$($(this).parent().next('.line').find('.input')).val($(this).data('variable'));
+		$(this).parent().next('.line').find('.input').val($(this).data('variable'));
 	});
 
 	update_results();
