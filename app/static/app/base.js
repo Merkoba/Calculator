@@ -170,8 +170,8 @@ function draw_buttons()
 	place_button_wider('Down');
 	place_button_wider('New Line');
 	place_button_wider('Remove Last');
-	place_button_wider('Erase');
 	place_button_wider('Clear');
+	place_button_wider('Erase');
 
 	$('.button').each(function()
 	{
