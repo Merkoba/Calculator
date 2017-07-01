@@ -6,7 +6,7 @@ var reference;
 var about;
 var site_root;
 var save_enabled = true;
-var ls_options = 'options_v1';
+var ls_options = 'options_v2';
 
 var focused = {
 	input: null,
@@ -135,12 +135,16 @@ function key_detection()
 
 function draw_buttons()
 {
-	for(var i=1; i<10; i++)
-	{
-		place_button(i);
-	}
-
-	place_button(0);
+	place_button(1, 'Context: 0.1, Middle: 1/1');
+	place_button(2, 'Context: 0.2, Middle: 1/2');
+	place_button(3, 'Context: 0.3, Middle: 1/3');
+	place_button(4, 'Context: 0.4, Middle: 1/4');
+	place_button(5, 'Context: 0.5, Middle: 1/5');
+	place_button(6, 'Context: 0.6, Middle: 1/6');
+	place_button(7, 'Context: 0.7, Middle: 1/7');
+	place_button(8, 'Context: 0.8, Middle: 1/8');
+	place_button(9, 'Context: 0.9, Middle: 1/9');
+	place_button(0, 'Context: 00, Middle: 000');
 
 	place_button('.');
 	place_button(',');
@@ -154,10 +158,10 @@ function draw_buttons()
 	place_button('(');
 	place_button(')');
 	place_button('pow');
-	place_button('sqrt');
-	place_button('sin');
-	place_button('cos');
-	place_button('tan');
+	place_button('sqrt', 'Context: sqrt(2), Middle: sqrt(1/2)');
+	place_button('sin', 'Context: asin, Middle: asinh');
+	place_button('cos', 'Context: acos, Middle: acosh');
+	place_button('tan', 'Context: atan, Middle: atanh');
 	place_button('pi');
 
 	buttons_br();
@@ -173,16 +177,34 @@ function draw_buttons()
 	{
 		$(this).click(function()
 		{
-			press($(this).html());
+			press($(this).text());
 		});
+
+		$(this).on('auxclick', function(e)
+		{
+			press($(this).text(), e.which);
+		});
+
+		tippy(this, 
+		{
+			delay: [2000, 100],
+			animation: 'scale',
+			hideOnClick: false,
+			duration: 100,
+			arrow: true,
+			performance: true,
+			theme: 'transparent',
+			size: 'regular',
+			arrowSize: 'small'
+		});
+
+		disable_context_menu(this);
 	});
 }
 
-function place_button(i)
+function place_button(s, title='')
 {
-	var s = `<button class='button'>${i}</button>`;
-
-	$('#buttons').append(s);
+	$('#buttons').append(`<button title="${title}" class='button'>${s}</button>`);
 }
 
 function place_button_wider(i)
@@ -446,7 +468,7 @@ function format_result(n)
 	return `<span class='whole'>${whole}</span><span class='decimal'>${decimal}</span>`
 }
 
-function press(s)
+function press(s, aux=false)
 {
 	focus_line(focused.input);
 
@@ -516,6 +538,11 @@ function press(s)
 		s = "Math.sqrt(";
 	}
 
+	if(aux)
+	{
+		s = check_aux(s, aux);
+	}
+
 	var v = $(focused.input).data('variable');
 
 	if(s === v)
@@ -561,6 +588,94 @@ function press(s)
 	move_caret();
 
 	update_results();
+}
+
+function check_aux(s, aux)
+{
+	if(aux)
+	{
+		for(var i=1; i<10; i++)
+		{
+			if(s == i)
+			{
+				if(aux === 3)
+				{
+					 return "0." + i;
+				}
+				else if(aux === 2)
+				{
+					 return "1/" + i;
+				}
+			}
+		}
+
+		if(s == 0)
+		{
+			if(aux === 3)
+			{
+				 return "00";
+			}
+
+			else if(aux === 2)
+			{
+				 return "000";
+			}
+		}
+
+		if(s == "Math.cos(")
+		{
+			if(aux === 3)
+			{
+				 return "Math.acos(";
+			}
+
+			else if(aux === 2)
+			{
+				 return "Math.acosh(";
+			}
+		}
+
+		if(s == "Math.tan(")
+		{
+			if(aux === 3)
+			{
+				 return "Math.atan(";
+			}
+
+			else if(aux === 2)
+			{
+				 return "Math.atanh(";
+			}
+		}
+
+		if(s == "Math.sin(")
+		{
+			if(aux === 3)
+			{
+				 return "Math.asin(";
+			}
+
+			else if(aux === 2)
+			{
+				 return "Math.asinh(";
+			}
+		}
+
+		if(s == "Math.sqrt(")
+		{
+			if(aux === 3)
+			{
+				 return "Math.SQRT2";
+			}
+
+			else if(aux === 2)
+			{
+				 return "Math.SQRT1_2";
+			}
+		}
+	}
+
+	return s;
 }
 
 function clear_line(input)
@@ -904,7 +1019,7 @@ var resize_timer = (function()
 
 function play(what)
 {
-	if(options.sounds)
+	if(options.sound)
 	{
 		$('#' + what)[0].pause();
 		$('#' + what)[0].currentTime = 0;
@@ -1420,23 +1535,23 @@ function show_options()
 	{
 		s += "<input id='chk_format' type='checkbox'>";
 	}
-	s += "<br><br><br>Enable Sounds<br><br>";
+	s += "<br><br><br>Enable Sound<br><br>";
 
-	if(options.sounds)
+	if(options.sound)
 	{
-		s += "<input id='chk_sounds' type='checkbox' checked>";
+		s += "<input id='chk_sound' type='checkbox' checked>";
 	}
 
 	else
 	{
-		s += "<input id='chk_sounds' type='checkbox'>";
+		s += "<input id='chk_sound' type='checkbox'>";
 	}
 
 	msg(s);
 
-	$('#chk_sounds').change(function()
+	$('#chk_sound').change(function()
 	{
-		options.sounds = $(this).prop('checked');
+		options.sound = $(this).prop('checked');
 		update_options();
 	});
 
@@ -1459,7 +1574,7 @@ function get_options()
 
 	if(options === null)
 	{
-		options = {sounds: true, format: true};
+		options = {sound: true, format: true};
 		update_options();
 	}
 }
@@ -1488,4 +1603,9 @@ function test1()
 	});
 
 	update_results();
+}
+
+function disable_context_menu(el)
+{
+	el.addEventListener('contextmenu', event => event.preventDefault());
 }

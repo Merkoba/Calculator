@@ -118,6 +118,7 @@ body
 
 #title
 {
+	cursor: default;
 	padding-top: 0.7em;
 	padding-bottom: 0.7em;
 	font-size: 1.3em;
