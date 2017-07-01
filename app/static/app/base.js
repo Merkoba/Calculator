@@ -160,16 +160,16 @@ function key_detection()
 
 function draw_buttons()
 {
-	place_button(1, 'Context: 0.1, Middle: 1/1');
-	place_button(2, 'Context: 0.2, Middle: 1/2');
-	place_button(3, 'Context: 0.3, Middle: 1/3');
-	place_button(4, 'Context: 0.4, Middle: 1/4');
-	place_button(5, 'Context: 0.5, Middle: 1/5');
-	place_button(6, 'Context: 0.6, Middle: 1/6');
-	place_button(7, 'Context: 0.7, Middle: 1/7');
-	place_button(8, 'Context: 0.8, Middle: 1/8');
-	place_button(9, 'Context: 0.9, Middle: 1/9');
-	place_button(0, 'Context: 00, Middle: 000');
+	place_button(1, 'Right Click: 0.1, Middle Click: 1/1');
+	place_button(2, 'Right Click: 0.2, Middle Click: 1/2');
+	place_button(3, 'Right Click: 0.3, Middle Click: 1/3');
+	place_button(4, 'Right Click: 0.4, Middle Click: 1/4');
+	place_button(5, 'Right Click: 0.5, Middle Click: 1/5');
+	place_button(6, 'Right Click: 0.6, Middle Click: 1/6');
+	place_button(7, 'Right Click: 0.7, Middle Click: 1/7');
+	place_button(8, 'Right Click: 0.8, Middle Click: 1/8');
+	place_button(9, 'Right Click: 0.9, Middle Click: 1/9');
+	place_button(0, 'Right Click: 00, Middle Click: 000');
 
 	place_button('.');
 	place_button(',');
@@ -183,16 +183,16 @@ function draw_buttons()
 	place_button('(');
 	place_button(')');
 	place_button('pow');
-	place_button('sqrt', 'Context: Cube Root');
-	place_button('sin', 'Context: asin, Middle: asinh');
-	place_button('cos', 'Context: acos, Middle: acosh');
-	place_button('tan', 'Context: atan, Middle: atanh');
+	place_button('sqrt', 'Right Click: Cube Root');
+	place_button('sin', 'Right Click: asin, Middle Click: asinh');
+	place_button('cos', 'Right Click: acos, Middle Click: acosh');
+	place_button('tan', 'Right Click: atan, Middle Click: atanh');
 	place_button('pi');
 
 	buttons_br();
 
-	place_button_wider('Up', 'Context: Move Line Up');
-	place_button_wider('Down', 'Context: Move Line Down');
+	place_button_wider('Up', 'Right Click: Move Line Up');
+	place_button_wider('Down', 'Right Click: Move Line Down');
 	place_button_wider('New Line');
 	place_button_wider('Remove Last');
 	place_button_wider('Clear');
@@ -643,7 +643,7 @@ function check_aux(s, aux)
 				{
 					 return "0." + i;
 				}
-				
+
 				else if(aux === 2)
 				{
 					 return "1/" + i;
