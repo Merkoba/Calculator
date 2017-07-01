@@ -10,8 +10,7 @@ var ls_options = 'options_v1';
 
 var focused = {
 	input: null,
-	caretpos: 0,
-	preval: ''
+	caretpos: 0
 }
 
 function init()
@@ -279,7 +278,6 @@ function add_line(value=false)
 	{
 		focused.input = this;
 		set_caretpos();
-		update_preval();
 		change_borders();
 	});
 
@@ -572,7 +570,6 @@ function clear_line(input)
 	update_results();
 }
 
-
 function update_results()
 {
 	var variables = {};
@@ -618,13 +615,11 @@ function update_results()
 			return true;
 		}
 
-		for(var i=0; i<vars.length; i++)
-		{
+		var matches = val.match(/\$[a-z]/g);
 
-			if(val.indexOf(vars[i]) !== -1)
-			{
-				variables[v].edges.push(vars[i]);
-			}
+		if(matches !== null)
+		{
+			variables[v].edges = matches;
 		}
 	});
 
@@ -666,8 +661,24 @@ function update_results()
 		}
 
 		if(!acyclic)
-		{
-			not_acyc();
+		{	
+			$('.input').each(function()
+			{
+				var v = $(this).data('variable');
+
+				var letter = v.substring(1);
+
+				if(sorted.indexOf(v) !== -1)
+				{
+					get_result($('#' + letter));
+				}
+
+				else
+				{
+					show_result($('#' + letter), 'Not Acyclical');					
+				}
+			});
+
 			return;
 		}
 
@@ -678,29 +689,11 @@ function update_results()
 		}
 	}
 
-	update_preval();
-
 	for(var i=0; i<sorted.length; i++)
 	{
 		var letter = sorted[i].substring(1);
-
 		get_result($('#' + letter));
 	}
-}
-
-function update_preval()
-{
-	focused.preval = $(focused.input).val();
-}
-
-function not_acyc()
-{
-	console.log('Not Acyclic');
-
-	$(focused.input).val(focused.preval);
-	focused.caretpos = focused.input.selectionStart;
-
-	play('nope');
 }
 
 function focus_line(input)
@@ -716,7 +709,7 @@ function line_up()
 
 function line_down()
 {
-	$($(focused.input).parent().next('.line').find('.input')).focus();
+	$($(focused.input).parent().next('.line').find('.input')).focus();	
 	move_caret_to_end();
 }
 
@@ -1411,19 +1404,7 @@ function show_options()
 {
 	var s = "";
 
-	s += "Enable Sounds<br><br>";
-
-	if(options.sounds)
-	{
-		s += "<input id='chk_sounds' type='checkbox' checked>";
-	}
-
-	else
-	{
-		s += "<input id='chk_sounds' type='checkbox'>";
-	}
-
-	s += "<br><br><br>Format Results<br><br>";
+	s += "Format Results<br><br>";
 
 	if(options.format)
 	{
@@ -1433,6 +1414,17 @@ function show_options()
 	else
 	{
 		s += "<input id='chk_format' type='checkbox'>";
+	}
+	s += "<br><br><br>Enable Sounds<br><br>";
+
+	if(options.sounds)
+	{
+		s += "<input id='chk_sounds' type='checkbox' checked>";
+	}
+
+	else
+	{
+		s += "<input id='chk_sounds' type='checkbox'>";
 	}
 
 	msg(s);
