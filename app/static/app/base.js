@@ -587,8 +587,6 @@ function update_results()
 		vr.edges = [];
 	});
 
-	var vars = Object.keys(variables);
-
 	$('.input').each(function()
 	{
 		var v = $(this).data('variable');
@@ -615,7 +613,7 @@ function update_results()
 			return true;
 		}
 
-		var matches = val.match(/\$[a-z]/g);
+		var matches = val.match(/\$[a-z]+/g);
 
 		if(matches !== null)
 		{
@@ -682,7 +680,7 @@ function update_results()
 			return;
 		}
 
-		if(n > 5000)
+		if(n > 10000)
 		{
 			console.log('Exceeded Loop Limit');
 			return;
@@ -1457,4 +1455,30 @@ function get_options()
 		options = {sounds: true, format: true};
 		update_options();
 	}
+}
+
+function fill_sheet()
+{
+	var n = 702 - $('.line').length;
+
+	for(var i=0; i<701; i++)
+	{
+		add_line();
+	}
+}
+
+function test1()
+{
+	fill_sheet();
+
+	var s = "+3*45-56/(43**4)+Math.acosh(8.9)";
+
+	$('.input').each(function()
+	{
+		$(this).val($(this).val() + s);
+
+		$($(this).parent().next('.line').find('.input')).val($(this).data('variable'));
+	});
+
+	update_results();
 }
