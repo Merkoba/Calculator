@@ -493,6 +493,36 @@ function format_result(n)
 
 function press(s, aux=false)
 {
+	if(s === "sin")
+	{
+		s = "Math.sin(";
+	}
+
+	else if(s === "cos")
+	{
+		s = "Math.cos(";
+	}
+
+	else if(s === "tan")
+	{
+		s = "Math.tan(";
+	}
+
+	else if(s === "pi")
+	{
+		s = "Math.PI";
+	}
+
+	else if(s === "pow")
+	{
+		s = "**";
+	}
+
+	else if(s === "sqrt")
+	{
+		s = "Math.sqrt(";
+	}
+
 	if(aux)
 	{
 		s = check_aux(s, aux);
@@ -544,36 +574,6 @@ function press(s, aux=false)
 		line_down();
 		focus_line(focused.input);
 		return;
-	}
-
-	else if(s === "sin")
-	{
-		s = "Math.sin(";
-	}
-
-	else if(s === "cos")
-	{
-		s = "Math.cos(";
-	}
-
-	else if(s === "tan")
-	{
-		s = "Math.tan(";
-	}
-
-	else if(s === "pi")
-	{
-		s = "Math.PI";
-	}
-
-	else if(s === "pow")
-	{
-		s = "**";
-	}
-
-	else if(s === "sqrt")
-	{
-		s = "Math.sqrt(";
 	}
 
 	var v = $(focused.input).data('variable');
@@ -643,6 +643,7 @@ function check_aux(s, aux)
 				{
 					 return "0." + i;
 				}
+				
 				else if(aux === 2)
 				{
 					 return "1/" + i;
