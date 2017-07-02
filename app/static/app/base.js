@@ -291,6 +291,7 @@ function add_line(value=false)
 
 	if(iterations > letters.length)
 	{
+		play('nope');
 		return;
 	}
 
@@ -369,9 +370,8 @@ function add_line_after()
 	}
 
 	else
-	{
-		focus_next();	
-		move_lines_down();
+	{	
+		move_lines_down(true);
 	}
 }
 
@@ -386,6 +386,7 @@ function move_lines_up()
 
 	if(line_length === 1)
 	{
+		play('nope');
 		return;
 	}
 
@@ -459,13 +460,19 @@ function move_lines_up()
 	blur_focus();
 }
 
-function move_lines_down()
+function move_lines_down(alt=false)
 {
 	var line_length = $('.line').length;
 
-	if(line_length === letters.length)
+	if(line_length === get_max_line_length())
 	{
+		play('nope');
 		return;
+	}
+
+	if(alt)
+	{
+		focus_next();
 	}
 
 	var input = focused.input;
@@ -2058,4 +2065,9 @@ function focus_if_isnt()
 	{
 		focus_line(focused.input);
 	}
+}
+
+function get_max_line_length()
+{
+	return get_var_index('$zz') + 1;
 }
