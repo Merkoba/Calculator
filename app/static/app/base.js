@@ -192,7 +192,7 @@ function draw_buttons()
 
 	place_button_wider('Up', 'Right Click: Move Line Up');
 	place_button_wider('Down', 'Right Click: Move Line Down');
-	place_button_wider('New Line');
+	place_button_wider('New Line', 'Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before');
 	place_button_wider('Remove Line', 'Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line');
 	place_button_wider('Clear', 'Requires Double Click');
 	place_button_wider('Erase');
@@ -356,7 +356,23 @@ function add_line(value=false)
 	focus_line(input);
 }
 
+function add_line_before()
+{
+	move_lines_down();
+}
+
+function add_line_after()
+{
+	focus_next();	
+	move_lines_down();
+}
+
 function remove_line()
+{
+	move_lines_up();
+}
+
+function move_lines_up()
 {
 	var line_length = $('.line').length;
 
@@ -389,6 +405,16 @@ function remove_line()
 		var inp = $(ln).find('.input')[0];
 		var val = inp.value;
 
+		if(val.trim() === '')
+		{
+			continue;
+		}
+
+		if(val.trim().startsWith('//'))
+		{
+			continue;
+		}
+
 		val = val.replace(/\$[a-z]+/g, function(match)
 		{
 			if(match === v)
@@ -396,11 +422,14 @@ function remove_line()
 				return '';
 			}
 
-			var ni = $('#' + match.substring(1)).parent().index();
+			var ni = get_var_index(match);
 
 			if(ni > index)
 			{
-				return decrease_var(match);
+				if($('#' + match.substring(1)).length > 0)
+				{
+					return decrease_var(match);
+				}
 			}
 
 			return match;
@@ -412,7 +441,6 @@ function remove_line()
 	for(var i=index + 1; i<line_length; i++)
 	{
 		var inp = $($('.line').get(i)).find('.input')[0];
-
 		var ninp = $(inp).parent().prev('.line').find('.input')[0];
 
 		ninp.value = inp.value;
@@ -426,35 +454,196 @@ function remove_line()
 	blur_focus();
 }
 
+function move_lines_down()
+{
+	var line_length = $('.line').length;
+
+	if(line_length === letters.length)
+	{
+		return;
+	}
+
+	var input = focused.input;
+	var line = $(input).parent();
+	var v = $(input).data('variable');
+	var index = $(line).index();
+	var last_index = $('.line').last().index();
+
+	for(var i=0; i<line_length; i++)
+	{
+		var ln = $('.line').get(i);
+		var inp = $(ln).find('.input')[0];
+		var val = inp.value;
+
+		if(val.trim() === '')
+		{
+			continue;
+		}
+
+		if(val.trim().startsWith('//'))
+		{
+			continue;
+		}
+
+		val = val.replace(/\$[a-z]+/g, function(match)
+		{
+			if(match === v)
+			{
+				return '';
+			}
+
+			var ni = get_var_index(match);
+
+			if(ni > index)
+			{
+				if($('#' + match.substring(1)).length > 0)
+				{
+					return increase_var(match);
+				}
+			}
+
+			return match;
+		});;
+
+		inp.value = val;
+	}
+
+	add_line();
+
+	line_length = $('.line').length;
+
+	for(var i=line_length - 1; i>index; i--)
+	{
+		var inp = $($('.line').get(i)).find('.input')[0];
+		var ninp = $(inp).parent().prev('.line').find('.input')[0];
+
+		inp.value = ninp.value;
+	}
+
+	input.value = '';
+
+	focus_line(input);
+
+	update_results();
+
+	blur_focus();
+}
+
 function decrease_var(v)
 {
 	var letter = v.substring(1);
 
-	var keep_changing = true;
-
 	var res = '';
 
-	for(var i=letter.length - 1; i>=0; i++)
-	{
-		if(!keep_changing)
-		{
-			break;
-		}
+	var decrease_next = true;
 
-		if(letter[i] === letters[0])
+	for(var i=letter.length - 1; i>=0; i--)
+	{
+		if(decrease_next)
 		{
-			res += letters[letters.length - 1];
-			keep_changing = true;
+			if(letter[i] === letters[0])
+			{
+				if(i === 0)
+				{
+					break;
+				}
+
+				else
+				{
+					res += letters[letters.length - 1];
+					decrease_next = true;
+				}
+			}
+
+			else
+			{
+				res += letters[letters.indexOf(letter[i]) - 1];
+				decrease_next = false;
+			}
 		}
 
 		else
 		{
-			res += letters[letters.indexOf(letter[i]) - 1];
-			keep_changing = false;
+			res += letters[letters.indexOf(letter[i])];
 		}
 	}
 
 	return '$' + res.split('').reverse().join('');
+}
+
+function increase_var(v)
+{
+	var letter = v.substring(1);
+
+	var res = '';
+
+	var increase_next = true;
+
+	for(var i=letter.length - 1; i>=0; i--)
+	{
+		if(increase_next)
+		{
+			if(letter[i] === letters[letters.length - 1])
+			{
+				if(i === 0)
+				{
+					break;
+				}
+
+				else
+				{
+					res += letters[0];
+					increase_next = true;
+				}
+			}
+
+			else
+			{
+				res += letters[letters.indexOf(letter[i]) + 1];
+				increase_next = false;
+			}
+		}
+
+		else
+		{
+			res += letters[letters.indexOf(letter[i])];
+		}
+	}
+
+	return '$' + res.split('').reverse().join('');
+}
+
+function get_var_index(v)
+{
+	var letter = v.substring(1);
+
+	var n = letter.length - 1;
+
+	var index = 0;
+
+	var last_t;
+
+	for(var i=0; i<letter.length; i++)
+	{
+		var t = letters.indexOf(letter[i]) + 1;
+
+		var p = Math.pow(letters.length, n);
+		
+		t *= p;
+
+		if(t === 0)
+		{
+			t += letters.indexOf(letter[i]);
+		}
+		
+		index += t;
+
+		n -= 1;
+	}
+
+	index -= 1;
+
+	return index;
 }
 
 function remove_last_line()
@@ -500,7 +689,7 @@ function get_result(input)
 	{
 		var val = $(input).val();
 
-		if(val.startsWith('//'))
+		if(val.trim().startsWith('//'))
 		{
 			show_comment(input);
 			return;
@@ -835,6 +1024,21 @@ function check_aux(s, aux)
 				 return false;
 			}
 		}
+
+		else if(s == "New Line")
+		{
+			if(aux === 3)
+			{
+				 add_line_after();
+				 return false;
+			}
+
+			else if(aux === 2)
+			{
+				 add_line_before();
+				 return false;
+			}
+		}
 	}
 
 	return false;
@@ -892,7 +1096,7 @@ function update_results()
 			return true;
 		}
 
-		if(val.startsWith('//'))
+		if(val.trim().startsWith('//'))
 		{
 			return true;
 		}
@@ -983,15 +1187,25 @@ function focus_line(input)
 	$(input).focus();
 }
 
+function focus_next()
+{
+	$(focused.input).parent().next('.line').find('.input').focus();	
+}
+
+function focus_prev()
+{
+	$(focused.input).parent().prev('.line').find('.input').focus();	
+}
+
 function line_up()
 {
-	$(focused.input).parent().prev('.line').find('.input').focus();
+	focus_prev();
 	move_caret_to_end();
 }
 
 function line_down()
 {
-	$(focused.input).parent().next('.line').find('.input').focus();	
+	focus_next();	
 	move_caret_to_end();
 }
 
@@ -1103,7 +1317,7 @@ function cycle_inputs(direction)
 
 		else
 		{
-			$(focused.input).parent().next('.line').find('.input').focus();
+			focus_next();
 		}
 	}
 
@@ -1116,7 +1330,7 @@ function cycle_inputs(direction)
 
 		else
 		{
-			$(focused.input).parent().prev('.line').find('.input').focus();
+			focus_prev();
 		}
 	}
 }
