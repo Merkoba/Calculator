@@ -363,8 +363,16 @@ function add_line_before()
 
 function add_line_after()
 {
-	focus_next();	
-	move_lines_down();
+	if($(focused.input).parent().index() === $('.line').length - 1)
+	{
+		add_line();
+	}
+
+	else
+	{
+		focus_next();	
+		move_lines_down();
+	}
 }
 
 function remove_line()
