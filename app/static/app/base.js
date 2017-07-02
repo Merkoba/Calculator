@@ -160,16 +160,16 @@ function key_detection()
 
 function draw_buttons()
 {
-	place_button(1, 'Right Click: 0.1, Middle Click: 1/1');
-	place_button(2, 'Right Click: 0.2, Middle Click: 1/2');
-	place_button(3, 'Right Click: 0.3, Middle Click: 1/3');
-	place_button(4, 'Right Click: 0.4, Middle Click: 1/4');
-	place_button(5, 'Right Click: 0.5, Middle Click: 1/5');
-	place_button(6, 'Right Click: 0.6, Middle Click: 1/6');
-	place_button(7, 'Right Click: 0.7, Middle Click: 1/7');
-	place_button(8, 'Right Click: 0.8, Middle Click: 1/8');
-	place_button(9, 'Right Click: 0.9, Middle Click: 1/9');
-	place_button(0, 'Right Click: 00, Middle Click: 000');
+	place_button(1, 'Right Click: 0.1 &nbsp;|&nbsp; Middle Click: 1/1');
+	place_button(2, 'Right Click: 0.2 &nbsp;|&nbsp; Middle Click: 1/2');
+	place_button(3, 'Right Click: 0.3 &nbsp;|&nbsp; Middle Click: 1/3');
+	place_button(4, 'Right Click: 0.4 &nbsp;|&nbsp; Middle Click: 1/4');
+	place_button(5, 'Right Click: 0.5 &nbsp;|&nbsp; Middle Click: 1/5');
+	place_button(6, 'Right Click: 0.6 &nbsp;|&nbsp; Middle Click: 1/6');
+	place_button(7, 'Right Click: 0.7 &nbsp;|&nbsp; Middle Click: 1/7');
+	place_button(8, 'Right Click: 0.8 &nbsp;|&nbsp; Middle Click: 1/8');
+	place_button(9, 'Right Click: 0.9 &nbsp;|&nbsp; Middle Click: 1/9');
+	place_button(0, 'Right Click: 00 &nbsp;|&nbsp; Middle Click: 000');
 
 	place_button('.');
 	place_button(',');
@@ -184,9 +184,9 @@ function draw_buttons()
 	place_button(')');
 	place_button('pow');
 	place_button('sqrt', 'Right Click: Cube Root');
-	place_button('sin', 'Right Click: asin, Middle Click: asinh');
-	place_button('cos', 'Right Click: acos, Middle Click: acosh');
-	place_button('tan', 'Right Click: atan, Middle Click: atanh');
+	place_button('sin', 'Right Click: asin &nbsp;|&nbsp; Middle Click: asinh');
+	place_button('cos', 'Right Click: acos &nbsp;|&nbsp; Middle Click: acosh');
+	place_button('tan', 'Right Click: atan &nbsp;|&nbsp; Middle Click: atanh');
 	place_button('pi');
 
 	buttons_br();
@@ -194,16 +194,29 @@ function draw_buttons()
 	place_button_wider('Up', 'Right Click: Move Line Up');
 	place_button_wider('Down', 'Right Click: Move Line Down');
 	place_button_wider('New Line');
-	place_button_wider('Remove Last');
-	place_button_wider('Clear');
+	place_button_wider('Remove Line', 'Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line');
+	place_button_wider('Clear', 'Requires Double Click');
 	place_button_wider('Erase');
 
 	$('.button').each(function()
 	{
-		$(this).click(function()
+		var dblclickers = ["Remove Line", "Clear"];
+
+		if(dblclickers.indexOf($(this).text()) !== -1)
 		{
-			press($(this).text());
-		});
+			$(this).dblclick(function()
+			{
+				press($(this).text());
+			});
+		}
+
+		else
+		{
+			$(this).click(function()
+			{
+				press($(this).text());
+			});
+		}
 
 		$(this).on('auxclick', function(e)
 		{
@@ -218,7 +231,6 @@ function draw_buttons()
 			duration: 100,
 			arrow: true,
 			performance: true,
-			theme: 'transparent',
 			size: 'regular',
 			arrowSize: 'small'
 		});
@@ -345,6 +357,107 @@ function add_line(value=false)
 	focus_line(input);
 }
 
+function remove_line()
+{
+	var line_length = $('.line').length;
+
+	if(line_length === 1)
+	{
+		return;
+	}
+
+	var input = focused.input;
+	var line = $(input).parent();
+	var v = $(input).data('variable');
+	var index = $(line).index();
+	var last_index = $('.line').last().index();
+
+	if(index === (line_length - 1))
+	{
+		if(input === focused.input)
+		{
+			$(line).prev('.line').find('.input').focus();
+		}
+
+		update_variable(input, undefined);
+		$(line).remove();
+		return;
+	}
+
+	for(var i=0; i<line_length; i++)
+	{
+		var ln = $('.line').get(i);
+		var inp = $(ln).find('.input')[0];
+		var val = inp.value;
+
+		val = val.replace(/\$[a-z]+/g, function(match)
+		{
+			if(match === v)
+			{
+				return '';
+			}
+
+			var ni = $('#' + match.substring(1)).parent().index();
+
+			if(ni > index)
+			{
+				return decrease_var(match);
+			}
+
+			return match;
+		});;
+
+		inp.value = val;
+	}
+
+	for(var i=index + 1; i<line_length; i++)
+	{
+		var inp = $($('.line').get(i)).find('.input')[0];
+
+		var ninp = $(inp).parent().prev('.line').find('.input')[0];
+
+		ninp.value = inp.value;
+		inp.value = '';
+	}
+
+	$('.line').last().remove();
+
+	update_results();
+
+	blur_focus();
+}
+
+function decrease_var(v)
+{
+	var letter = v.substring(1);
+
+	var keep_changing = true;
+
+	var res = '';
+
+	for(var i=letter.length - 1; i>=0; i++)
+	{
+		if(!keep_changing)
+		{
+			break;
+		}
+
+		if(letter[i] === letters[0])
+		{
+			res += letters[letters.length - 1];
+			keep_changing = true;
+		}
+
+		else
+		{
+			res += letters[letters.indexOf(letter[i]) - 1];
+			keep_changing = false;
+		}
+	}
+
+	return '$' + res.split('').reverse().join('');
+}
+
 function remove_last_line()
 {
 	if($('.line').length === 1)
@@ -370,20 +483,6 @@ function remove_last_line()
 	if(val !== '')
 	{
 		update_results();
-	}
-}
-
-function reset_sheet()
-{
-	var conf = confirm("Are you sure you want to clear everything?");
-
-	if(conf)
-	{
-		$a=$b=$c=$d=$e=$f=$g=$h=$i=$j=$k=$l=$m=$n=$o=$p=$q=$r=$s=$t=$u=$v=$w=$x=$y=$z = undefined;
-
-		$('#lines').html('');
-
-		add_line();
 	}
 }
 
@@ -555,9 +654,9 @@ function press(s, aux=false)
 		return;
 	}
 
-	else if(s === "Remove Last")
+	else if(s === "Remove Line")
 	{
-		remove_last_line();
+		remove_line();
 		focus_line(focused.input);
 		return;
 	}
@@ -725,6 +824,15 @@ function check_aux(s, aux)
 			if(aux === 3)
 			{
 				 move_line_down();
+				 return false;
+			}
+		}
+
+		else if(s == "Remove Line")
+		{
+			if(aux === 3)
+			{
+				 remove_last_line();
 				 return false;
 			}
 		}
