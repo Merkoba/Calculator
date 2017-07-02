@@ -57,10 +57,7 @@ function key_detection()
 
 				if($(focused.input).val() === '')
 				{
-					if($('.input').last()[0] === focused.input)
-					{
-						remove_last_line();
-					}
+					remove_line();
 				}
 
 				else
@@ -85,6 +82,8 @@ function key_detection()
 		{
 			return;
 		}
+
+		focus_if_isnt();
 
 		var code = e.keyCode;
 
@@ -1835,4 +1834,12 @@ function test1()
 function disable_context_menu(el)
 {
 	el.addEventListener('contextmenu', event => event.preventDefault());
+}
+
+function focus_if_isnt()
+{
+	if(focused.input !== document.activeElement)
+	{
+		focus_line(focused.input);
+	}
 }
