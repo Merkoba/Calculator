@@ -83,8 +83,6 @@ function key_detection()
 			return;
 		}
 
-		focus_if_isnt();
-
 		var code = e.keyCode;
 
 		if(code === 13)
@@ -154,6 +152,8 @@ function key_detection()
 				e.preventDefault();
 			}
 		}
+
+		focus_if_isnt();
 	});
 }
 
