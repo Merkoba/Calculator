@@ -424,12 +424,9 @@ function move_lines_up()
 
 			var ni = get_var_index(match);
 
-			if(ni > index)
+			if(ni > index && ni < line_length)
 			{
-				if($('#' + match.substring(1)).length > 0)
-				{
-					return decrease_var(match);
-				}
+				return decrease_var(match);
 			}
 
 			return match;
@@ -494,12 +491,9 @@ function move_lines_down()
 
 			var ni = get_var_index(match);
 
-			if(ni > index)
+			if(ni > index && ni < line_length)
 			{
-				if($('#' + match.substring(1)).length > 0)
-				{
-					return increase_var(match);
-				}
+				return increase_var(match);
 			}
 
 			return match;
