@@ -1,5 +1,4 @@
 var letters = "abcdefghijklmnopqrstuvwxyz";
-var $a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u,$v,$w,$x,$y,$z;
 
 var msg_open = false;
 var reference;
@@ -377,7 +376,15 @@ function add_line_after()
 
 function remove_line()
 {
-	move_lines_up();
+	if($(focused.input).parent().index() === $('.line').length - 1)
+	{
+		remove_last_line();
+	}
+
+	else
+	{
+		move_lines_up();
+	}
 }
 
 function move_lines_up()
@@ -403,8 +410,10 @@ function move_lines_up()
 			$(line).prev('.line').find('.input').focus();
 		}
 
-		update_variable(input, undefined);
 		$(line).remove();
+
+		update_results();
+
 		return;
 	}
 
@@ -673,14 +682,9 @@ function remove_last_line()
 		$(line).prev('.line').find('.input').focus();
 	}
 
-	update_variable(input, undefined);
-
 	$(line).remove();
 
-	if(val !== '')
-	{
-		update_results();
-	}
+	update_results();
 }
 
 function hide_plus()
@@ -704,7 +708,7 @@ function get_result(input)
 			return;
 		}
 
-		if(val.length === 0)
+		if(val.trim().length === 0)
 		{
 			update_variable(input, undefined);
 			return;
@@ -1069,6 +1073,8 @@ function clear_line(input)
 
 function update_results()
 {
+	undefine_variables();
+
 	var variables = {};
 
 	$('.input').each(function()
@@ -2070,4 +2076,17 @@ function focus_if_isnt()
 function get_max_line_length()
 {
 	return get_var_index('$zz') + 1;
+}
+
+function undefine_variables()
+{
+	var pattern = /\$[a-z]+/;
+
+	for (var varName in window) 
+	{
+		if (pattern.test(varName)) 
+		{
+			window[varName] = undefined;
+		}
+	}
 }
