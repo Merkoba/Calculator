@@ -286,22 +286,21 @@ function add_line(value=false)
 {
 	var num_lines = $('.line').length;
 
-	var iterations = Math.floor(num_lines / letters.length);
-
-	if(iterations > letters.length)
+	if(num_lines === get_max_line_length())
 	{
 		play('nope');
 		return;
 	}
 
-	if(iterations > 0)
+	if(num_lines === 0)
 	{
-		var letter = letters[iterations - 1] + letters[num_lines - (iterations * letters.length)];
+		var letter = 'a';
 	}
 
 	else
 	{
-		var letter = letters[num_lines];
+		var last_var = $('.input').last().data('variable');
+		var letter = increase_var(last_var).substring(1);
 	}
 
 	if(!value)
@@ -603,15 +602,12 @@ function increase_var(v)
 		{
 			if(letter[i] === letters[letters.length - 1])
 			{
-				if(i === 0)
-				{
-					break;
-				}
+				res += letters[0];
+				increase_next = true;
 
-				else
+				if(i == 0)
 				{
-					res += letters[0];
-					increase_next = true;
+					res += 'a';
 				}
 			}
 
