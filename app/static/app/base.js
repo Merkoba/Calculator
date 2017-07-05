@@ -6,6 +6,7 @@ var about;
 var site_root;
 var save_enabled = true;
 var ls_options = 'options_v2';
+var ls_user_data = 'user_data_v1';
 
 var focused = {
 	input: null,
@@ -23,6 +24,7 @@ function init()
 	get_site_root();
 	adjust_volumes();
 	get_options();
+	get_user_data();
 
 	if(content === '')
 	{
@@ -1570,7 +1572,21 @@ function on_save_response(response)
 		s += "<span class='linky2' onclick=\"copy_to_clipboard('" + url + "');hide_overlay()\">Copy To Clipboard</span>";
 
 		msg(s);
+
+		add_to_saved(url);
 	}
+}
+
+function add_to_saved(url)
+{
+	if(user_data.saved === undefined)
+	{
+		user_data.saved = [];
+	}
+
+	user_data.saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url]);
+
+	update_user_data();
 }
 
 function copy_to_clipboard(s)
@@ -1954,6 +1970,9 @@ function show_more()
 	var s = "";
 
 	s += "<div class='linky2' id='more_options'>Options</div><br><br>";
+
+	s += "<div class='linky2' id='more_saved'>Saved</div><br><br>";
+
 	s += "<div class='linky2' id='more_about'>About</div>";
 
 	msg(s);
@@ -1963,6 +1982,11 @@ function show_more()
 	$('#more_options').click(function()
 	{
 		show_options();
+	});
+
+	$('#more_saved').click(function()
+	{
+		show_saved();
 	});
 
 	$('#more_about').click(function()
@@ -2027,6 +2051,49 @@ function get_options()
 	{
 		options = {sound: true, format: true};
 		update_options();
+	}
+}
+
+function get_user_data()
+{
+	user_data = JSON.parse(localStorage.getItem(ls_user_data));
+
+	if(user_data === null)
+	{
+		user_data = {};
+		update_user_data();
+	}
+}
+
+function update_user_data()
+{
+	localStorage.setItem(ls_user_data, JSON.stringify(user_data));
+}
+
+function show_saved()
+{
+	if(user_data.saved === undefined)
+	{
+		msg('Nothing saved yet.');
+	}
+
+	else
+	{
+		var s = "";
+		
+		var n = Math.min(100, user_data.saved.length);
+
+		for(var i=0; i<n; i++)
+		{
+			s += "<a class='ancher1' target=_blank href='" + user_data.saved[i][1] + "'>" + user_data.saved[i][0] + "</a>";
+
+			if(i < n - 1)
+			{
+				s += "<br><br>";
+			}
+		}
+
+		msg(s);
 	}
 }
 
