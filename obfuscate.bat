@@ -1,0 +1,1 @@
+javascript-obfuscator C:\Users\yo\Documents\calculator\app\static\app\base.js --output C:\Users\yo\Documents\calculator\app\static\app\base_o.js --mangle true

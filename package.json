@@ -1,0 +1,9 @@
+{
+  "name": "Calculator",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "obfuscate": "javascript-obfuscator"
+  },
+  "dependencies": {}
+}
