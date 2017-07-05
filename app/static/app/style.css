@@ -259,3 +259,8 @@ input[type="checkbox"]
 	width: 2em;
 	height: 2em;
 }
+
+select
+{
+	font-size: 1.1em;
+}

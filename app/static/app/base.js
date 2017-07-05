@@ -9,6 +9,8 @@ var base = (function()
 	var save_enabled = true;
 	var ls_options = 'options_v2';
 	var ls_user_data = 'user_data_v1';
+	var options;
+	var user_data;
 
 	var focused = {
 		input: null,
@@ -755,7 +757,7 @@ var base = (function()
 		window[$(input).data('variable')] = val;
 	}
 
-	function round(num, places) 
+	function round_number(num, places) 
 	{
 		if(!places)
 		{
@@ -763,11 +765,17 @@ var base = (function()
 		}
 
 		var val = Math.pow(10, places);
+
 		return Math.round(num * val) / val;
 	}
 
 	function format_result(n)
 	{
+		if(options.round)
+		{
+			n = round_number(n, options.round_places);
+		}
+
 		var ns = n.toString();
 
 		if(ns.indexOf('.') !== -1)
@@ -1634,7 +1642,8 @@ var base = (function()
 		s += "Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>";
 		s += "Calculations are simply JavaScript. You have all the Math module at your disposal. Only certain common functions are available as buttons but you can type anything you want.<br><br>";
 		s += "There's a reference popup with the Math constants and methods.<br><br>";
-		s += "You can save a sheet for future use or sharing.<br><br><br>";
+		s += "You can save a sheet for future use or sharing.<br><br>";
+		s += "Note: Formatting and rounding are only applied to the displayed results, not to internal calculations.<br><br><br>";
 
 		s += "<span class='b2'>Shortcuts</span><br><br>";
 		s += "Enter will focus the next available empty line or create a new one.<br><br>";
@@ -2012,6 +2021,34 @@ var base = (function()
 		{
 			s += "<input id='chk_format' type='checkbox'>";
 		}
+		
+		s += "<br><br><br>Round Results<br><br>";
+
+		if(options.round)
+		{
+			s += "<input id='chk_round' type='checkbox' checked>";
+		}
+
+		else
+		{
+			s += "<input id='chk_round' type='checkbox'>";
+		}
+
+		s += "<div id='op_round_places'>";
+
+		s += "<br><br><br>Round Places<br><br>";
+
+		s += "<select id='sel_round_places'>";
+		s += "<option value='0'>0</option>";
+		s += "<option value='1'>1</option>";
+		s += "<option value='2'>2</option>";
+		s += "<option value='3'>3</option>";
+		s += "<option value='4'>4</option>";
+		s += "<option value='5'>5</option>";
+		s += "</select>"
+
+		s += "</div>";
+
 		s += "<br><br><br>Enable Sound<br><br>";
 
 		if(options.sound)
@@ -2026,17 +2063,66 @@ var base = (function()
 
 		msg(s);
 
-		$('#chk_sound').change(function()
+		if(options.round)
 		{
-			options.sound = $(this).prop('checked');
-			update_options();
-		});
+			$('#sel_round_places').find('option').each(function()
+			{
+				if(this.value == options.round_places)
+				{
+					$(this).prop('selected', true);
+				}
+			});
+		}
+
+		else
+		{
+			$('#op_round_places').hide();
+		}
 
 		$('#chk_format').change(function()
 		{
 			options.format = $(this).prop('checked');
 			update_options();
 			update_results();
+		});
+		
+		$('#chk_round').change(function()
+		{
+			options.round = $(this).prop('checked');
+
+			if(options.round)
+			{
+				$('#op_round_places').show();
+
+				$('#sel_round_places').find('option').each(function()
+				{
+					if(this.value == options.round_places)
+					{
+						$(this).prop('selected', true);
+					}
+				});
+			}
+
+			else
+			{
+				$('#op_round_places').hide();
+			}
+
+			update_options();
+			update_results();
+		});	
+
+		$('#sel_round_places').change(function()
+		{
+			options.round_places = parseInt(this.value);
+			update_options();
+			update_results();
+		});
+
+		$('#chk_sound').change(function()
+		{
+			options.sound = $(this).prop('checked');
+			update_options();
 		});
 	}
 
@@ -2049,9 +2135,40 @@ var base = (function()
 	{
 		options = JSON.parse(localStorage.getItem(ls_options));
 
+		var mod = false;
+
 		if(options === null)
 		{
-			options = {sound: true, format: true};
+			options = {};
+			mod = true;
+		}
+
+		if(options.sound === undefined)
+		{
+			options.sound = true;
+			mod = true;
+		}
+
+		if(options.format === undefined)
+		{
+			options.format = true;
+			mod = true;
+		}
+
+		if(options.round === undefined)
+		{
+			options.round = true;
+			mod = true;
+		}
+
+		if(options.round_places === undefined)
+		{
+			options.round_places = 2;
+			mod = true;
+		}
+
+		if(mod)
+		{
 			update_options();
 		}
 	}
