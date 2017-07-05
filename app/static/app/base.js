@@ -315,7 +315,7 @@ var base = (function()
 		}
 
 		var s = `<div class='line'><button class='button variable'>$${letter}</button>`;
-		s += `<input type='text' class='input' id='${letter}' value='${value}'><div class='result'></div></div>`;
+		s += `<input type='text' class='input' id='${letter}' value='${value}'><div class='result_container'><span class='result'></span></div></div>`;
 		
 		$('#lines').append(s);
 
@@ -353,6 +353,19 @@ var base = (function()
 			if(code === 38 || code === 40)
 			{
 				e.preventDefault();
+			}
+		});
+
+		$('.result').last().click(function()
+		{
+			on_result_click(this);
+		});
+
+		$('.result').last().on('auxclick', function(e)
+		{
+			if(e.which === 2)
+			{
+				on_result_middle_click(this);
 			}
 		});
 
@@ -696,7 +709,7 @@ var base = (function()
 
 	function get_result(input)
 	{
-		var result = $(input).next('.result');
+		var result = $(input).next('.result_container').find('.result')[0];
 
 		$(result).html('');
 
@@ -749,7 +762,7 @@ var base = (function()
 
 	function show_result(input, s)
 	{
-		$(input).next('.result').html(s);
+		$(input).next('.result_container').find('.result').html(s);
 	}
 
 	function update_variable(input, val)
@@ -1654,7 +1667,9 @@ var base = (function()
 		s += "Tab and Shift + Tab cycle the focus between lines.<br><br>";
 		s += "Escape clears a line, removes the line if already cleared, or closes popups.<br><br>";
 		s += "Constants and methods in the Reference will be added to the current line when clicked.<br><br>";
-		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.";
+		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.<br><br>";
+		s += "Clicking on a result toggles rounding on and off.<br><br>";
+		s += "Middle clicking on a result copies the result to the clipboard.";
 
 		about = s;
 	}
@@ -2082,8 +2097,8 @@ var base = (function()
 		$('#chk_format').change(function()
 		{
 			options.format = $(this).prop('checked');
-			update_options();
 			update_results();
+			update_options();
 		});
 		
 		$('#chk_round').change(function()
@@ -2108,15 +2123,15 @@ var base = (function()
 				$('#op_round_places').hide();
 			}
 
-			update_options();
 			update_results();
+			update_options();
 		});	
 
 		$('#sel_round_places').change(function()
 		{
 			options.round_places = parseInt(this.value);
-			update_options();
 			update_results();
+			update_options();
 		});
 
 		$('#chk_sound').change(function()
@@ -2226,7 +2241,7 @@ var base = (function()
 		}
 	}
 
-	function test1()
+	global.test1 = function()
 	{
 		fill_sheet();
 
@@ -2271,6 +2286,30 @@ var base = (function()
 				window[varName] = undefined;
 			}
 		}
+	}
+
+	function on_result_click(el)
+	{
+		if(getSelection().toString() === "")
+		{
+			if($(el).find('.whole').length > 0)
+			{
+				toggle_round();
+			}
+		}
+	}
+
+	function on_result_middle_click(el)
+	{
+		copy_to_clipboard($(el).text());
+		play('pup');
+	}
+
+	function toggle_round()
+	{
+		options.round = !options.round;
+		update_results();
+		update_options();
 	}
 
 	return global;

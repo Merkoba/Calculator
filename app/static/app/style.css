@@ -81,7 +81,7 @@ body
 	padding: 0.2em;
 }
 
-.result
+.result_container
 {
 	padding-top: 0.35em;
 	font-size: 1.5em;
@@ -109,11 +109,12 @@ body
 .whole
 {
 	font-size: 1.2em;
+	cursor: pointer;
 }
 
 .decimal
 {
-
+	cursor: pointer;
 }
 
 #title
