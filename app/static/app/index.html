@@ -13,17 +13,17 @@
 
 		<link rel='stylesheet' href="/static/app/tippy.css?v=1">
 
-		<script src="/static/app/base_o.js?v=8"></script>
+		<script src="/static/app/base_o.js?v=9"></script>
 		<link rel='stylesheet' href="/static/app/style.css?v=11">
 
 		<script>
 			$(function()
 			{
-				version = "4.0.2";
+				app_version = "4.1.0";
 
-				content = "{{content}}";
+				saved_content = "{{content}}";
 
-				base.init();
+				BASE.init();
 			})
 		</script>
 
@@ -51,6 +51,7 @@
 
 		<audio class='sound' id='nope' src='/static/app/nope.mp3?v=1'></audio>
 		<audio class='sound' id='pup' src='/static/app/pup.mp3?v=1'></audio>
+		<audio class='sound' id='done' src='/static/app/done.mp3?v=2'></audio>
 
 		<div id='overlay'></div>
 
