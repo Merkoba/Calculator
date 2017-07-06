@@ -1648,6 +1648,8 @@ var base = (function()
 
 		s = s.substring(0, s.length - 3);
 
+		s = s.replace(/\\/g, '\\\\');
+
 		return s;
 	}
 
