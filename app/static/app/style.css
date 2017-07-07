@@ -91,6 +91,11 @@ body
 	word-wrap: break-word;
 }
 
+.result 
+{
+	cursor: pointer;
+}
+
 .txt_btn
 {
 	display: inline-block;
@@ -109,10 +114,14 @@ body
 	padding-left: 0.5em;
 }
 
+.resolved
+{
+
+}
+
 .whole
 {
 	font-size: 1.2em;
-	cursor: pointer;
 }
 
 .decimal
@@ -260,13 +269,13 @@ b
 	user-select: none;
 }
 
-.dialog_btn:hover 
+.dialog_btn:hover
 {
 	background-color: #e3e3e3;
 	border-color: rgba(0,0,0,0.5);
 }
 
-.dialog_btn:active 
+.dialog_btn:active
 {
 	background-color: #CCC;
 	border-color: rgba(0,0,0,0.9);
@@ -281,4 +290,16 @@ input[type="checkbox"]
 select
 {
 	font-size: 1.1em;
+}
+
+sup, sub
+{
+	display: inline-block;
+	padding: 0 0.1em;
+	font-size: 1.2em;
+}
+
+sup
+{
+	border-bottom: 0.08em solid;
 }

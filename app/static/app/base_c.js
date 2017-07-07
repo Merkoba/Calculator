@@ -1,5 +1,16 @@
 var BASE = (function()
 {
+	var math_normal = math.create(
+	{
+		number: 'BigNumber',
+		precision: 64
+	});
+
+	var math_fraction = math.create(
+	{
+		number: 'Fraction'
+	});
+
 	var global = {};
 	
 	var letters = "abcdefghijklmnopqrstuvwxyz";
@@ -742,11 +753,18 @@ var BASE = (function()
 
 			if(val.trim().length === 0)
 			{
-				update_variable(input, undefined);
 				return;
 			}
 
-			var result = math.eval(val.replace(/\$/g, '_') + '+0', linevars);
+			if(options.fraction)
+			{
+				var result = math_fraction.eval(val.replace(/\$/g, '_'), linevars);
+			}
+
+			else
+			{
+				var result = math_normal.eval(val.replace(/\$/g, '_') + '+0', linevars);
+			}
 
 			update_variable(input, result);
 
@@ -761,13 +779,11 @@ var BASE = (function()
 
 	function show_error(input)
 	{
-		update_variable(input, undefined);
 		show_result(input, 'Error');
 	}
 
 	function show_comment(input)
 	{
-		update_variable(input, undefined);
 		show_result(input, 'Comment');
 	}
 
@@ -781,34 +797,55 @@ var BASE = (function()
 		linevars[$(input).data('variable').replace('$', '_')] = val;
 	}
 
-	function format_result(n)
+	function format_result(n, f=false)
 	{
-		if(options.round)
+		if(options.fraction && !f)
 		{
-			n = math.round(n, options.round_places);
-		}
+			var split = math_fraction.format(n).split('/');
 
-		var ns = n.toString();
+			if(split.length === 2)
+			{
+				var sup = split[0];
+				var sub = split[1];
 
-		if(ns.indexOf('.') !== -1)
-		{
-			var split = ns.split('.');
-			var whole = split[0].toString() + '.';
-			var decimal = split[1].toString();
+				return `<span class='resolved'><sup>${sup}</sup><br><sub>${sub}</sub></span>`
+			}
+
+			else
+			{
+				return format_result(n, true);
+			}
 		}
 
 		else
 		{
-			var whole = n.toString();
-			var decimal = '';
-		}
+			if(options.round)
+			{
+				n = math_normal.round(n, options.round_places);
+			}
 
-		if(options.format)
-		{
-			whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			var ns = n.toString();
+
+			if(ns.indexOf('.') !== -1)
+			{
+				var split = ns.split('.');
+				var whole = split[0].toString() + '.';
+				var decimal = split[1].toString();
+			}
+
+			else
+			{
+				var whole = n.toString();
+				var decimal = '';
+			}
+
+			if(options.commas)
+			{
+				whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+			
+			return `<span class='resolved'><span class='whole'>${whole}</span><span class='decimal'>${decimal}</span></span>`
 		}
-		
-		return `<span class='whole'>${whole}</span><span class='decimal'>${decimal}</span>`
 	}
 
 	function press(s, aux=false)
@@ -1718,7 +1755,7 @@ var BASE = (function()
 		s += "Escape clears a line, removes the line if already cleared, or closes popups.<br><br>";
 		s += "Constants and methods in the Reference will be added to the current line when clicked.<br><br>";
 		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.<br><br>";
-		s += "Clicking on a result toggles rounding on and off.<br><br>";
+		s += "Clicking on a result toggles fraction mode on and off.<br><br>";
 		s += "Middle clicking on a result copies the result to the clipboard.";
 
 		about = s;
@@ -1862,16 +1899,16 @@ var BASE = (function()
 	{
 		var s = "";
 
-		s += "Format Results<br><br>";
+		s += "Add Commas<br><br>";
 
-		if(options.format)
+		if(options.commas)
 		{
-			s += "<input id='chk_format' type='checkbox' checked>";
+			s += "<input id='chk_commas' type='checkbox' checked>";
 		}
 
 		else
 		{
-			s += "<input id='chk_format' type='checkbox'>";
+			s += "<input id='chk_commas' type='checkbox'>";
 		}
 		
 		s += "<br><br><br>Round Results<br><br>";
@@ -1886,7 +1923,7 @@ var BASE = (function()
 			s += "<input id='chk_round' type='checkbox'>";
 		}
 
-		s += "<div id='op_round_places'>";
+		s += "<span id='op_round_places'>";
 
 		s += "<br><br><br>Round Places<br><br>";
 
@@ -1899,7 +1936,19 @@ var BASE = (function()
 		s += "<option value='5'>5</option>";
 		s += "</select>"
 
-		s += "</div>";
+		s += "</span>";
+
+		s += "<br><br><br>Fraction Mode<br><br>";
+
+		if(options.fraction)
+		{
+			s += "<input id='chk_fraction' type='checkbox' checked>";
+		}
+
+		else
+		{
+			s += "<input id='chk_fraction' type='checkbox'>";
+		}		
 
 		s += "<br><br><br>Enable Sound<br><br>";
 
@@ -1923,9 +1972,9 @@ var BASE = (function()
 			}
 		});
 
-		$('#chk_format').change(function()
+		$('#chk_commas').change(function()
 		{
-			options.format = $(this).prop('checked');
+			options.commas = $(this).prop('checked');
 			update_results();
 			update_options();
 		});
@@ -1943,6 +1992,13 @@ var BASE = (function()
 			update_results();
 			update_options();
 		});
+
+		$('#chk_fraction').change(function()
+		{
+			options.fraction = $(this).prop('checked');
+			update_results();
+			update_options();
+		});		
 
 		$('#chk_sound').change(function()
 		{
@@ -1974,9 +2030,9 @@ var BASE = (function()
 			mod = true;
 		}
 
-		if(options.format === undefined)
+		if(options.commas === undefined)
 		{
-			options.format = true;
+			options.commas = true;
 			mod = true;
 		}
 
@@ -1989,6 +2045,12 @@ var BASE = (function()
 		if(options.round_places === undefined)
 		{
 			options.round_places = 5;
+			mod = true;
+		}
+
+		if(options.fraction === undefined)
+		{
+			options.fraction = false;
 			mod = true;
 		}
 
@@ -2119,10 +2181,7 @@ var BASE = (function()
 	{
 		if(getSelection().toString() === "")
 		{
-			if($(el).find('.whole').length > 0)
-			{
-				toggle_round();
-			}
+			toggle_fraction();
 		}
 	}
 
@@ -2132,9 +2191,9 @@ var BASE = (function()
 		play('pup');
 	}
 
-	function toggle_round()
+	function toggle_fraction()
 	{
-		options.round = !options.round;
+		options.fraction = !options.fraction;
 		update_results();
 		update_options();
 	}
