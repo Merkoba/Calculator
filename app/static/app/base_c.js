@@ -1270,7 +1270,7 @@ var BASE = (function()
 
 		if(it < ct)
 		{
-			$('#lines_container').scrollTop($('#lines_container').scrollTop() + (ct - it));
+			$('#lines_container').scrollTop($('#lines_container').scrollTop() - (ct - it));
 		}
 
 		var ib = it + $(focused.input).parent().outerHeight();
