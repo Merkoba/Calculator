@@ -177,15 +177,15 @@ var BASE = (function()
 
 	function draw_buttons()
 	{
-		place_button(1, 'Right Click: 1/1&nbsp;|&nbsp;Middle Click: 0.1');
-		place_button(2, 'Right Click: 1/2&nbsp;|&nbsp;Middle Click: 0.2');
-		place_button(3, 'Right Click: 1/3&nbsp;|&nbsp;Middle Click: 0.3');
-		place_button(4, 'Right Click: 1/4&nbsp;|&nbsp;Middle Click: 0.4');
-		place_button(5, 'Right Click: 1/5&nbsp;|&nbsp;Middle Click: 0.5');
-		place_button(6, 'Right Click: 1/6&nbsp;|&nbsp;Middle Click: 0.6');
-		place_button(7, 'Right Click: 1/7&nbsp;|&nbsp;Middle Click: 0.7');
-		place_button(8, 'Right Click: 1/8&nbsp;|&nbsp;Middle Click: 0.8');
-		place_button(9, 'Right Click: 1/9&nbsp;|&nbsp;Middle Click: 0.9');
+		place_button(1, 'Right Click: 1/1 &nbsp;|&nbsp; Middle Click: 0.1');
+		place_button(2, 'Right Click: 1/2 &nbsp;|&nbsp; Middle Click: 0.2');
+		place_button(3, 'Right Click: 1/3 &nbsp;|&nbsp; Middle Click: 0.3');
+		place_button(4, 'Right Click: 1/4 &nbsp;|&nbsp; Middle Click: 0.4');
+		place_button(5, 'Right Click: 1/5 &nbsp;|&nbsp; Middle Click: 0.5');
+		place_button(6, 'Right Click: 1/6 &nbsp;|&nbsp; Middle Click: 0.6');
+		place_button(7, 'Right Click: 1/7 &nbsp;|&nbsp; Middle Click: 0.7');
+		place_button(8, 'Right Click: 1/8 &nbsp;|&nbsp; Middle Click: 0.8');
+		place_button(9, 'Right Click: 1/9 &nbsp;|&nbsp; Middle Click: 0.9');
 		place_button(0, 'Right Click: 00 &nbsp;|&nbsp; Middle Click: 000');
 
 		place_button('.');
