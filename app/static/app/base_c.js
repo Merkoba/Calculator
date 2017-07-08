@@ -50,14 +50,6 @@ var BASE = (function()
 
 		else
 		{
-			if(get_url_param('frac') !== null)
-			{
-				if(!options.fraction)
-				{
-					toggle_fraction();
-				}
-			}
-
 			load_saved_content();
 		}
 
@@ -1852,8 +1844,29 @@ var BASE = (function()
 		}
 	}
 
+	function check_params()
+	{
+		if(get_url_param('frac') === null)
+		{
+			if(options.fraction)
+			{
+				toggle_fraction();
+			}
+		}
+
+		else
+		{
+			if(!options.fraction)
+			{
+				toggle_fraction();
+			}
+		}		
+	}
+
 	function load_saved_content()
 	{
+		check_params();
+
 		var splits = saved_content.split('@!#');
 
 		for(var i=0; i<splits.length; i++)
