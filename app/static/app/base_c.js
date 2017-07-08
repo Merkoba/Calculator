@@ -357,6 +357,7 @@ var BASE = (function()
 			focused.input = this;
 			set_caretpos();
 			change_borders();
+			check_line_visibility();
 		});
 
 		$(input).on('input', function()
@@ -1260,6 +1261,25 @@ var BASE = (function()
 			var letter = sorted[i].substring(1);
 			get_result($('#' + letter));
 		}
+	}
+
+	function check_line_visibility()
+	{
+		var it = $(focused.input).parent()[0].getBoundingClientRect().top;
+		var ct = $('#lines_container').offset().top;
+
+		if(it < ct)
+		{
+			$('#lines_container').scrollTop($('#lines_container').scrollTop() + (ct - it));
+		}
+
+		var ib = it + $(focused.input).parent().outerHeight();
+		var cb = ct + $('#lines_container').outerHeight();
+
+		if(ib > cb)
+		{
+			$('#lines_container').scrollTop($('#lines_container').scrollTop() + (ib - cb));
+		}		
 	}
 
 	function focus_line(input)
