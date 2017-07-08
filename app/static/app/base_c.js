@@ -50,6 +50,14 @@ var BASE = (function()
 
 		else
 		{
+			if(get_url_param('frac') !== null)
+			{
+				if(!options.fraction)
+				{
+					toggle_fraction();
+				}
+			}
+
 			load_saved_content();
 		}
 
@@ -1659,11 +1667,13 @@ var BASE = (function()
 
 		else
 		{
-			edit_url(response);
+			var uparams = make_uparams(response);
+
+			edit_url(uparams);
 
 			var s = "";
 
-			var url = site_root + response;
+			var url = site_root + uparams;
 
 			s += url + "<br><br>";
 
@@ -1708,10 +1718,25 @@ var BASE = (function()
 		document.body.removeChild(textareaEl);
 	}
 
+	function make_uparams(s)
+	{
+		if(options.fraction)
+		{
+			s += "?";
+			s += "frac";
+		}
+
+		return s;
+	}
+
+	function get_url_param(param)
+	{
+		return new URLSearchParams(window.location.search).get(param);
+	}
+
 	function edit_url(s)
 	{
 		window.history.pushState({"pageTitle": "title", "content": "etc"}, "", '/' + s);
-
 	}
 
 	function stringify_sheet()
@@ -1995,9 +2020,7 @@ var BASE = (function()
 
 		$('#chk_fraction').change(function()
 		{
-			options.fraction = $(this).prop('checked');
-			update_results();
-			update_options();
+			toggle_fraction();
 		});		
 
 		$('#chk_sound').change(function()
