@@ -759,7 +759,7 @@ var BASE = (function()
 
 			if(options.fraction)
 			{
-				var result = math_fraction.eval(val.replace(/\$/g, '_'), linevars);
+				var result = math_fraction.eval(val.replace(/\$/g, '_') + '+0', linevars);
 			}
 
 			else
@@ -1137,20 +1137,7 @@ var BASE = (function()
 		update_results();
 	}
 
-	var update_results = (function() 
-	{
-		var timer; 
-		return function() 
-		{
-			clearTimeout(timer);
-			timer = setTimeout(function() 
-			{
-				do_update_results();
-			}, 200);
-		};
-	})();
-
-	function do_update_results()
+	function update_results()
 	{
 		undefine_variables();
 
@@ -2194,9 +2181,9 @@ var BASE = (function()
 
 	function fill_sheet()
 	{
-		var n = 702 - $('.line').length;
+		var n = get_max_line_length() - $('.line').length;
 
-		for(var i=0; i<701; i++)
+		for(var i=0; i<n; i++)
 		{
 			add_line();
 		}
