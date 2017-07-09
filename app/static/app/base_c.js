@@ -868,7 +868,7 @@ var BASE = (function()
 
 		else if(s === "pow")
 		{
-			s = "pow(";
+			s = "^";
 		}
 
 		else if(s === "sqrt")
@@ -2206,7 +2206,7 @@ var BASE = (function()
 	{
 		fill_sheet();
 
-		var s = "+3*45-56/pow(43,4)+acosh(8.9)";
+		var s = "+3*45-56/43^4+acosh(8.9)";
 
 		$('.input').each(function()
 		{
