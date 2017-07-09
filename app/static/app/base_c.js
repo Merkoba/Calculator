@@ -171,7 +171,10 @@ var BASE = (function()
 				}
 			}
 
-			focus_if_isnt();
+			if(!e.ctrlKey)
+			{
+				focus_if_isnt();
+			}
 		});
 	}
 
