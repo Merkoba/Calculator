@@ -1137,7 +1137,20 @@ var BASE = (function()
 		update_results();
 	}
 
-	function update_results()
+	var update_results = (function() 
+	{
+		var timer; 
+		return function() 
+		{
+			clearTimeout(timer);
+			timer = setTimeout(function() 
+			{
+				do_update_results();
+			}, 200);
+		};
+	})();
+
+	function do_update_results()
 	{
 		undefine_variables();
 
