@@ -759,12 +759,12 @@ var BASE = (function()
 
 			if(options.fraction)
 			{
-				var result = math_fraction.eval(val.replace(/\$/g, '_') + '+0', linevars);
+				var result = math_fraction.eval(val.replace(/\$/g, '_') + '*1', linevars);
 			}
 
 			else
 			{
-				var result = math_normal.eval(val.replace(/\$/g, '_') + '+0', linevars);
+				var result = math_normal.eval(val.replace(/\$/g, '_') + '*1', linevars);
 			}
 
 			update_variable(input, result);
