@@ -338,7 +338,7 @@ var BASE = (function()
 		
 		$('#lines').append(s);
 
-		var input = $('.input').last();
+		var input = $('.input').last()[0];
 		
 		focused.input = input;
 
@@ -510,9 +510,9 @@ var BASE = (function()
 
 		$('.line').last().remove();
 
-		update_results();
-
 		blur_focus();
+
+		update_results();
 	}
 
 	function move_lines_down(alt=false)
@@ -588,9 +588,9 @@ var BASE = (function()
 
 		focus_line(input);
 
-		update_results();
-
 		blur_focus();
+
+		update_results();
 	}
 
 	function decrease_var(v)
@@ -973,9 +973,9 @@ var BASE = (function()
 
 		move_caret();
 
-		update_results();
-
 		blur_focus();
+
+		update_results();
 	}
 
 	function blur_focus()
@@ -1362,9 +1362,9 @@ var BASE = (function()
 
 		focused.input = ninp;
 
-		update_results();
-
 		blur_focus();
+
+		update_results();
 	}
 
 	function move_line_down()
@@ -1407,9 +1407,9 @@ var BASE = (function()
 
 		focused.input = ninp;
 
-		update_results();
-
 		blur_focus();
+
+		update_results();
 	}
 
 	function cycle_inputs(direction)
