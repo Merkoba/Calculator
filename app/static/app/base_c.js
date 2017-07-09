@@ -73,7 +73,7 @@ var BASE = (function()
 				{
 					var result = $(focused.input).next('.result');
 
-					if($(focused.input).val() === '')
+					if(focused.input.value === '')
 					{
 						remove_line();
 					}
@@ -293,7 +293,7 @@ var BASE = (function()
 		{
 			var inp = $(this).find('.input')[0];
 
-			if($(inp).val() === '')
+			if(inp.value === '')
 			{
 				focus_line(inp);
 				found_line = true;
@@ -719,7 +719,7 @@ var BASE = (function()
 
 		var input = $('.input').last()[0];
 
-		var val = $(input).val();
+		var val = input.value;
 
 		if(input === focused.input)
 		{
@@ -738,13 +738,13 @@ var BASE = (function()
 
 	function get_result(input)
 	{
-		var result = $(input).next('.result_container').find('.result')[0];
+		var result = $(input).parent().find('.result')[0];
 
 		$(result).html('');
 
 		try
 		{
-			var val = $(input).val();
+			var val = input.value;
 
 			if(val.trim().startsWith('//'))
 			{
@@ -790,7 +790,7 @@ var BASE = (function()
 
 	function show_result(input, s)
 	{
-		$(input).next('.result_container').find('.result').html(s);
+		$(input).parent().find('.result').html(s);
 	}
 
 	function update_variable(input, val)
@@ -943,7 +943,7 @@ var BASE = (function()
 			}
 		}
 
-		var val = $(focused.input).val();
+		var val = focused.input.value;
 
 		var selstart = focused.input.selectionStart;
 		var selend = focused.input.selectionEnd;
@@ -958,9 +958,9 @@ var BASE = (function()
 
 		var str = x + s + y;
 
-		$(focused.input).val(x + s + y);
+		focused.input.value = x + s + y;
 
-		val = $(focused.input).val();
+		val = focused.input.value;
 
 		var caretpos = focused.caretpos + s.length;
 
@@ -1125,7 +1125,7 @@ var BASE = (function()
 
 	function clear_line(input)
 	{
-		$(input).val('');
+		input.value = '';
 
 		if(input === focused.input)
 		{
@@ -1145,7 +1145,7 @@ var BASE = (function()
 
 		$('.input').each(function()
 		{
-			var val = $(this).val();
+			var val = this.value;
 
 			var v = $(this).data('variable');
 			
@@ -1160,13 +1160,13 @@ var BASE = (function()
 		{
 			var v = $(this).data('variable');
 			
-			var val = $(this).val();
+			var val = this.value;
 
 			if(val.trim() === '')
 			{
 				if(val.length > 0)
 				{
-					$(this).val('');
+					this.value = '';
 
 					if(this === focused.input)
 					{
@@ -1237,12 +1237,12 @@ var BASE = (function()
 
 					if(sorted.indexOf(v) !== -1)
 					{
-						get_result($('#' + letter));
+						get_result($('#' + letter)[0]);
 					}
 
 					else
 					{
-						show_result($('#' + letter), 'Not Acyclical');					
+						show_result($('#' + letter)[0], 'Not Acyclical');					
 					}
 				});
 
@@ -1259,7 +1259,7 @@ var BASE = (function()
 		for(var i=0; i<sorted.length; i++)
 		{
 			var letter = sorted[i].substring(1);
-			get_result($('#' + letter));
+			get_result($('#' + letter)[0]);
 		}
 	}
 
@@ -1320,8 +1320,7 @@ var BASE = (function()
 		}
 
 		var inp = focused.input;
-
-		ninp = $(inp).parent().prev('.line').find('.input')[0];
+		var ninp = $(inp).parent().prev('.line').find('.input')[0];
 
 		var val = inp.value;
 		var nval = ninp.value;
@@ -1366,8 +1365,7 @@ var BASE = (function()
 		}
 
 		var inp = focused.input;
-
-		ninp = $(inp).parent().next('.line').find('.input')[0];
+		var ninp = $(inp).parent().next('.line').find('.input')[0];
 
 		var val = inp.value;
 		var nval = ninp.value;
@@ -1490,13 +1488,13 @@ var BASE = (function()
 
 	function move_caret_to_end()
 	{
-		focused.caretpos = $(focused.input).val().length;
+		focused.caretpos = focused.input.value.length;
 		move_caret();
 	}
 
 	function erase_character()
 	{
-		var val = $(focused.input).val();
+		var val = focused.input.value;
 
 		if(val === '')
 		{
@@ -1509,7 +1507,7 @@ var BASE = (function()
 		if(selstart !== selend)
 		{
 			val = val.slice(0, selstart) + val.slice(selend);
-			$(focused.input).val(val);
+			focused.input.value = val;
 			focused.caretpos = selstart;
 
 		}
@@ -1519,7 +1517,7 @@ var BASE = (function()
 			var x = val.substr(0, focused.caretpos - 1);
 			var y = val.substring(focused.caretpos);
 
-			$(focused.input).val(x + y);
+			focused.input.value = x + y;
 
 			var caretpos = focused.caretpos - 1;
 
@@ -1757,7 +1755,7 @@ var BASE = (function()
 
 		$('.input').each(function()
 		{
-			s += $(this).val();
+			s += this.value;
 			s += "@!#";
 		});
 
@@ -2199,7 +2197,7 @@ var BASE = (function()
 
 		$('.input').each(function()
 		{
-			$(this).val($(this).val() + s);
+			this.value = this.value + s;
 
 			$(this).parent().next('.line').find('.input').val($(this).data('variable'));
 		});
