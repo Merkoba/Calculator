@@ -444,7 +444,7 @@ var BASE = (function()
 		}
 
 		var input = focused.input;
-		var line = $(input).parent();
+		var line = $(input).parent()[0];
 		var v = $(input).data('variable');
 		var index = $(line).index();
 		var last_index = $('.line').last().index();
@@ -531,7 +531,7 @@ var BASE = (function()
 		}
 
 		var input = focused.input;
-		var line = $(input).parent();
+		var line = $(input).parent()[0];
 		var v = $(input).data('variable');
 		var index = $(line).index();
 		var last_index = $('.line').last().index();
