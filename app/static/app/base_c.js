@@ -176,7 +176,7 @@ var BASE = (function()
 			{
 				if(e.shiftKey && e.ctrlKey)
 				{
-					parse_input(focused.input);
+					format_input(focused.input);
 				}
 
 				else if(e.shiftKey)
@@ -236,7 +236,7 @@ var BASE = (function()
 		place_button_wider('Down', 'Right Click: Move Line Down');
 		place_button_wider('New Line', 'Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before');
 		place_button_wider('Remove Line', 'Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line');
-		place_button_wider('Clear', 'Requires Double Click');
+		place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs');
 		place_button_wider('Erase');
 
 		$('.button').each(function()
@@ -1018,12 +1018,12 @@ var BASE = (function()
 				{
 					if(aux === 3)
 					{
-						 return "1/" + i;
+						return "1/" + i;
 					}
 
 					else if(aux === 2)
 					{
-						 return "0." + i;
+						return "0." + i;
 					}
 				}
 			}
@@ -1032,12 +1032,12 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					 return "00";
+					return "00";
 				}
 
 				else if(aux === 2)
 				{
-					 return "000";
+					return "000";
 				}
 			}
 
@@ -1045,12 +1045,12 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					 return "acos(";
+					return "acos(";
 				}
 
 				else if(aux === 2)
 				{
-					 return "acosh(";
+					return "acosh(";
 				}
 			}
 
@@ -1058,12 +1058,12 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					 return "atan(";
+					return "atan(";
 				}
 
 				else if(aux === 2)
 				{
-					 return "atanh(";
+					return "atanh(";
 				}
 			}
 
@@ -1071,12 +1071,12 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					 return "asin(";
+					return "asin(";
 				}
 
 				else if(aux === 2)
 				{
-					 return "asinh(";
+					return "asinh(";
 				}
 			}
 
@@ -1084,7 +1084,7 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					 return "cbrt(";
+					return "cbrt(";
 				}
 			}
 
@@ -1092,12 +1092,12 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					 return "phi"
+					return "phi"
 				}
 
 				else if(aux === 2)
 				{
-					 return "e";
+					return "e";
 				}
 			}
 
@@ -1105,8 +1105,8 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					 move_line_up();
-					 return false;
+					move_line_up();
+					return false;
 				}
 			}
 
@@ -1114,8 +1114,8 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					 move_line_down();
-					 return false;
+					move_line_down();
+					return false;
 				}
 			}
 
@@ -1123,8 +1123,8 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					 remove_last_line();
-					 return false;
+					remove_last_line();
+					return false;
 				}
 			}
 
@@ -1132,14 +1132,29 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					 add_line_after();
-					 return false;
+					add_line_after();
+					return false;
 				}
 
 				else if(aux === 2)
 				{
-					 add_line_before();
-					 return false;
+					add_line_before();
+					return false;
+				}
+			}
+
+			else if(s === "Clear")
+			{
+				if(aux === 3)
+				{
+					format_input(focused.input);
+					return false;
+				}
+
+				else if(aux === 2)
+				{
+					format_all_inputs();
+					return false;
 				}
 			}
 		}
@@ -1811,7 +1826,7 @@ var BASE = (function()
 		s += "Control + Shift + Enter replaces a line's input's variables with their corresponding inputs.<br><br>";
 		s += "Shift + Space adds the variable from the line above to the current line.<br><br>";
 		s += "Control + Space adds the input from the line above to the current line.<br><br>";
-		s += "Control + Shift + Space cleans and formats the input.<br><br>";
+		s += "Control + Shift + Space formats the input.<br><br>";
 		s += "Up and Down arrows change the focus between lines.<br><br>";
 		s += "Shift + Up and Shift + Down move the lines up or down.<br><br>";
 		s += "Tab and Shift + Tab cycle the focus between lines.<br><br>";
@@ -2436,10 +2451,12 @@ var BASE = (function()
 
 		input.value = val;
 
+		move_caret_to_end();
+
 		update_results();
 	}
 
-	function parse_input(input)
+	function format_input(input)
 	{
 		var val = input.value;
 
@@ -2455,8 +2472,8 @@ var BASE = (function()
 
 		try
 		{
-			val = math_normal.parse(val.replace('$', '_')).toString({parenthesis: 'auto'});
-			val = val.replace('_', '$');
+			val = math_normal.parse(val.replace(/\$/g, '_')).toString({parenthesis: 'auto'});
+			val = val.replace(/_/g, '$');
 		}
 
 		catch(err)
@@ -2467,7 +2484,17 @@ var BASE = (function()
 
 		input.value = val;
 
+		move_caret_to_end();
+
 		update_results();
+	}
+
+	function format_all_inputs()
+	{
+		$('.input').each(function()
+		{
+			format_input(this);
+		});
 	}
 
 	return global;
