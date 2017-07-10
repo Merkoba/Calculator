@@ -105,7 +105,12 @@ var BASE = (function()
 
 			if(code === 13)
 			{
-				if(e.shiftKey)
+				if(e.shiftKey && e.ctrlKey)
+				{
+					expand_value(focused.input);
+				}
+
+				else if(e.shiftKey)
 				{
 					press($(focused.input).data('variable'));
 				}
@@ -172,6 +177,12 @@ var BASE = (function()
 				if(e.shiftKey)
 				{
 					add_ans();
+					e.preventDefault();
+				}
+
+				else if(e.ctrlKey)
+				{
+					add_top_val();
 					e.preventDefault();
 				}
 			}
@@ -502,7 +513,7 @@ var BASE = (function()
 				}
 
 				return match;
-			});;
+			});
 
 			inp.value = val;
 		}
@@ -575,7 +586,7 @@ var BASE = (function()
 				}
 
 				return match;
-			});;
+			});
 
 			inp.value = val;
 		}
@@ -1792,7 +1803,9 @@ var BASE = (function()
 		s += "Enter will focus the next available empty line or create a new one.<br><br>";
 		s += "Shift + Enter does the same but also adds the previous line's variable into the new one.<br><br>";
 		s += "Control + Enter does the same but also copies the line's input into the new one.<br><br>";
+		s += "Control + Shift + Enter replaces a line's variables with their corresponding values.<br><br>";
 		s += "Shift + Space adds the variable from the line above to the current line.<br><br>";
+		s += "Control + Space adds the input from the line above to the current line.<br><br>";
 		s += "Up and Down arrows change the focus between lines.<br><br>";
 		s += "Shift + Up and Shift + Down move the lines up or down.<br><br>";
 		s += "Tab and Shift + Tab cycle the focus between lines.<br><br>";
@@ -1927,6 +1940,16 @@ var BASE = (function()
 		if(variable !== undefined)
 		{
 			press(variable);
+		}
+	}
+
+	function add_top_val()
+	{
+		var val = $(focused.input).parent().prev('.line').find('.input').val();
+
+		if(val !== '')
+		{
+			press(val);
 		}
 	}
 
@@ -2325,6 +2348,74 @@ var BASE = (function()
 			focused.input.value = og_val;
 			update_results();
 		}
+	}
+
+	function expand_value(input)
+	{
+		var val = input.value;
+
+		val = val.replace(/\$[a-z]+/g, function(match)
+		{
+			var v = linevars[match.replace('$', '_')];
+
+			if(v !== undefined)
+			{
+				return v;
+			}
+
+			else
+			{
+				return match;
+			}
+		});
+
+		input.value = val;
+
+		update_results();
+	}
+
+	function expand_value_full(input)
+	{
+		var val = input.value;
+
+		var n = 0;
+
+		while(true)
+		{
+			var og_val = val;
+
+			val = val.replace(/\$[a-z]+/g, function(match)
+			{
+				var v = $('#' + match.substring(1)).val();
+
+				if(v !== undefined)
+				{
+					return "(" + v + ")";
+				}
+
+				else
+				{
+					return match;
+				}
+
+			});
+
+			if(og_val === val)
+			{
+				break;
+			}
+
+			n += 1;
+
+			if(n > 10000)
+			{
+				break;
+			}
+		}
+
+		input.value = val;
+
+		update_results();
 	}
 
 	return global;
