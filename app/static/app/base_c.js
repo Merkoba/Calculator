@@ -2406,6 +2406,8 @@ var BASE = (function()
 			}
 		}
 
+		val = math_normal.parse(val).toString({parenthesis: 'auto'});
+
 		input.value = val;
 
 		update_results();
