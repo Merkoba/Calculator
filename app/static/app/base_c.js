@@ -110,6 +110,11 @@ var BASE = (function()
 					press($(focused.input).data('variable'));
 				}
 
+				else if(e.ctrlKey)
+				{
+					copy_value_down();
+				}
+
 				else
 				{
 					focus_next_or_add();
@@ -1786,6 +1791,7 @@ var BASE = (function()
 		s += "<span class='b2'>Shortcuts</span><br><br>";
 		s += "Enter will focus the next available empty line or create a new one.<br><br>";
 		s += "Shift + Enter does the same but also adds the previous line's variable into the new one.<br><br>";
+		s += "Control + Enter does the same but also copies the line's input into the new one.<br><br>";
 		s += "Shift + Space adds the variable from the line above to the current line.<br><br>";
 		s += "Up and Down arrows change the focus between lines.<br><br>";
 		s += "Shift + Up and Shift + Down move the lines up or down.<br><br>";
@@ -2305,6 +2311,20 @@ var BASE = (function()
 			play('pup');
 			hide_overlay();
 		});		
+	}
+
+	function copy_value_down()
+	{
+		var og_var = $(focused.input).data('variable');
+		var og_val = focused.input.value;
+
+		focus_next_or_add();
+
+		if(og_var !== $(focused.input).data('variable'))
+		{
+			focused.input.value = og_val;
+			update_results();
+		}
 	}
 
 	return global;
