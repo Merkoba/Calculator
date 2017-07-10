@@ -174,7 +174,12 @@ var BASE = (function()
 
 			else if(code === 32)
 			{
-				if(e.shiftKey)
+				if(e.shiftKey && e.ctrlKey)
+				{
+					parse_input(focused.input);
+				}
+
+				else if(e.shiftKey)
 				{
 					add_ans();
 					e.preventDefault();
@@ -1806,6 +1811,7 @@ var BASE = (function()
 		s += "Control + Shift + Enter replaces a line's input's variables with their corresponding inputs.<br><br>";
 		s += "Shift + Space adds the variable from the line above to the current line.<br><br>";
 		s += "Control + Space adds the input from the line above to the current line.<br><br>";
+		s += "Control + Shift + Space cleans and formats the input.<br><br>";
 		s += "Up and Down arrows change the focus between lines.<br><br>";
 		s += "Shift + Up and Shift + Down move the lines up or down.<br><br>";
 		s += "Tab and Shift + Tab cycle the focus between lines.<br><br>";
@@ -2359,6 +2365,11 @@ var BASE = (function()
 			return;
 		}
 
+		if(val.trim().startsWith('//'))
+		{
+			return;
+		}
+
 		if(val.indexOf('$') === -1)
 		{
 			return;
@@ -2415,6 +2426,37 @@ var BASE = (function()
 		try
 		{
 			val = math_normal.parse(val).toString({parenthesis: 'auto'});
+		}
+
+		catch(err)
+		{
+			play('nope');
+			return;
+		}
+
+		input.value = val;
+
+		update_results();
+	}
+
+	function parse_input(input)
+	{
+		var val = input.value;
+
+		if(val.trim() === '')
+		{
+			return;
+		}
+
+		if(val.trim().startsWith('//'))
+		{
+			return;
+		}
+
+		try
+		{
+			val = math_normal.parse(val.replace('$', '_')).toString({parenthesis: 'auto'});
+			val = val.replace('_', '$');
 		}
 
 		catch(err)
