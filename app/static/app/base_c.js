@@ -2381,7 +2381,7 @@ var BASE = (function()
 
 				var v = $('#' + match.substring(1)).val();
 
-				if(v !== undefined)
+				if(v !== undefined && v.trim() !== '')
 				{
 					return "(" + v + ")";
 				}
@@ -2406,7 +2406,22 @@ var BASE = (function()
 			}
 		}
 
-		val = math_normal.parse(val).toString({parenthesis: 'auto'});
+		if(val.indexOf('$') !== -1)
+		{
+			play('nope');
+			return;
+		}
+
+		try
+		{
+			val = math_normal.parse(val).toString({parenthesis: 'auto'});
+		}
+
+		catch(err)
+		{
+			play('nope');
+			return;
+		}
 
 		input.value = val;
 
