@@ -107,7 +107,7 @@ var BASE = (function()
 			{
 				if(e.shiftKey && e.ctrlKey)
 				{
-					expand_value(focused.input);
+					expand_value_full(focused.input);
 				}
 
 				else if(e.shiftKey)
@@ -1803,7 +1803,7 @@ var BASE = (function()
 		s += "Enter will focus the next available empty line or create a new one.<br><br>";
 		s += "Shift + Enter does the same but also adds the previous line's variable into the new one.<br><br>";
 		s += "Control + Enter does the same but also copies the line's input into the new one.<br><br>";
-		s += "Control + Shift + Enter replaces a line's variables with their corresponding values.<br><br>";
+		s += "Control + Shift + Enter replaces a line's variables with their corresponding line's input.<br><br>";
 		s += "Shift + Space adds the variable from the line above to the current line.<br><br>";
 		s += "Control + Space adds the input from the line above to the current line.<br><br>";
 		s += "Up and Down arrows change the focus between lines.<br><br>";
