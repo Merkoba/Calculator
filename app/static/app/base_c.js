@@ -31,7 +31,11 @@ var BASE = (function()
 
 	global.init = function()
 	{
+		get_options();
+		get_user_data();
 		draw_buttons();
+		place_infobar();
+		update_infobar();
 		place_lines_container();
 		key_detection();
 		resize_events();
@@ -39,8 +43,6 @@ var BASE = (function()
 		title_click_events();
 		get_site_root();
 		adjust_volumes();
-		get_options();
-		get_user_data();
 
 		if(saved_content === '')
 		{
@@ -387,14 +389,6 @@ var BASE = (function()
 		$('.result').last().click(function()
 		{
 			on_result_click(this);
-		});
-
-		$('.result').last().on('auxclick', function(e)
-		{
-			if(e.which === 2)
-			{
-				on_result_middle_click(this);
-			}
 		});
 
 		$('.result').last()[0].addEventListener('mousedown', function(event) 
@@ -1427,7 +1421,9 @@ var BASE = (function()
 
 	function place_lines_container()
 	{
-		$('#lines_container').css('height', ($(window).height() - $('#title').outerHeight() - $('#buttons').outerHeight()) + 'px');
+		var h = $(window).height() - $('#app_top').outerHeight(true);
+
+		$('#lines_container').css('height', h + 'px');
 	}
 
 	function resize_events()
@@ -1446,6 +1442,7 @@ var BASE = (function()
 			clearTimeout(timer);
 			timer = setTimeout(function() 
 			{
+				place_infobar();
 				place_lines_container();
 			}, 350);
 		};
@@ -1703,8 +1700,7 @@ var BASE = (function()
 		s += "Escape clears a line, removes the line if already cleared, or closes popups.<br><br>";
 		s += "Constants and methods in the Reference will be added to the current line when clicked.<br><br>";
 		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.<br><br>";
-		s += "Clicking on a result toggles fraction mode on and off.<br><br>";
-		s += "Middle clicking on a result copies the result to the clipboard.";
+		s += "Clicking on a result copies the result to the clipboard.";
 
 		about = s;
 	}
@@ -1913,19 +1909,7 @@ var BASE = (function()
 		s += "<option value='5'>5</option>";
 		s += "</select>"
 
-		s += "</span>";
-
-		s += "<br><br><br>Fraction Mode<br><br>";
-
-		if(options.fraction)
-		{
-			s += "<input id='chk_fraction' type='checkbox' checked>";
-		}
-
-		else
-		{
-			s += "<input id='chk_fraction' type='checkbox'>";
-		}		
+		s += "</span>";		
 
 		s += "<br><br><br>Enable Sound<br><br>";
 
@@ -2190,15 +2174,24 @@ var BASE = (function()
 
 	function on_result_click(el)
 	{
-		if(getSelection().toString() === "")
-		{
-			toggle_fraction();
-		}
-	}
+		var s = "";
 
-	function on_result_middle_click(el)
-	{
-		copy_to_clipboard($(el).text());
+		if($(el).find('sup').length > 0)
+		{
+			s += $(el).find('sup').text();
+
+			s += "/";
+
+			s += $(el).find('sub').text();
+		}
+
+		else
+		{
+			s += $(el).text();
+		}
+
+		copy_to_clipboard(s);
+
 		play('pup');
 	}
 
@@ -2206,6 +2199,7 @@ var BASE = (function()
 	{
 		options.fraction = !options.fraction;
 		update_results();
+		update_infobar();
 		update_options();
 	}
 
@@ -2423,6 +2417,39 @@ var BASE = (function()
 	function redo_change()
 	{
 		document.execCommand('redo', false, null);		
+	}
+
+	function place_infobar()
+	{
+		var w = $('#buttons').width();
+
+		$('#infobar').css('width', w + 'px');
+	}
+
+	function update_infobar()
+	{
+		var s = "";
+
+		s += "<span id='ib_fraction_toggle' class='ib_item'>";
+
+		if(options.fraction)
+		{
+			s += "Fraction Mode";
+		}
+
+		else
+		{
+			s += "Normal Mode";
+		}
+
+		s += "</span>"
+
+		$('#infobar').html(s);
+
+		$('#ib_fraction_toggle').click(function()
+		{
+			toggle_fraction();
+		});
 	}
 
 	return global;

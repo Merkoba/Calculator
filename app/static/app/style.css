@@ -14,7 +14,6 @@ body
 
 #buttons 
 {
-	padding-bottom: 3em;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -44,6 +43,26 @@ body
 	display: inline-block;
 	font-size: 1.5em;
 	width: 3em;
+}
+
+#infobar
+{
+	font-size: 1.4em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	margin: 0 auto;
+	background-color: #c6eaf3;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.ib_item
+{
+	cursor: pointer;
 }
 
 #lines_container

@@ -15,14 +15,14 @@
 
 		<link rel='stylesheet' href="/static/app/tippy.css?v=1">
 
-		<script src="/static/app/base_o.js?v=42"></script>
-		<link rel='stylesheet' href="/static/app/style.css?v=15">
+		<script src="/static/app/base_o.js?v=43"></script>
+		<link rel='stylesheet' href="/static/app/style.css?v=16">
 
 		<script>
 
 			$(function()
 			{
-				app_version = "6.0.0";
+				app_version = "7.0.0";
 
 				saved_content = "{{content}}";
 
@@ -35,20 +35,28 @@
 
 	<body>
 
-		<div id='title'>
-			<span class='linky' id='lnk_new'>New</span>
-			&nbsp;&nbsp; - &nbsp;&nbsp;
-			<span class='linky' id='lnk_save'>Save</span>
-			&nbsp;&nbsp; - &nbsp;&nbsp;
-			<a class='linky' id='lnk_reference' href='http://mathjs.org/docs/reference/' target=_blank>Reference</a>
-			&nbsp;&nbsp; - &nbsp;&nbsp;
-			<span class='linky' id='lnk_more'>More</span>
+		<div id='app_top'>
+
+			<div id='title'>
+				<span class='linky' id='lnk_new'>New</span>
+				&nbsp;&nbsp; - &nbsp;&nbsp;
+				<span class='linky' id='lnk_save'>Save</span>
+				&nbsp;&nbsp; - &nbsp;&nbsp;
+				<a class='linky' id='lnk_reference' href='http://mathjs.org/docs/reference/' target=_blank>Reference</a>
+				&nbsp;&nbsp; - &nbsp;&nbsp;
+				<span class='linky' id='lnk_more'>More</span>
+			</div>
+
+			<br>
+
+			<span id='buttons'></span>
+
+			<div id='infobar'>Nothing</div>
+
 		</div>
 
-		<div id='buttons'></div>
-
 		<div id='lines_container'>
-			<div id='lines'></div>
+			<br><br><div id='lines'></div>
 		</div>
 
 		<audio preload class='sound' id='nope' src='/static/app/nope.mp3?v=1'></audio>
