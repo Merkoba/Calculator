@@ -1739,20 +1739,26 @@ var BASE = (function()
 				hide_overlay();
 			});
 
-			add_to_saved(url);
+			add_to_saved(url, svd);
 
 			saved_content = svd;
 		}
 	}
 
-	function add_to_saved(url)
+	function add_to_saved(url, svd)
 	{
 		if(user_data.saved === undefined)
 		{
 			user_data.saved = [];
 		}
 
-		user_data.saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url]);
+		var split = svd.split('@!#');
+
+		var num_lines = split.length;
+
+		var sample = split[0].substring(0, 100);
+
+		user_data.saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample]);
 
 		update_user_data();
 	}
@@ -2198,7 +2204,25 @@ var BASE = (function()
 
 			for(var i=j; i<n; i++)
 			{
-				s += "<a class='ancher1' target=_blank href='" + user_data.saved[i][1] + "'>" + user_data.saved[i][0] + "</a>";
+				s += "<a class='ancher1' target=_blank href='" + user_data.saved[i][1] + "' title='" + user_data.saved[i][3] + "'>";
+				
+				s += user_data.saved[i][0];
+
+				var num_lines = user_data.saved[i][2];
+				
+				s += "<br>" + num_lines;
+
+				if(num_lines === 1)
+				{
+					s += " Line";
+				}
+
+				else
+				{
+					s += " Lines";
+				}
+
+				s += "</a>";
 
 				if(i < n - 1)
 				{
