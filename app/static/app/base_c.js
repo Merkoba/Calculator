@@ -1756,9 +1756,16 @@ var BASE = (function()
 
 		var num_lines = split.length;
 
-		var sample = split[0].substring(0, 100);
+		var n = Math.min(5,split.length);
 
-		user_data.saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample]);
+		var sample = '';
+
+		for(var i=0; i<n; i++)
+		{
+			sample += split[i].substring(0, 100) + '\n';
+		}
+
+		user_data.saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample, options.fraction]);
 
 		update_user_data();
 	}
@@ -2220,6 +2227,16 @@ var BASE = (function()
 				else
 				{
 					s += " Lines";
+				}
+
+				if(user_data.saved[i][4])
+				{
+					s += " - Fraction";
+				}
+
+				else
+				{
+					s += " - Normal";
 				}
 
 				s += "</a>";
