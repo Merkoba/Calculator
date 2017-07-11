@@ -2456,7 +2456,7 @@ var BASE = (function()
 		update_results();
 	}
 
-	function format_input(input)
+	function format_input(input, update=true)
 	{
 		var val = input.value;
 
@@ -2486,15 +2486,20 @@ var BASE = (function()
 
 		move_caret_to_end();
 
-		update_results();
+		if(update)
+		{
+			update_results();
+		}
 	}
 
 	function format_all_inputs()
 	{
 		$('.input').each(function()
 		{
-			format_input(this);
+			format_input(this, false);
 		});
+
+		update_results();
 	}
 
 	return global;
