@@ -26,8 +26,7 @@ var BASE = (function()
 	var user_data;
 
 	var focused = {
-		input: null,
-		caretpos: 0
+		input: null
 	}
 
 	global.init = function()
@@ -80,16 +79,8 @@ var BASE = (function()
 
 					else
 					{
-						clear_line(focused.input);
+						clear_input(focused.input);
 					}
-				}
-			}
-
-			if($('.input').is(':focus'))
-			{
-				if(code === 37 || code === 39)
-				{
-					focused.caretpos = focused.input.selectionStart;
 				}
 			}
 		});
@@ -194,7 +185,7 @@ var BASE = (function()
 
 			if(!e.ctrlKey)
 			{
-				focus_if_isnt();
+				focus_if_isnt(focused.input);
 			}
 		});
 	}
@@ -237,7 +228,7 @@ var BASE = (function()
 		place_button_wider('New Line', 'Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before');
 		place_button_wider('Remove Line', 'Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line');
 		place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs');
-		place_button_wider('Erase');
+		place_button_wider('Undo', 'Right Click: Redo');
 
 		$('.button').each(function()
 		{
@@ -319,7 +310,7 @@ var BASE = (function()
 
 			if(inp.value === '')
 			{
-				focus_line(inp);
+				focus_input(inp);
 				found_line = true;
 				return false;
 			}
@@ -371,22 +362,15 @@ var BASE = (function()
 			press('$' + letter);
 		});
 
-		$(input).click(function()
-		{
-			set_caretpos();
-		});
-
 		$(input).focus(function()
 		{
 			focused.input = this;
-			set_caretpos();
 			change_borders();
 			check_line_visibility();
 		});
 
 		$(input).on('input', function()
 		{
-			focused.caretpos = this.selectionStart;
 			update_results();
 		});
 
@@ -423,7 +407,7 @@ var BASE = (function()
 
 		$(input).data('variable', '$' + letter);
 		
-		focus_line(input);
+		focus_input(input);
 	}
 
 	function add_line_before()
@@ -534,8 +518,6 @@ var BASE = (function()
 
 		$('.line').last().remove();
 
-		blur_focus();
-
 		update_results();
 	}
 
@@ -610,9 +592,7 @@ var BASE = (function()
 
 		input.value = '';
 
-		focus_line(input);
-
-		blur_focus();
+		focus_input(input);
 
 		update_results();
 	}
@@ -906,50 +886,49 @@ var BASE = (function()
 
 			if(!s)
 			{
-				focus_line(focused.input);
+				focus_input(focused.input);
 				return;
 			}
 		}
 
 		if(s === "Clear")
 		{
-			clear_line(focused.input);
-			focus_line(focused.input);
+			clear_input(focused.input);
 			return;
 		}
 
-		else if(s === "Erase")
+		else if(s === "Undo")
 		{
-			erase_character();
-			focus_line(focused.input);
+			undo_change();
+			update_results();
 			return;
 		}
 
 		else if(s === "New Line")
 		{
 			focus_next_or_add();
-			focus_line(focused.input);
+			focus_input(focused.input);
 			return;
 		}
 
 		else if(s === "Remove Line")
 		{
 			remove_line();
-			focus_line(focused.input);
+			focus_input(focused.input);
 			return;
 		}
 
 		else if(s === "Up")
 		{
 			line_up();
-			focus_line(focused.input);
+			focus_input(focused.input);
 			return;
 		}
 
 		else if(s === "Down")
 		{
 			line_down();
-			focus_line(focused.input);
+			focus_input(focused.input);
 			return;
 		}
 
@@ -967,37 +946,7 @@ var BASE = (function()
 			}
 		}
 
-		var val = focused.input.value;
-
-		var selstart = focused.input.selectionStart;
-		var selend = focused.input.selectionEnd;
-
-		if(selstart !== selend)
-		{
-			val = val.slice(0, selstart) + val.slice(selend);
-		}
-		
-		var x = val.substr(0, focused.caretpos);
-		var y = val.substring(focused.caretpos);
-
-		var str = x + s + y;
-
-		focused.input.value = x + s + y;
-
-		val = focused.input.value;
-
-		var caretpos = focused.caretpos + s.length;
-
-		if(caretpos > val.length)
-		{
-			caretpos = val.length;
-		}
-
-		focused.caretpos = caretpos;
-
-		move_caret();
-
-		blur_focus();
+		insert_text(focused.input, s);
 
 		update_results();
 	}
@@ -1157,22 +1106,24 @@ var BASE = (function()
 					return false;
 				}
 			}
+
+			else if(s === "Undo")
+			{
+				if(aux === 3)
+				{
+					redo_change();
+					update_results();
+					return false;
+				}
+			}
 		}
 
 		return false;
 	}
 
-	function clear_line(input)
+	function clear_input(input)
 	{
-		input.value = '';
-
-		if(input === focused.input)
-		{
-			focused.caretpos = 0;
-		}
-
-		focus_line(focused.input);
-
+		replace_text(input, '');
 		update_results();
 	}
 
@@ -1181,6 +1132,7 @@ var BASE = (function()
 		undefine_variables();
 
 		var variables = {};
+
 
 		$('.input').each(function()
 		{
@@ -1206,11 +1158,6 @@ var BASE = (function()
 				if(val.length > 0)
 				{
 					this.value = '';
-
-					if(this === focused.input)
-					{
-						focused.caretpos = 0;
-					}
 				}
 
 				return true;
@@ -1321,9 +1268,9 @@ var BASE = (function()
 		}		
 	}
 
-	function focus_line(input)
+	function focus_input(input)
 	{
-		$(input).focus();
+		input.focus();
 	}
 
 	function focus_next()
@@ -1339,13 +1286,11 @@ var BASE = (function()
 	function line_up()
 	{
 		focus_prev();
-		move_caret_to_end();
 	}
 
 	function line_down()
 	{
 		focus_next();	
-		move_caret_to_end();
 	}
 
 	function move_line_up()
@@ -1375,20 +1320,18 @@ var BASE = (function()
 
 		$('.input').each(function()
 		{
-			this.value = this.value.replace(re, cnv);
-			this.value = this.value.replace(re2, cv);
-			this.value = this.value.replace(/@!#/g, '');
+			var vl = this.value.replace(re, cnv);
+			vl = vl.replace(re2, cv);
+			this.value = vl.replace(/@!#/g, '');
 		});
 
 		val = inp.value;
 		nval = ninp.value;
 
 		inp.value = nval;
-		ninp.value = val;
+		ninp.value =  val;
 
-		focused.input = ninp;
-
-		blur_focus();
+		focus_if_isnt(ninp);
 
 		update_results();
 	}
@@ -1420,20 +1363,18 @@ var BASE = (function()
 
 		$('.input').each(function()
 		{
-			this.value = this.value.replace(re, cnv);
-			this.value = this.value.replace(re2, cv);
-			this.value = this.value.replace(/@!#/g, '');
+			var vl = this.value.replace(re, cnv);
+			vl = vl.replace(re2, cv);
+			this.value = vl.replace(/@!#/g, '');		
 		});
 
 		val = inp.value;
 		nval = ninp.value;
 
 		inp.value = nval;
-		ninp.value = val;
+		ninp.value =  val;
 
-		focused.input = ninp;
-
-		blur_focus();
+		focus_if_isnt(ninp);
 
 		update_results();
 	}
@@ -1451,7 +1392,7 @@ var BASE = (function()
 		{
 			if(index === ($('.input').length - 1))
 			{
-				focus_line($('.input').first()[0]);
+				focus_input($('.input').first()[0]);
 			}
 
 			else
@@ -1464,7 +1405,7 @@ var BASE = (function()
 		{
 			if(index === 0)
 			{
-				focus_line($('.input').last()[0]);
+				focus_input($('.input').last()[0]);
 			}
 
 			else
@@ -1487,90 +1428,6 @@ var BASE = (function()
 	function place_lines_container()
 	{
 		$('#lines_container').css('height', ($(window).height() - $('#title').outerHeight() - $('#buttons').outerHeight()) + 'px');
-	}
-
-	function set_caretpos()
-	{
-		setTimeout(function()
-		{
-			focused.caretpos = focused.input.selectionStart;
-		}, 10);
-	}
-
-	function move_caret() 
-	{
-		var caretpos = focused.caretpos;
-		var current_caret = focused.input.selectionStart;
-
-		var distance = caretpos;
-
-		if(distance === current_caret)
-		{
-			return;
-		}
-
-		if(focused.input.setSelectionRange) 
-		{
-			focus_line(focused.input);
-			focused.input.setSelectionRange(distance, distance);
-		} 
-
-		else if(focused.input.createTextRange) 
-		{
-			var range = focused.input.createTextRange();
-			range.collapse(true);
-			range.moveEnd(distance);
-			range.moveStart(distance);
-			range.select();
-		}
-	}
-
-	function move_caret_to_end()
-	{
-		focused.caretpos = focused.input.value.length;
-		move_caret();
-	}
-
-	function erase_character()
-	{
-		var val = focused.input.value;
-
-		if(val === '')
-		{
-			return;
-		}
-
-		var selstart = focused.input.selectionStart;
-		var selend = focused.input.selectionEnd;
-
-		if(selstart !== selend)
-		{
-			val = val.slice(0, selstart) + val.slice(selend);
-			focused.input.value = val;
-			focused.caretpos = selstart;
-
-		}
-
-		else
-		{
-			var x = val.substr(0, focused.caretpos - 1);
-			var y = val.substring(focused.caretpos);
-
-			focused.input.value = x + y;
-
-			var caretpos = focused.caretpos - 1;
-
-			if(caretpos < 0)
-			{
-				caretpos = 0;
-			}
-
-			focused.caretpos = caretpos;
-		}
-
-		move_caret();
-
-		update_results();
 	}
 
 	function resize_events()
@@ -1878,7 +1735,7 @@ var BASE = (function()
 
 		msg_open = false;
 
-		focus_line(focused.input);
+		focus_input(focused.input);
 	}
 
 	function msg(txt, temp_disable=false)
@@ -1949,8 +1806,6 @@ var BASE = (function()
 
 			add_line(value);
 		}
-
-		move_caret_to_end();
 
 		update_results();
 	}
@@ -2273,9 +2128,17 @@ var BASE = (function()
 		}
 	}
 
-	function fill_sheet()
+	function fill_sheet(x=false)
 	{
-		var n = get_max_line_length() - $('.line').length;
+		if(x)
+		{
+			var n = x;
+		}
+
+		else
+		{
+			var n = get_max_line_length() - $('.line').length;
+		}
 
 		for(var i=0; i<n; i++)
 		{
@@ -2283,9 +2146,9 @@ var BASE = (function()
 		}
 	}
 
-	global.test1 = function()
+	global.test1 = function(x=false)
 	{
-		fill_sheet();
+		fill_sheet(x);
 
 		var s = "+3*45-56/43^4+acosh(8.9)";
 
@@ -2304,11 +2167,11 @@ var BASE = (function()
 		el.addEventListener('contextmenu', event => event.preventDefault());
 	}
 
-	function focus_if_isnt()
+	function focus_if_isnt(input)
 	{
-		if(focused.input !== document.activeElement)
+		if(input !== document.activeElement)
 		{
-			focus_line(focused.input);
+			focus_input(input);
 		}
 	}
 
@@ -2407,7 +2270,7 @@ var BASE = (function()
 
 		if(og_var !== $(focused.input).data('variable'))
 		{
-			focused.input.value = og_val;
+			replace_text(focused.input, og_val);
 			update_results();
 		}
 	}
@@ -2490,9 +2353,7 @@ var BASE = (function()
 			return;
 		}
 
-		input.value = val;
-
-		move_caret_to_end();
+		replace_text(input, val);
 
 		update_results();
 	}
@@ -2523,9 +2384,7 @@ var BASE = (function()
 			return;
 		}
 
-		input.value = val;
-
-		move_caret_to_end();
+		replace_text(input, val);
 
 		if(update)
 		{
@@ -2541,6 +2400,29 @@ var BASE = (function()
 		});
 
 		update_results();
+	}
+
+	function insert_text(input, s)
+	{
+		focus_if_isnt(input);
+		document.execCommand('insertText', false, s)
+	}
+
+	function replace_text(input, s)
+	{
+		focus_if_isnt(input);
+		document.execCommand('selectAll', false, null);
+		document.execCommand('insertText', false, s);
+	}
+
+	function undo_change()
+	{
+		document.execCommand('undo', false, null);
+	}
+
+	function redo_change()
+	{
+		document.execCommand('redo', false, null);		
 	}
 
 	return global;
