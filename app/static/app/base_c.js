@@ -2500,8 +2500,8 @@ var BASE = (function()
 
 	function remove_ranges()
 	{
-		var ss = focused.input.selectionStart;
-		focused.input.setSelectionRange(ss,ss);
+		var ss = focused.input.selectionEnd;
+		focused.input.setSelectionRange(ss, ss);
 	}
 
 	function place_infobar()
