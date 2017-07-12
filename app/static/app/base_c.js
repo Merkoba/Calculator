@@ -2761,6 +2761,7 @@ var BASE = (function()
 		s += "<br><br><br>";
 
 		s += "Available Commands";
+		
 		s += "<br><br>";
 
 		for(let i=0; i<commands.length; i++)
