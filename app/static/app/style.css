@@ -205,6 +205,11 @@ a:hover, a:visited, a:link
 	text-decoration: underline;
 }
 
+a.ancher1:hover, a.ancher1:visited, a.ancher1:link
+{
+	text-decoration: none;
+}
+
 .linky
 {
 	-webkit-touch-callout: none;
@@ -213,11 +218,6 @@ a:hover, a:visited, a:link
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-}
-
-a.link:hover, a.linky:visited
-{
-	color: inherit;
 }
 
 .linky2
