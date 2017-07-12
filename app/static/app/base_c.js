@@ -31,7 +31,7 @@ var BASE = (function()
 		'lake',
 		'vapor',
 		'bubble',
-		'copper'
+		'carbon'
 	];
 
 	var focused = {
