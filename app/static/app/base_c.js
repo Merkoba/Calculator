@@ -413,6 +413,8 @@ var BASE = (function()
 		$(input).data('variable', '$' + letter);
 		
 		focus_input(input);
+
+		move_caret_to_end(input);
 	}
 
 	function add_line_before()
@@ -2558,6 +2560,11 @@ var BASE = (function()
 	function capitalize_string(text) 
 	{
 		return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+	}
+
+	function move_caret_to_end(input)
+	{
+		input.setSelectionRange(input.value.length, input.value.length);
 	}
 
 	return global;
