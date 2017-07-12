@@ -1849,9 +1849,9 @@ var BASE = (function()
 		s += "Calculations are done automatically in real time using topological sorting.<br><br>";
 		s += "Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>";
 		s += "You can save a sheet for future use or sharing.<br><br>";
-		s += "Note: Formatting and rounding are only applied to the displayed results, not to internal calculations.<br><br><br>";
+		s += "Note: Formatting and rounding are only applied to the displayed results, not to internal calculations.";
 
-		s += "<span class='b2'>Shortcuts</span><br><br>";
+		s += "<br><br><br><span class='b2'>Shortcuts</span><br><br>";
 		s += "Enter will focus the next available empty line or create a new one.<br><br>";
 		s += "Shift + Enter does the same but also adds the previous line's variable into the new one.<br><br>";
 		s += "Control + Enter does the same but also copies the line's input into the new one.<br><br>";
@@ -1866,6 +1866,13 @@ var BASE = (function()
 		s += "Constants and methods in the Reference will be added to the current line when clicked.<br><br>";
 		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.<br><br>";
 		s += "Clicking on a result copies the result to the clipboard.";
+
+		s += "<br><br><br><span class='b2'>Exporting</span><br><br>";
+		s += "User options and data are stored in the Local Storage in your browser.<br><br>";
+		s += "In case you need to export them to another browser you can manually copy the object strings from one browser to another.<br><br>";
+		s += "To access the options object use localStorage.getItem(BASE.ls_options).<br><br>";
+		s += "To access the user data object use localStorage.getItem(BASE.ls_user_data).<br><br>";
+		s += "To copy the values to another browser use localStorage.setItem.";
 
 		about = s;
 	}
