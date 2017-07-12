@@ -1421,7 +1421,7 @@ var BASE = (function()
 
 	function place_lines_container()
 	{
-		var h = $(window).height() - $('#app_top').outerHeight(true);
+		var h = $(window).height() - $('#app_top').outerHeight();
 
 		$('#lines_container').css('height', h + 'px');
 	}
@@ -1616,7 +1616,14 @@ var BASE = (function()
 
 		for(var i=0; i<n; i++)
 		{
-			sample += split[i].substring(0, 100) + '\n';
+			var line = split[i].substring(0, 100).trim();
+
+			if(line === '')
+			{
+				line = 'Empty'
+			}
+
+			sample += line + '\n';
 		}
 
 		user_data.saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample, options.fraction]);
