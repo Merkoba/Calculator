@@ -2263,7 +2263,7 @@ var BASE = (function()
 
 	function show_saved(j=0)
 	{
-		if(user_data.saved.length === [])
+		if(user_data.saved.length === 0)
 		{
 			msg('Nothing saved yet.');
 			return;
