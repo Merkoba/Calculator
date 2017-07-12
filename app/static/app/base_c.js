@@ -1928,12 +1928,12 @@ var BASE = (function()
 		s += "<br><br><br>Theme<br><br>";
 
 		s += "<select id='sel_theme'>";
-		s += "<option value='default'>Default</option>";
 		s += "<option value='paper'>Paper</option>";
 		s += "<option value='dark'>Dark</option>";
 		s += "<option value='leaf'>Leaf</option>";
 		s += "<option value='bulb'>Bulb</option>";
 		s += "<option value='lake'>Lake</option>";
+		s += "<option value='vapor'>Vapor</option>";
 		s += "<option value='bubblegum'>Bubblegum</option>";
 		s += "</select>"
 
@@ -2044,7 +2044,7 @@ var BASE = (function()
 
 		if(options.theme === undefined)
 		{
-			options.theme = 'default';
+			options.theme = 'paper';
 			mod = true;
 		}
 
