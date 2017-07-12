@@ -323,3 +323,12 @@ sup
 {
 	border-bottom: 0.08em solid;
 }
+
+.prog_input
+{
+	font-size: 1em;	
+	width: 20em;
+	border: 0.02em solid black;
+	padding: 0.2em;
+	margin-top: 0.5em;
+}

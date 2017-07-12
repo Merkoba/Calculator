@@ -19,10 +19,11 @@ var BASE = (function()
 	var about;
 	var site_root;
 	var save_enabled = true;
-	var ls_options = 'options_v2';
-	var ls_user_data = 'user_data_v1';
 	var options;
 	var user_data;
+
+	global.ls_options = 'options_v2';
+	global.ls_user_data = 'user_data_v1';
 
 	var themes = [
 		'paper',
@@ -32,6 +33,27 @@ var BASE = (function()
 		'vapor',
 		'bubble',
 		'carbon'
+	];
+
+	var commands = [
+		'insert x',
+		'clear',
+		'erase',
+		'add line',
+		'add line before',
+		'add line after',
+		'remove line',
+		'remove last line',
+		'ans',
+		'go up',
+		'go down',
+		'move line up',
+		'move line down',
+		'undo',
+		'redo',
+		'format',
+		'format all',
+		'expand'
 	];
 
 	var focused = {
@@ -45,6 +67,7 @@ var BASE = (function()
 		apply_theme(options.theme);
 		apply_mode();
 		draw_buttons();
+		draw_prog_buttons();
 		place_infobar();
 		update_infobar();
 		place_lines_container();
@@ -236,6 +259,10 @@ var BASE = (function()
 
 		buttons_br();
 
+		place_prog_buttons_area();
+
+		buttons_br();
+
 		place_button_wider('Up', 'Right Click: Move Line Up');
 		place_button_wider('Down', 'Right Click: Move Line Down');
 		place_button_wider('New Line', 'Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before');
@@ -243,7 +270,7 @@ var BASE = (function()
 		place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs');
 		place_button_wider('Erase', 'Right Click: Undo &nbsp;|&nbsp; Middle Click: Redo');
 
-		$('.button').each(function()
+		$('.button').not('.programmable').each(function()
 		{
 			var dblclickers = ["Remove Line", "Clear"];
 
@@ -276,7 +303,7 @@ var BASE = (function()
 
 			tippy(this, 
 			{
-				delay: [2000, 100],
+				delay: [1200, 100],
 				animation: 'scale',
 				hideOnClick: false,
 				duration: 100,
@@ -290,6 +317,76 @@ var BASE = (function()
 		});
 	}
 
+	function draw_prog_buttons()
+	{
+		$('#prog_buttons').html('');
+
+		for(let i=1; i<13; i++)
+		{
+			var s = '';
+
+			var key = 'F' + i;
+
+			var prog = user_data.programs[key];
+
+			var t1 = 'Primary';
+			var t2 = 'Secondary';
+			
+			if(prog !== undefined)
+			{
+
+				if(prog.primary !== undefined)
+				{
+					if(prog.primary.title !== '')
+					{
+						t1 = prog.primary.title;
+					}
+				}
+
+				if(prog.secondary !== undefined)
+				{
+					if(prog.secondary.title !== '')
+					{
+						t2 = prog.secondary.title;
+					}				
+				}
+			}
+
+			s += "Click: " + t1 + " &nbsp;|&nbsp; ";
+			s += "Right Click: " + t2 + " &nbsp;|&nbsp; ";
+			s += 'Middle Click: Program';
+
+			place_button_programmable(key, s);
+		}
+
+		$('.button.programmable').each(function()
+		{
+			$(this).click(function(e)
+			{
+				prog_press($(this).text(), e.which);
+			});
+
+			$(this).on('auxclick', function(e)
+			{
+				prog_press($(this).text(), e.which);
+			});
+			
+			tippy(this, 
+			{
+				delay: [1200, 100],
+				animation: 'scale',
+				hideOnClick: false,
+				duration: 100,
+				arrow: true,
+				performance: true,
+				size: 'regular',
+				arrowSize: 'small'
+			});
+
+			disable_context_menu(this);
+		});		
+	}
+
 	function place_button(s, title='')
 	{
 		$('#buttons').append(`<button title="${title}" class='button'>${s}</button>`);
@@ -298,6 +395,16 @@ var BASE = (function()
 	function place_button_wider(s, title='')
 	{
 		$('#buttons').append(`<button title="${title}" class='button wider'>${s}</button>`);
+	}
+
+	function place_prog_buttons_area()
+	{
+		$('#buttons').append("<span id='prog_buttons'></span>");
+	}
+
+	function place_button_programmable(s, title='')
+	{
+		$('#prog_buttons').append(`<button title="${title}" class='button programmable'>${s}</button>`);
 	}
 
 	function buttons_br()
@@ -437,7 +544,12 @@ var BASE = (function()
 
 	function remove_line()
 	{
-		if($(focused.input).parent().index() === $('.line').length - 1)
+		if($('.line').length === 1)
+		{
+			clear_input(focused.input);
+		}
+
+		else if($(focused.input).parent().index() === $('.line').length - 1)
 		{
 			remove_last_line();
 		}
@@ -722,7 +834,7 @@ var BASE = (function()
 	{
 		if($('.line').length === 1)
 		{
-			play('nope');
+			clear_input(focused.input);
 			return;
 		}
 
@@ -1133,6 +1245,32 @@ var BASE = (function()
 		}
 
 		return false;
+	}
+
+	function prog_press(key, e)
+	{
+		if(e === 2)
+		{
+			open_program_editor(key);
+			return false;
+		}
+
+		var prog = user_data.programs[key];
+
+		if(prog !== undefined)
+		{
+			if(e === 1)
+			{
+				execute_program(prog.primary.commands);
+			}
+
+			if(e === 3)
+			{
+				execute_program(prog.secondary.commands);
+			}	
+		}
+
+		focus_if_isnt(focused.input);
 	}
 
 	function clear_input(input)
@@ -2015,12 +2153,12 @@ var BASE = (function()
 
 	function update_options()
 	{
-		localStorage.setItem(ls_options, JSON.stringify(options));
+		localStorage.setItem(BASE.ls_options, JSON.stringify(options));
 	}
 
 	function get_options()
 	{
-		options = JSON.parse(localStorage.getItem(ls_options));
+		options = JSON.parse(localStorage.getItem(BASE.ls_options));
 
 		var mod = false;
 
@@ -2083,25 +2221,45 @@ var BASE = (function()
 
 	function get_user_data()
 	{
-		user_data = JSON.parse(localStorage.getItem(ls_user_data));
+		user_data = JSON.parse(localStorage.getItem(BASE.ls_user_data));
+
+		var mod = false;
 
 		if(user_data === null)
 		{
 			user_data = {};
+			mod = true;
+		}
+
+		if(user_data.saved === undefined)
+		{
+			user_data.saved = [];
+			mod = true;
+		}
+
+		if(user_data.programs === undefined)
+		{
+			user_data.programs = {};
+			mod = true;
+		}
+
+		if(mod)
+		{
 			update_user_data();
 		}
 	}
 
 	function update_user_data()
 	{
-		localStorage.setItem(ls_user_data, JSON.stringify(user_data));
+		localStorage.setItem(BASE.ls_user_data, JSON.stringify(user_data));
 	}
 
 	function show_saved(j=0)
 	{
-		if(user_data.saved === undefined)
+		if(user_data.saved.length === [])
 		{
 			msg('Nothing saved yet.');
+			return;
 		}
 
 		else
@@ -2565,6 +2723,214 @@ var BASE = (function()
 	function move_caret_to_end(input)
 	{
 		input.setSelectionRange(input.value.length, input.value.length);
+	}
+
+	function open_program_editor(key)
+	{
+		var s = "";
+
+		s += "Primary Action Title</b2>";
+		s += "<br><input class='prog_input'></input>";
+
+		s += "<br><br><br>";
+
+		s += "Primary Action Commands";
+		s += "<br><input class='prog_input'></input>";
+
+		s += "<br><br><br>";
+
+		s += "Secondary Action Title";
+		s += "<br><input class='prog_input'></input>";
+
+		s += "<br><br><br>";
+
+		s += "Secondary Action Commands";
+		s += "<br><input class='prog_input'></input>";
+
+		s += "<br><br><br>";
+
+		s += "<span id='prog_save' class='linky2'>Save</span>";
+
+		s += "<br><br><br>";
+
+		s += "Available Commands";
+		s += "<br><br>";
+
+		for(let i=0; i<commands.length; i++)
+		{
+			s += commands[i] + "<br>";
+		}
+
+		s += "<br><br>";
+
+		s += "Examples";
+		s += "<br><br>";
+		s += "insert 34<br>";
+		s += "insert pi<br>";
+		s += "add line; insert cos(55)<br>";
+		s += "go up; erase; format<br>";
+		s += "insert 1; add line; ans; insert + 2";
+
+		msg(s);
+
+		var prog = user_data.programs[key];
+
+		if(prog !== undefined)
+		{
+			$('#msg').find('input').get(0).value = prog.primary.title;
+			$('#msg').find('input').get(1).value = prog.primary.commands;
+
+			$('#msg').find('input').get(2).value = prog.secondary.title;
+			$('#msg').find('input').get(3).value = prog.secondary.commands;
+		}
+
+		$('#msg').find('input').first().focus();
+
+		$('#prog_save').click(function()
+		{
+			save_program(key);
+			hide_overlay();
+		});
+	}
+
+	function save_program(key)
+	{
+		var p_title = $('#msg').find('input').get(0).value.trim().replace(/\s+/g, ' ');
+		var p_commands = $('#msg').find('input').get(1).value.trim().replace(/\s+/g, ' ');
+
+		var s_title = $('#msg').find('input').get(2).value.trim().replace(/\s+/g, ' ');
+		var s_commands = $('#msg').find('input').get(3).value.trim().replace(/\s+/g, ' ');
+
+		if(user_data.programs[key] === undefined)
+		{
+			user_data.programs[key] = {primary:{}, secondary:{}}
+		}
+
+		user_data.programs[key].primary.title = p_title;
+		user_data.programs[key].primary.commands = p_commands;
+
+		user_data.programs[key].secondary.title = s_title;
+		user_data.programs[key].secondary.commands = s_commands;
+
+		draw_prog_buttons();
+
+		update_user_data();
+	}
+
+	function execute_program(cmds)
+	{
+		var split = cmds.split(';');
+
+		for(let i=0; i<split.length; i++)
+		{
+			var command = split[i].trim().replace(/\s+/g, ' ');
+
+			if(command.length === 0)
+			{
+				continue;
+			}
+
+			if(command.indexOf('insert ') !== -1)
+			{
+				insert_text(focused.input, command.replace('insert ', ''));
+				continue;
+			}
+
+			var index = commands.indexOf(command);
+
+			if(index !== -1)
+			{
+				execute_command(command);
+			}
+		}
+	}
+
+	function execute_command(command)
+	{
+		if(command === "clear")
+		{
+			clear_input(focused.input);
+		}
+
+		else if(command === "erase")
+		{
+			erase_character();
+		}
+
+		else if(command === "add line")
+		{
+			add_line();
+		}
+
+		else if(command === "add line before")
+		{
+			add_line_before();
+		}
+
+		else if(command === "add line after")
+		{
+			add_line_after();
+		}
+
+		else if(command === "remove line")
+		{
+			remove_line();
+		}
+
+		else if(command === "remove last line")
+		{
+			remove_last_line();
+		}
+
+		else if(command === "ans")
+		{
+			add_ans();
+		}
+
+		else if(command === "go up")
+		{
+			line_up();
+		}
+
+		else if(command === "go down")
+		{
+			line_down();
+		}
+
+		else if(command === "move line up")
+		{
+			move_line_up();
+		}
+
+		else if(command === "move line down")
+		{
+			move_line_down();
+		}
+
+		else if(command === "undo")
+		{
+			undo_change();
+		}
+
+		else if(command === "redo")
+		{
+			redo_change();
+		}
+
+		else if(command === "format")
+		{
+			format_input(focused.input);
+		}
+
+		else if(command === "format all")
+		{
+			format_all_inputs();
+		}
+
+		else if(command === "expand")
+		{
+			expand_value(focused.input);
+		}
 	}
 
 	return global;
