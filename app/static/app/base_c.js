@@ -33,6 +33,7 @@ var BASE = (function()
 	{
 		get_options();
 		get_user_data();
+		apply_theme(options.theme);
 		draw_buttons();
 		place_infobar();
 		update_infobar();
@@ -1501,10 +1502,10 @@ var BASE = (function()
 			save_sheet();
 		});
 
-		$('#lnk_code').click(function()
+		$('#lnk_options').click(function()
 		{
-			show_code();
-		});	
+			show_options();
+		});
 
 		$('#lnk_more').click(function()
 		{
@@ -1849,8 +1850,6 @@ var BASE = (function()
 	{
 		var s = "";
 
-		s += "<span class='linky2' id='more_options'>Options</span><br><br><br>";
-
 		s += "<span class='linky2' id='more_saved'>Saved</span><br><br><br>";
 
 		s += "<span class='linky2' id='more_about'>About</span>";
@@ -1903,8 +1902,6 @@ var BASE = (function()
 			s += "<input id='chk_round' type='checkbox'>";
 		}
 
-		s += "<span id='op_round_places'>";
-
 		s += "<br><br><br>Round Places<br><br>";
 
 		s += "<select id='sel_round_places'>";
@@ -1914,9 +1911,7 @@ var BASE = (function()
 		s += "<option value='3'>3</option>";
 		s += "<option value='4'>4</option>";
 		s += "<option value='5'>5</option>";
-		s += "</select>"
-
-		s += "</span>";		
+		s += "</select>"		
 
 		s += "<br><br><br>Enable Sound<br><br>";
 
@@ -1930,11 +1925,31 @@ var BASE = (function()
 			s += "<input id='chk_sound' type='checkbox'>";
 		}
 
+		s += "<br><br><br>Theme<br><br>";
+
+		s += "<select id='sel_theme'>";
+		s += "<option value='default'>Default</option>";
+		s += "<option value='paper'>Paper</option>";
+		s += "<option value='dark'>Dark</option>";
+		s += "<option value='leaf'>Leaf</option>";
+		s += "<option value='bulb'>Bulb</option>";
+		s += "<option value='lake'>Lake</option>";
+		s += "<option value='bubblegum'>Bubblegum</option>";
+		s += "</select>"
+
 		msg(s);
 
 		$('#sel_round_places').find('option').each(function()
 		{
 			if(this.value == options.round_places)
+			{
+				$(this).prop('selected', true);
+			}
+		});
+
+		$('#sel_theme').find('option').each(function()
+		{
+			if(this.value == options.theme)
 			{
 				$(this).prop('selected', true);
 			}
@@ -1969,6 +1984,13 @@ var BASE = (function()
 		$('#chk_sound').change(function()
 		{
 			options.sound = $(this).prop('checked');
+			update_options();
+		});
+
+		$('#sel_theme').change(function()
+		{
+			options.theme = this.value;
+			apply_theme(options.theme);
 			update_options();
 		});
 	}
@@ -2017,6 +2039,12 @@ var BASE = (function()
 		if(options.fraction === undefined)
 		{
 			options.fraction = false;
+			mod = true;
+		}
+
+		if(options.theme === undefined)
+		{
+			options.theme = 'default';
 			mod = true;
 		}
 
@@ -2457,6 +2485,11 @@ var BASE = (function()
 		{
 			toggle_fraction();
 		});
+	}
+
+	function apply_theme(theme)
+	{
+		$('head').append("<link rel='stylesheet' href='/static/app/themes/" + theme + ".css?v=" + app_version + "'>");
 	}
 
 	return global;
