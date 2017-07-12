@@ -34,6 +34,7 @@ var BASE = (function()
 		get_options();
 		get_user_data();
 		apply_theme(options.theme);
+		apply_mode();
 		draw_buttons();
 		place_infobar();
 		update_infobar();
@@ -2234,6 +2235,7 @@ var BASE = (function()
 	{
 		options.fraction = !options.fraction;
 		update_results();
+		apply_mode();
 		update_infobar();
 		update_options();
 	}
@@ -2490,6 +2492,21 @@ var BASE = (function()
 	function apply_theme(theme)
 	{
 		$('head').append("<link rel='stylesheet' href='/static/app/themes/" + theme + ".css?v=" + app_version + "'>");
+	}
+
+	function apply_mode()
+	{
+		if(options.fraction)
+		{
+			var mode = "fraction";
+		}
+
+		else
+		{
+			var mode = "normal";
+		}
+
+		$('head').append("<link rel='stylesheet' href='/static/app/modes/" + mode + ".css?v=" + app_version + "'>");
 	}
 
 	return global;
