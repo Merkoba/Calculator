@@ -16,7 +16,6 @@ var BASE = (function()
 	var letters = "abcdefghijklmnopqrstuvwxyz";
 	var linevars = {};
 	var msg_open = false;
-	var reference;
 	var about;
 	var site_root;
 	var save_enabled = true;
@@ -25,9 +24,19 @@ var BASE = (function()
 	var options;
 	var user_data;
 
+	var themes = [
+		'paper',
+		'leaf',
+		'bulb',
+		'lake',
+		'vapor',
+		'bubble',
+		'copper'
+	];
+
 	var focused = {
 		input: null
-	}
+	};
 
 	global.init = function()
 	{
@@ -232,7 +241,7 @@ var BASE = (function()
 		place_button_wider('New Line', 'Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before');
 		place_button_wider('Remove Line', 'Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line');
 		place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs');
-		place_button_wider('Undo', 'Right Click: Redo');
+		place_button_wider('Erase', 'Right Click: Undo &nbsp;|&nbsp; Middle Click: Redo');
 
 		$('.button').each(function()
 		{
@@ -893,9 +902,9 @@ var BASE = (function()
 			return;
 		}
 
-		else if(s === "Undo")
+		else if(s === "Erase")
 		{
-			undo_change();
+			erase_character();
 			update_results();
 			return;
 		}
@@ -1103,14 +1112,21 @@ var BASE = (function()
 				}
 			}
 
-			else if(s === "Undo")
+			else if(s === "Erase")
 			{
 				if(aux === 3)
+				{
+					undo_change();
+					update_results();
+					return false;
+				}
+
+				else if(aux === 2)
 				{
 					redo_change();
 					update_results();
 					return false;
-				}
+				}				
 			}
 		}
 
@@ -1689,7 +1705,7 @@ var BASE = (function()
 		s += "Version " + app_version + "<br><br>";
 		s += "This is a calculator that aims to empower users through a different workflow than what is found in most common calculator programs.<br><br>";
 		s += "It's based around multiple \"lines\" of calculations which can be reused and edited anytime.<br><br>";
-		s += "Calculations are done by the math.js library, with high precision settings enabled.<br><br>";
+		s += "Calculations are done by the <a href='http://mathjs.org/docs/index.html' target=_blank>math.js</a> library, with high precision settings enabled.<br><br>";
 		s += "Calculations are done automatically in real time using topological sorting.<br><br>";
 		s += "Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>";
 		s += "You can save a sheet for future use or sharing.<br><br>";
@@ -1929,13 +1945,12 @@ var BASE = (function()
 		s += "<br><br><br>Theme<br><br>";
 
 		s += "<select id='sel_theme'>";
-		s += "<option value='paper'>Paper</option>";
-		s += "<option value='dark'>Dark</option>";
-		s += "<option value='leaf'>Leaf</option>";
-		s += "<option value='bulb'>Bulb</option>";
-		s += "<option value='lake'>Lake</option>";
-		s += "<option value='vapor'>Vapor</option>";
-		s += "<option value='bubblegum'>Bubblegum</option>";
+
+		for(let i=0; i<themes.length; i++)
+		{
+			s += "<option value='" + themes[i] + "'>" + capitalize_string(themes[i]) + "</option>";
+		}
+
 		s += "</select>"
 
 		msg(s);
@@ -2047,6 +2062,15 @@ var BASE = (function()
 		{
 			options.theme = 'paper';
 			mod = true;
+		}
+
+		else
+		{
+			if(themes.indexOf(options.theme) === -1)
+			{
+				options.theme = 'paper';
+				mod = true;
+			}
 		}
 
 		if(mod)
@@ -2446,14 +2470,36 @@ var BASE = (function()
 		document.execCommand('insertText', false, s);
 	}
 
+	function erase_character()
+	{
+		var ss = focused.input.selectionStart;
+
+		if(ss === 0)
+		{
+			focus_input(focused.input);
+			return;
+		}
+
+		focused.input.setSelectionRange(ss - 1, ss);
+		insert_text(focused.input, '');		
+	}
+
 	function undo_change()
 	{
 		document.execCommand('undo', false, null);
+		remove_ranges();
 	}
 
 	function redo_change()
 	{
-		document.execCommand('redo', false, null);		
+		document.execCommand('redo', false, null);
+		remove_ranges();		
+	}
+
+	function remove_ranges()
+	{
+		var ss = focused.input.selectionStart;
+		focused.input.setSelectionRange(ss,ss);
 	}
 
 	function place_infobar()
@@ -2507,6 +2553,11 @@ var BASE = (function()
 		}
 
 		$('head').append("<link rel='stylesheet' href='/static/app/modes/" + mode + ".css?v=" + app_version + "'>");
+	}
+
+	function capitalize_string(text) 
+	{
+		return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 	}
 
 	return global;
