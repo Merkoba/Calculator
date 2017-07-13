@@ -2979,7 +2979,6 @@ var BASE = (function()
 				if(splt[0].toLowerCase() === 'insert')
 				{
 					insert_text(focused.input, splt.slice(1));
-					continue;
 				}
 
 				else
