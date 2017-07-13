@@ -45,7 +45,13 @@ var BASE = (function()
 		'add line after',
 		'remove line',
 		'remove last line',
-		'ans',
+		'remove all lines',
+		'variable down',
+		'input down',
+		'result down',
+		'prev variable',
+		'prev input',
+		'prev result',
 		'go up',
 		'go down',
 		'move line up',
@@ -55,7 +61,12 @@ var BASE = (function()
 		'format',
 		'format all',
 		'expand',
-		'caret to end'
+		'caret to end',
+		'caret to start',
+		'copy variable',
+		'copy input',
+		'copy result',
+		'pup'
 	];
 
 	var focused = {
@@ -146,7 +157,7 @@ var BASE = (function()
 
 				else if(e.ctrlKey)
 				{
-					copy_value_down();
+					copy_input_down();
 				}
 
 				else
@@ -225,7 +236,7 @@ var BASE = (function()
 
 				else if(e.ctrlKey)
 				{
-					add_top_val();
+					add_input();
 					e.preventDefault();
 				}
 			}
@@ -389,11 +400,6 @@ var BASE = (function()
 			{
 				prog_press($(this).text(), event);
 			}, false);	
-
-			$(this).on('auxclick', function(e)
-			{
-				prog_press($(this).text(), e.which);
-			});
 			
 			tippy(this, 
 			{
@@ -582,6 +588,15 @@ var BASE = (function()
 		{
 			move_lines_up();
 		}
+	}
+
+	function remove_all_lines()
+	{
+		undefine_variables();
+		
+		$('#lines').html('');
+		
+		add_line();
 	}
 
 	function move_lines_up()
@@ -1276,7 +1291,7 @@ var BASE = (function()
 		if(e.which === 2)
 		{
 			open_program_editor(key);
-			return false;
+			return;
 		}
 
 		focus_if_isnt(focused.input);
@@ -2046,13 +2061,23 @@ var BASE = (function()
 		}
 	}
 
-	function add_top_val()
+	function add_result()
 	{
-		var val = $(focused.input).parent().prev('.line').find('.input').val();
+		var result = $(focused.input).parent().prev('.line').find('.result')[0];
 
-		if(val !== '')
+		if(result !== undefined)
 		{
-			press(val);
+			press(get_result_text(result));
+		}
+	}
+
+	function add_input()
+	{
+		var value = $(focused.input).parent().prev('.line').find('.input')[0].value;
+
+		if(value !== undefined && value !== '')
+		{
+			press(value);
 		}
 	}
 
@@ -2413,7 +2438,7 @@ var BASE = (function()
 		{
 			this.value = this.value + s;
 
-			$(this).parent().next('.line').find('.input').val($(this).data('variable'));
+			$(this).parent().next('.line').find('.input')[0].value = ($(this).data('variable'));
 		});
 
 		update_results();
@@ -2445,7 +2470,7 @@ var BASE = (function()
 		}
 	}
 
-	function on_result_click(el)
+	function get_result_text(el)
 	{
 		var s = "";
 
@@ -2463,8 +2488,12 @@ var BASE = (function()
 			s += $(el).text();
 		}
 
-		copy_to_clipboard(s);
+		return s;		
+	}
 
+	function on_result_click(el)
+	{
+		copy_to_clipboard(get_result_text(el));
 		play('pup');
 	}
 
@@ -2529,7 +2558,7 @@ var BASE = (function()
 		});		
 	}
 
-	function copy_value_down()
+	function copy_input_down()
 	{
 		var og_var = $(focused.input).data('variable');
 		var og_val = focused.input.value;
@@ -2539,6 +2568,20 @@ var BASE = (function()
 		if(og_var !== $(focused.input).data('variable'))
 		{
 			replace_text(focused.input, og_val);
+			update_results();
+		}
+	}
+
+	function copy_result_down()
+	{
+		var og_var = $(focused.input).data('variable');
+		var og_result = get_result_text($(focused.input).parent().find('.result')[0])
+
+		focus_next_or_add();
+
+		if(og_var !== $(focused.input).data('variable'))
+		{
+			replace_text(focused.input, og_result);
 			update_results();
 		}
 	}
@@ -2577,7 +2620,7 @@ var BASE = (function()
 					return match;
 				}
 
-				var v = $('#' + match.substring(1)).val();
+				var v = $('#' + match.substring(1))[0].value;
 
 				if(v !== undefined && v.trim() !== '')
 				{
@@ -2778,6 +2821,11 @@ var BASE = (function()
 		input.setSelectionRange(input.value.length, input.value.length);
 	}
 
+	function move_caret_to_start(input)
+	{
+		input.setSelectionRange(0, 0);
+	}
+
 	function open_program_editor(key)
 	{
 		var s = "";
@@ -2832,7 +2880,7 @@ var BASE = (function()
 		s += "insert pi<br>";
 		s += "add line; insert cos(55)<br>";
 		s += "go up; erase; format<br>";
-		s += "insert 1; add line; ans; insert + 2";
+		s += "insert 1; add line; prev variable; insert + 2";
 
 		msg(s);
 
@@ -2850,7 +2898,7 @@ var BASE = (function()
 			$('#prog_chk_s').prop('checked', prog.secondary.doubleclick);
 		}
 
-		$('#msg').find('input').first().focus();
+		$('#msg').find('.prog_input').first().focus();
 
 		$('#prog_save').click(function()
 		{
@@ -2952,9 +3000,39 @@ var BASE = (function()
 			remove_last_line();
 		}
 
-		else if(command === "ans")
+		else if(command === "remove all lines")
+		{
+			remove_all_lines();
+		}
+
+		else if(command === "variable down")
+		{
+			press($(focused.input).data('variable'));
+		}		
+
+		else if(command === "input down")
+		{
+			copy_input_down();
+		}
+
+		else if(command === "result down")
+		{
+			copy_result_down();
+		}
+
+		else if(command === "prev variable")
 		{
 			add_ans();
+		}
+
+		else if(command === "prev input")
+		{
+			add_input();
+		}
+
+		else if(command === "prev result")
+		{
+			add_result();
 		}
 
 		else if(command === "go up")
@@ -3005,6 +3083,32 @@ var BASE = (function()
 		else if(command === "caret to end")
 		{
 			move_caret_to_end(focused.input);
+		}
+
+		else if(command === "caret to start")
+		{
+			move_caret_to_start(focused.input);
+		}
+
+		else if(command === "copy variable")
+		{
+			copy_to_clipboard($(focused.input).data('variable'));
+		}
+
+		else if(command === "copy input")
+		{
+			copy_to_clipboard(focused.input.value);
+		}
+
+		else if(command === "copy result")
+		{
+			var result = get_result_text($(focused.input).parent().find('.result')[0]);
+			copy_to_clipboard(result);
+		}
+
+		else if(command === "pup")
+		{
+			play('pup');
 		}
 	}
 
