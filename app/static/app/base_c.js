@@ -2965,24 +2965,38 @@ var BASE = (function()
 
 		for(let i=0; i<split.length; i++)
 		{
-			var command = split[i].trim().replace(/\s+/g, ' ').toLowerCase();
+			var command = split[i].trim().replace(/\s+/g, ' ');
 
 			if(command.length === 0)
 			{
 				continue;
 			}
 
-			if(command.indexOf('insert ') !== -1)
+			if(command.indexOf(' ') !== -1)
 			{
-				insert_text(focused.input, command.replace('insert ', ''));
-				continue;
+				var splt = command.split(' ');
+
+				if(splt[0].toLowerCase() === 'insert')
+				{
+					insert_text(focused.input, splt.slice(1));
+					continue;
+				}
+
+				else
+				{
+					if(commands.indexOf(command.toLowerCase() !== -1))
+					{
+						execute_command(command);
+					}					
+				}
 			}
 
-			var index = commands.indexOf(command);
-
-			if(index !== -1)
+			else
 			{
-				execute_command(command);
+				if(commands.indexOf(command.toLowerCase() !== -1))
+				{
+					execute_command(command);
+				}
 			}
 		}
 	}
