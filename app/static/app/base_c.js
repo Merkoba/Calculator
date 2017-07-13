@@ -2091,7 +2091,7 @@ var BASE = (function()
 			s += "<input id='chk_sound' type='checkbox'>";
 		}
 
-		s += "<br><br><br>Theme<br><br>";
+		s += "<br><br><br>Color Theme<br><br>";
 
 		s += "<select id='sel_theme'>";
 
