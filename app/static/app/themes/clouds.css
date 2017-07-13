@@ -1,19 +1,19 @@
 body
 {
-	background-color: #bde0c9;
+	background-color: white;
 	color: black;
 }
 
 .button
 {
-	background-color: #a7ceac;
-	border-color: #a0ceb1;
+	background-color: #dee6f5;
+	border-color: #e1ebff;
 	color: black;
 }
 
 #infobar
 {
-	background-color: #96b990;
+	background-color: #e8e8e8;
 	color: black;
 }
 

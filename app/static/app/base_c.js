@@ -34,6 +34,7 @@ var BASE = (function()
 		'vapor',
 		'cobalt',
 		'bubble',
+		'clouds',
 		'carbon'
 	];
 
