@@ -19,10 +19,8 @@ var BASE = (function()
 	var about;
 	var site_root;
 	var save_enabled = true;
-	var options;
 	var user_data;
 
-	global.ls_options = 'options_v2';
 	global.ls_user_data = 'user_data_v1';
 
 	var themes = [
@@ -77,9 +75,8 @@ var BASE = (function()
 
 	global.init = function()
 	{
-		get_options();
 		get_user_data();
-		apply_theme(options.theme);
+		apply_theme(user_data.options.theme);
 		apply_mode();
 		draw_buttons();
 		draw_prog_buttons();
@@ -921,7 +918,7 @@ var BASE = (function()
 				return;
 			}
 
-			if(options.fraction)
+			if(user_data.options.fraction)
 			{
 				var result = math_fraction.eval(val.replace(/\$/g, '_') + '*1', linevars);
 			}
@@ -964,7 +961,7 @@ var BASE = (function()
 
 	function format_result(n, f=false)
 	{
-		if(options.fraction && !f)
+		if(user_data.options.fraction && !f)
 		{
 			var split = math_fraction.format(n).split('/');
 
@@ -984,9 +981,9 @@ var BASE = (function()
 
 		else
 		{
-			if(options.round)
+			if(user_data.options.round)
 			{
-				n = math_normal.round(n, options.round_places);
+				n = math_normal.round(n, user_data.options.round_places);
 			}
 
 			var ns = n.toString();
@@ -1004,7 +1001,7 @@ var BASE = (function()
 				var decimal = '';
 			}
 
-			if(options.commas)
+			if(user_data.options.commas)
 			{
 				whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			}
@@ -1670,7 +1667,7 @@ var BASE = (function()
 
 	function play(what)
 	{
-		if(options.sound)
+		if(user_data.options.sound)
 		{
 			$('#' + what)[0].pause();
 			$('#' + what)[0].currentTime = 0;
@@ -1846,7 +1843,7 @@ var BASE = (function()
 			sample += line + '\n';
 		}
 
-		user_data.saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample, options.fraction]);
+		user_data.saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample, user_data.options.fraction]);
 
 		update_user_data();
 	}
@@ -1863,7 +1860,7 @@ var BASE = (function()
 
 	function make_uparams(s)
 	{
-		if(options.fraction)
+		if(user_data.options.fraction)
 		{
 			s += "?";
 			s += "frac";
@@ -1931,11 +1928,10 @@ var BASE = (function()
 		s += "Clicking on a result copies the result to the clipboard.";
 
 		s += "<br><br><br><span class='b2'>Exporting</span><br><br>";
-		s += "User options and data are stored in the Local Storage in your browser.<br><br>";
-		s += "In case you need to export them to another browser you can manually copy the object strings from one browser to another.<br><br>";
-		s += "To access the options object use localStorage.getItem(BASE.ls_options).<br><br>";
-		s += "To access the user data object use localStorage.getItem(BASE.ls_user_data).<br><br>";
-		s += "To copy the values to another browser use localStorage.setItem.";
+		s += "User data is stored in the local storage in your browser.<br><br>";
+		s += "In case you need to export them to another browser you can manually copy the object string from one browser to another.<br><br>";
+		s += "To access the object string use localStorage.getItem(BASE.ls_user_data).<br><br>";
+		s += "To copy the value to another browser use localStorage.setItem(BASE.ls_user_data, string).";
 
 		about = s;
 	}
@@ -2010,7 +2006,7 @@ var BASE = (function()
 	{
 		if(get_url_param('frac') === null)
 		{
-			if(options.fraction)
+			if(user_data.options.fraction)
 			{
 				toggle_fraction();
 			}
@@ -2018,7 +2014,7 @@ var BASE = (function()
 
 		else
 		{
-			if(!options.fraction)
+			if(!user_data.options.fraction)
 			{
 				toggle_fraction();
 			}
@@ -2117,7 +2113,7 @@ var BASE = (function()
 
 		s += "Add Commas<br><br>";
 
-		if(options.commas)
+		if(user_data.options.commas)
 		{
 			s += "<input id='chk_commas' type='checkbox' checked>";
 		}
@@ -2129,7 +2125,7 @@ var BASE = (function()
 		
 		s += "<br><br><br>Round Results<br><br>";
 
-		if(options.round)
+		if(user_data.options.round)
 		{
 			s += "<input id='chk_round' type='checkbox' checked>";
 		}
@@ -2152,7 +2148,7 @@ var BASE = (function()
 
 		s += "<br><br><br>Enable Sound<br><br>";
 
-		if(options.sound)
+		if(user_data.options.sound)
 		{
 			s += "<input id='chk_sound' type='checkbox' checked>";
 		}
@@ -2177,7 +2173,7 @@ var BASE = (function()
 
 		$('#sel_round_places').find('option').each(function()
 		{
-			if(this.value == options.round_places)
+			if(this.value == user_data.options.round_places)
 			{
 				$(this).prop('selected', true);
 			}
@@ -2185,7 +2181,7 @@ var BASE = (function()
 
 		$('#sel_theme').find('option').each(function()
 		{
-			if(this.value == options.theme)
+			if(this.value == user_data.options.theme)
 			{
 				$(this).prop('selected', true);
 			}
@@ -2193,23 +2189,23 @@ var BASE = (function()
 
 		$('#chk_commas').change(function()
 		{
-			options.commas = $(this).prop('checked');
+			user_data.options.commas = $(this).prop('checked');
 			update_results();
-			update_options();
+			update_user_data();
 		});
 		
 		$('#chk_round').change(function()
 		{
-			options.round = $(this).prop('checked');
+			user_data.options.round = $(this).prop('checked');
 			update_results();
-			update_options();
+			update_user_data();
 		});	
 
 		$('#sel_round_places').change(function()
 		{
-			options.round_places = parseInt(this.value);
+			user_data.options.round_places = parseInt(this.value);
 			update_results();
-			update_options();
+			update_user_data();
 		});
 
 		$('#chk_fraction').change(function()
@@ -2219,84 +2215,16 @@ var BASE = (function()
 
 		$('#chk_sound').change(function()
 		{
-			options.sound = $(this).prop('checked');
-			update_options();
+			user_data.options.sound = $(this).prop('checked');
+			update_user_data();
 		});
 
 		$('#sel_theme').change(function()
 		{
-			options.theme = this.value;
-			apply_theme(options.theme);
-			update_options();
+			user_data.options.theme = this.value;
+			apply_theme(user_data.options.theme);
+			update_user_data();
 		});
-	}
-
-	function update_options()
-	{
-		localStorage.setItem(BASE.ls_options, JSON.stringify(options));
-	}
-
-	function get_options()
-	{
-		options = JSON.parse(localStorage.getItem(BASE.ls_options));
-
-		var mod = false;
-
-		if(options === null)
-		{
-			options = {};
-			mod = true;
-		}
-
-		if(options.sound === undefined)
-		{
-			options.sound = true;
-			mod = true;
-		}
-
-		if(options.commas === undefined)
-		{
-			options.commas = true;
-			mod = true;
-		}
-
-		if(options.round === undefined)
-		{
-			options.round = true;
-			mod = true;
-		}
-
-		if(options.round_places === undefined)
-		{
-			options.round_places = 5;
-			mod = true;
-		}
-
-		if(options.fraction === undefined)
-		{
-			options.fraction = false;
-			mod = true;
-		}
-
-		if(options.theme === undefined)
-		{
-			options.theme = 'paper';
-			mod = true;
-		}
-
-		else
-		{
-			if(themes.indexOf(options.theme) === -1)
-			{
-				options.theme = 'paper';
-				mod = true;
-			}
-		}
-
-		if(mod)
-		{
-			update_options();
-		}
 	}
 
 	function get_user_data()
@@ -2322,6 +2250,48 @@ var BASE = (function()
 			user_data.programs = {};
 			mod = true;
 		}
+
+		if(user_data.options === undefined)
+		{
+			user_data.options = {};
+			mod = true;
+		}
+
+		if(user_data.options.sound === undefined)
+		{
+			user_data.options.sound = true;
+			mod = true;
+		}
+
+		if(user_data.options.commas === undefined)
+		{
+			user_data.options.commas = true;
+			mod = true;
+		}
+
+		if(user_data.options.round === undefined)
+		{
+			user_data.options.round = true;
+			mod = true;
+		}
+
+		if(user_data.options.round_places === undefined)
+		{
+			user_data.options.round_places = 5;
+			mod = true;
+		}
+
+		if(user_data.options.fraction === undefined)
+		{
+			user_data.options.fraction = false;
+			mod = true;
+		}
+
+		if(user_data.options.theme === undefined)
+		{
+			user_data.options.theme = 'paper';
+			mod = true;
+		}		
 
 		if(mod)
 		{
@@ -2501,11 +2471,11 @@ var BASE = (function()
 
 	function toggle_fraction()
 	{
-		options.fraction = !options.fraction;
+		user_data.options.fraction = !user_data.options.fraction;
 		update_results();
 		apply_mode();
 		update_infobar();
-		update_options();
+		update_user_data();
 	}
 
 	function show_code()
@@ -2773,7 +2743,7 @@ var BASE = (function()
 
 		s += "<span id='ib_fraction_toggle' class='ib_item'>";
 
-		if(options.fraction)
+		if(user_data.options.fraction)
 		{
 			s += "Fraction Mode";
 		}
@@ -2800,7 +2770,7 @@ var BASE = (function()
 
 	function apply_mode()
 	{
-		if(options.fraction)
+		if(user_data.options.fraction)
 		{
 			var mode = "fraction";
 		}
