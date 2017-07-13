@@ -19,9 +19,12 @@ var BASE = (function()
 	var about;
 	var site_root;
 	var save_enabled = true;
-	var user_data;
-
-	global.ls_user_data = 'user_data_v1';
+	var options;
+	var saved;
+	var programs;
+	var ls_options = 'options_v2';
+	var ls_saved = 'saved_v2';
+	var ls_programs = 'programs_v2';
 
 	var themes = [
 		'paper',
@@ -75,8 +78,8 @@ var BASE = (function()
 
 	global.init = function()
 	{
-		get_user_data();
-		apply_theme(user_data.options.theme);
+		get_local_storage();
+		apply_theme(options.theme);
 		apply_mode();
 		draw_buttons();
 		draw_prog_buttons();
@@ -348,7 +351,7 @@ var BASE = (function()
 
 			var key = 'F' + i;
 
-			var prog = user_data.programs[key];
+			var prog = programs[key];
 
 			var pt1 = '';
 			var pt2 = '';
@@ -918,7 +921,7 @@ var BASE = (function()
 				return;
 			}
 
-			if(user_data.options.fraction)
+			if(options.fraction)
 			{
 				var result = math_fraction.eval(val.replace(/\$/g, '_') + '*1', linevars);
 			}
@@ -961,7 +964,7 @@ var BASE = (function()
 
 	function format_result(n, f=false)
 	{
-		if(user_data.options.fraction && !f)
+		if(options.fraction && !f)
 		{
 			var split = math_fraction.format(n).split('/');
 
@@ -981,9 +984,9 @@ var BASE = (function()
 
 		else
 		{
-			if(user_data.options.round)
+			if(options.round)
 			{
-				n = math_normal.round(n, user_data.options.round_places);
+				n = math_normal.round(n, options.round_places);
 			}
 
 			var ns = n.toString();
@@ -1001,7 +1004,7 @@ var BASE = (function()
 				var decimal = '';
 			}
 
-			if(user_data.options.commas)
+			if(options.commas)
 			{
 				whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			}
@@ -1295,7 +1298,7 @@ var BASE = (function()
 
 		focus_if_isnt(focused.input);
 
-		var prog = user_data.programs[key];
+		var prog = programs[key];
 
 		if(prog !== undefined)
 		{
@@ -1667,7 +1670,7 @@ var BASE = (function()
 
 	function play(what)
 	{
-		if(user_data.options.sound)
+		if(options.sound)
 		{
 			$('#' + what)[0].pause();
 			$('#' + what)[0].currentTime = 0;
@@ -1818,9 +1821,9 @@ var BASE = (function()
 
 	function add_to_saved(url, svd)
 	{
-		if(user_data.saved === undefined)
+		if(saved === undefined)
 		{
-			user_data.saved = [];
+			saved = [];
 		}
 
 		var split = svd.split('@!#');
@@ -1843,9 +1846,9 @@ var BASE = (function()
 			sample += line + '\n';
 		}
 
-		user_data.saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample, user_data.options.fraction]);
+		saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample, options.fraction]);
 
-		update_user_data();
+		update_saved();
 	}
 
 	function copy_to_clipboard(s)
@@ -1860,7 +1863,7 @@ var BASE = (function()
 
 	function make_uparams(s)
 	{
-		if(user_data.options.fraction)
+		if(options.fraction)
 		{
 			s += "?";
 			s += "frac";
@@ -1929,9 +1932,13 @@ var BASE = (function()
 
 		s += "<br><br><br><span class='b2'>Exporting</span><br><br>";
 		s += "User data is stored in the local storage of your browser.<br><br>";
-		s += "In case you need to export it to another browser you can manually copy the object string from one browser to another.<br><br>";
-		s += "To access the object string use localStorage.getItem(BASE.ls_user_data).<br><br>";
-		s += "To copy the value to another browser use localStorage.setItem(BASE.ls_user_data, string).";
+		s += "In case you need to export it to another browser you can manually copy the object strings from one browser to another.<br><br>";
+		s += "To access the options object use localStorage.getItem('options_v2').<br><br>";
+		s += "To access the saved object use localStorage.getItem('saved_v2').<br><br>";
+		s += "To access the programs object use localStorage.getItem('programs_v2').<br><br>";
+		s += "To copy the values to another browser use localStorage.setItem.<br><br>";
+		s += "For instance, localStorage.setItem('programs_v2', string).<br><br>";
+		s += "Using older versions of objects, for instance options_v1, is not supported.";
 
 		about = s;
 	}
@@ -2006,7 +2013,7 @@ var BASE = (function()
 	{
 		if(get_url_param('frac') === null)
 		{
-			if(user_data.options.fraction)
+			if(options.fraction)
 			{
 				toggle_fraction();
 			}
@@ -2014,7 +2021,7 @@ var BASE = (function()
 
 		else
 		{
-			if(!user_data.options.fraction)
+			if(!options.fraction)
 			{
 				toggle_fraction();
 			}
@@ -2113,7 +2120,7 @@ var BASE = (function()
 
 		s += "Add Commas<br><br>";
 
-		if(user_data.options.commas)
+		if(options.commas)
 		{
 			s += "<input id='chk_commas' type='checkbox' checked>";
 		}
@@ -2125,7 +2132,7 @@ var BASE = (function()
 		
 		s += "<br><br><br>Round Results<br><br>";
 
-		if(user_data.options.round)
+		if(options.round)
 		{
 			s += "<input id='chk_round' type='checkbox' checked>";
 		}
@@ -2148,7 +2155,7 @@ var BASE = (function()
 
 		s += "<br><br><br>Enable Sound<br><br>";
 
-		if(user_data.options.sound)
+		if(options.sound)
 		{
 			s += "<input id='chk_sound' type='checkbox' checked>";
 		}
@@ -2173,7 +2180,7 @@ var BASE = (function()
 
 		$('#sel_round_places').find('option').each(function()
 		{
-			if(this.value == user_data.options.round_places)
+			if(this.value == options.round_places)
 			{
 				$(this).prop('selected', true);
 			}
@@ -2181,7 +2188,7 @@ var BASE = (function()
 
 		$('#sel_theme').find('option').each(function()
 		{
-			if(this.value == user_data.options.theme)
+			if(this.value == options.theme)
 			{
 				$(this).prop('selected', true);
 			}
@@ -2189,23 +2196,23 @@ var BASE = (function()
 
 		$('#chk_commas').change(function()
 		{
-			user_data.options.commas = $(this).prop('checked');
+			options.commas = $(this).prop('checked');
 			update_results();
-			update_user_data();
+			update_options();
 		});
 		
 		$('#chk_round').change(function()
 		{
-			user_data.options.round = $(this).prop('checked');
+			options.round = $(this).prop('checked');
 			update_results();
-			update_user_data();
+			update_options();
 		});	
 
 		$('#sel_round_places').change(function()
 		{
-			user_data.options.round_places = parseInt(this.value);
+			options.round_places = parseInt(this.value);
 			update_results();
-			update_user_data();
+			update_options();
 		});
 
 		$('#chk_fraction').change(function()
@@ -2215,98 +2222,142 @@ var BASE = (function()
 
 		$('#chk_sound').change(function()
 		{
-			user_data.options.sound = $(this).prop('checked');
-			update_user_data();
+			options.sound = $(this).prop('checked');
+			update_options();
 		});
 
 		$('#sel_theme').change(function()
 		{
-			user_data.options.theme = this.value;
-			apply_theme(user_data.options.theme);
-			update_user_data();
+			options.theme = this.value;
+			apply_theme(options.theme);
+			update_options();
 		});
 	}
 
-	function get_user_data()
+	function get_local_storage()
 	{
-		user_data = JSON.parse(localStorage.getItem(BASE.ls_user_data));
+		get_options();
+		get_saved();
+		get_programs();
+	}
+
+	function update_options()
+	{
+		localStorage.setItem(ls_options, JSON.stringify(options));
+	}
+
+	function get_options()
+	{
+		options = JSON.parse(localStorage.getItem(ls_options));
 
 		var mod = false;
 
-		if(user_data === null)
+		if(options === null)
 		{
-			user_data = {};
+			options = {};
 			mod = true;
 		}
 
-		if(user_data.saved === undefined)
+		if(options.sound === undefined)
 		{
-			user_data.saved = [];
+			options.sound = true;
 			mod = true;
 		}
 
-		if(user_data.programs === undefined)
+		if(options.commas === undefined)
 		{
-			user_data.programs = {};
+			options.commas = true;
 			mod = true;
 		}
 
-		if(user_data.options === undefined)
+		if(options.round === undefined)
 		{
-			user_data.options = {};
+			options.round = true;
 			mod = true;
 		}
 
-		if(user_data.options.sound === undefined)
+		if(options.round_places === undefined)
 		{
-			user_data.options.sound = true;
+			options.round_places = 5;
 			mod = true;
 		}
 
-		if(user_data.options.commas === undefined)
+		if(options.fraction === undefined)
 		{
-			user_data.options.commas = true;
+			options.fraction = false;
 			mod = true;
 		}
 
-		if(user_data.options.round === undefined)
+		if(options.theme === undefined)
 		{
-			user_data.options.round = true;
+			options.theme = 'paper';
 			mod = true;
 		}
 
-		if(user_data.options.round_places === undefined)
+		else
 		{
-			user_data.options.round_places = 5;
-			mod = true;
+			if(themes.indexOf(options.theme) === -1)
+			{
+				options.theme = 'paper';
+				mod = true;
+			}
 		}
-
-		if(user_data.options.fraction === undefined)
-		{
-			user_data.options.fraction = false;
-			mod = true;
-		}
-
-		if(user_data.options.theme === undefined)
-		{
-			user_data.options.theme = 'paper';
-			mod = true;
-		}		
 
 		if(mod)
 		{
-			update_user_data();
+			update_options();
 		}
 	}
 
-	function update_user_data()
+	function get_saved()
 	{
-		localStorage.setItem(BASE.ls_user_data, JSON.stringify(user_data));
+		saved = JSON.parse(localStorage.getItem(ls_saved));
+
+		var mod = false;
+
+		if(saved === null)
+		{
+			saved = [];
+			mod = true;
+		}
+
+		if(mod)
+		{
+			update_saved();
+		}
+	}
+
+	function update_saved()
+	{
+		localStorage.setItem(ls_saved, JSON.stringify(saved));
+	}
+
+	function get_programs()
+	{
+		programs = JSON.parse(localStorage.getItem(ls_programs));
+
+		var mod = false;
+
+		if(programs === null)
+		{
+			programs = {};
+			mod = true;
+		}
+
+		if(mod)
+		{
+			update_programs();
+		}
+	}
+
+	function update_programs()
+	{
+		localStorage.setItem(ls_programs, JSON.stringify(programs));
 	}
 
 	function show_saved(j=0)
 	{
-		if(user_data.saved.length === 0)
+		if(saved.length === 0)
 		{
 			msg('Nothing saved yet.');
 			return;
@@ -2316,15 +2367,15 @@ var BASE = (function()
 		{
 			var s = "";
 			
-			var n = Math.min(20 + j, user_data.saved.length);
+			var n = Math.min(20 + j, saved.length);
 
 			for(var i=j; i<n; i++)
 			{
-				s += "<a class='ancher1' target=_blank href='" + user_data.saved[i][1] + "' title='" + user_data.saved[i][3] + "'>";
+				s += "<a class='ancher1' target=_blank href='" + saved[i][1] + "' title='" + saved[i][3] + "'>";
 				
-				s += user_data.saved[i][0];
+				s += saved[i][0];
 
-				var num_lines = user_data.saved[i][2];
+				var num_lines = saved[i][2];
 				
 				s += "<br>" + num_lines;
 
@@ -2338,7 +2389,7 @@ var BASE = (function()
 					s += " Lines";
 				}
 
-				if(user_data.saved[i][4])
+				if(saved[i][4])
 				{
 					s += " - Fraction";
 				}
@@ -2356,7 +2407,7 @@ var BASE = (function()
 				}
 			}
 
-			if(n < user_data.saved.length)
+			if(n < saved.length)
 			{
 				s += "<br><br><div id='svd_load_more' class='linky3' data-j=" + n + ">Load More</div>";
 			}
@@ -2471,11 +2522,11 @@ var BASE = (function()
 
 	function toggle_fraction()
 	{
-		user_data.options.fraction = !user_data.options.fraction;
+		options.fraction = !options.fraction;
 		update_results();
 		apply_mode();
 		update_infobar();
-		update_user_data();
+		update_options();
 	}
 
 	function show_code()
@@ -2743,7 +2794,7 @@ var BASE = (function()
 
 		s += "<span id='ib_fraction_toggle' class='ib_item'>";
 
-		if(user_data.options.fraction)
+		if(options.fraction)
 		{
 			s += "Fraction Mode";
 		}
@@ -2770,7 +2821,7 @@ var BASE = (function()
 
 	function apply_mode()
 	{
-		if(user_data.options.fraction)
+		if(options.fraction)
 		{
 			var mode = "fraction";
 		}
@@ -2856,7 +2907,7 @@ var BASE = (function()
 
 		msg(s);
 
-		var prog = user_data.programs[key];
+		var prog = programs[key];
 
 		if(prog !== undefined)
 		{
@@ -2889,22 +2940,22 @@ var BASE = (function()
 		var s_commands = $('#msg').find('.prog_input').get(3).value.trim().replace(/\s+/g, ' ');
 		var s_dbl = $('#prog_chk_s').prop('checked');
 
-		if(user_data.programs[key] === undefined)
+		if(programs[key] === undefined)
 		{
-			user_data.programs[key] = {primary:{}, secondary:{}}
+			programs[key] = {primary:{}, secondary:{}}
 		}
 
-		user_data.programs[key].primary.title = p_title;
-		user_data.programs[key].primary.commands = p_commands;
-		user_data.programs[key].primary.doubleclick = p_dbl;
+		programs[key].primary.title = p_title;
+		programs[key].primary.commands = p_commands;
+		programs[key].primary.doubleclick = p_dbl;
 
-		user_data.programs[key].secondary.title = s_title;
-		user_data.programs[key].secondary.commands = s_commands;
-		user_data.programs[key].secondary.doubleclick = s_dbl;
+		programs[key].secondary.title = s_title;
+		programs[key].secondary.commands = s_commands;
+		programs[key].secondary.doubleclick = s_dbl;
 
 		draw_prog_buttons();
 
-		update_user_data();
+		update_programs();
 	}
 
 	function execute_program(cmds)
