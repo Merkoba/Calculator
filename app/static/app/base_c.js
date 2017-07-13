@@ -156,6 +156,15 @@ var BASE = (function()
 
 			}
 
+			else if(code === 8)
+			{
+				if(e.shiftKey)
+				{
+					clear_input(focused.input);
+					e.preventDefault();
+				}
+			}			
+
 			else if(code === 9)
 			{
 				if(e.shiftKey)
@@ -1306,6 +1315,11 @@ var BASE = (function()
 
 	function clear_input(input)
 	{
+		if(input.value === '')
+		{
+			return;
+		}
+
 		replace_text(input, '');
 		update_results();
 	}
@@ -1894,6 +1908,7 @@ var BASE = (function()
 		s += "Shift + Up and Shift + Down move the lines up or down.<br><br>";
 		s += "Tab and Shift + Tab cycle the focus between lines.<br><br>";
 		s += "Escape clears a line, removes the line if already cleared, or closes popups.<br><br>";
+		s += "Shift + Backspace clears a line.<br><br>";
 		s += "Constants and methods in the Reference will be added to the current line when clicked.<br><br>";
 		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.<br><br>";
 		s += "Clicking on a result copies the result to the clipboard.";
