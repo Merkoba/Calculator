@@ -53,7 +53,8 @@ var BASE = (function()
 		'redo',
 		'format',
 		'format all',
-		'expand'
+		'expand',
+		'caret to end'
 	];
 
 	var focused = {
@@ -2761,7 +2762,7 @@ var BASE = (function()
 		s += "<br><br><br>";
 
 		s += "Available Commands";
-		
+
 		s += "<br><br>";
 
 		for(let i=0; i<commands.length; i++)
@@ -2938,6 +2939,11 @@ var BASE = (function()
 		else if(command === "expand")
 		{
 			expand_value(focused.input);
+		}
+
+		else if(command === "caret to end")
+		{
+			move_caret_to_end(focused.input);
 		}
 	}
 
