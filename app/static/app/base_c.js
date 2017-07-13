@@ -2935,11 +2935,11 @@ var BASE = (function()
 	function save_program(key)
 	{
 		var p_title = $('#msg').find('.prog_input').get(0).value.trim().replace(/\s+/g, ' ');
-		var p_commands = $('#msg').find('.prog_input').get(1).value.trim().replace(/\s+/g, ' ').replace(/;+/g, ';').replace(/\s+;/, ';');
+		var p_commands = $('#msg').find('.prog_input').get(1).value.replace(/\s*;+/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim();
 		var p_dbl = $('#prog_chk_p').prop('checked');
 
 		var s_title = $('#msg').find('.prog_input').get(2).value.trim().replace(/\s+/g, ' ');
-		var s_commands = $('#msg').find('.prog_input').get(3).value.trim().replace(/\s+/g, ' ').replace(/;+/g, ';').replace(/\s+;/, ';');
+		var s_commands = $('#msg').find('.prog_input').get(3).value.replace(/\s*;+/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim();
 		var s_dbl = $('#prog_chk_s').prop('checked');
 
 		if(check_program(p_commands, s_commands))
