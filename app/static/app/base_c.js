@@ -66,7 +66,9 @@ var BASE = (function()
 		'copy variable',
 		'copy input',
 		'copy result',
-		'pup'
+		'play done',
+		'play pup',
+		'play nope'
 	];
 
 	var focused = {
@@ -3106,9 +3108,19 @@ var BASE = (function()
 			copy_to_clipboard(result);
 		}
 
-		else if(command === "pup")
+		else if(command === "play done")
+		{
+			play('done');
+		}
+
+		else if(command === "play pup")
 		{
 			play('pup');
+		}
+
+		else if(command === "play nope")
+		{
+			play('nope');
 		}
 	}
 
