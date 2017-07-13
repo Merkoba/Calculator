@@ -337,6 +337,11 @@ sup
 	word-spacing: 0.06em;
 }
 
+.prog_input_smaller
+{
+	width: 15em;
+}
+
 .prog_label
 {
 	padding-bottom: 0.5em;

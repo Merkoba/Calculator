@@ -2857,7 +2857,7 @@ var BASE = (function()
 		s += "<span class='b2'>" + key + "</span><br><br>";
 
 		s += "<div class='prog_label'>Primary Action Title</b2></div>";
-		s += "<input class='prog_input'></input>";
+		s += "<input class='prog_input prog_input_smaller'></input>";
 
 		s += "<br><br><br>";
 
@@ -2873,7 +2873,7 @@ var BASE = (function()
 		s += "<br><br><br><br>";
 
 		s += "<div class='prog_label'>Secondary Action Title</div>";
-		s += "<input class='prog_input'></input>";
+		s += "<input class='prog_input prog_input_smaller'></input>";
 
 		s += "<br><br><br>";
 
