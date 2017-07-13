@@ -92,8 +92,9 @@ body
 {
 	font-size: 1.7em;	
 	width: 33.5em;
-	border: 0.1em solid black;
+	border: 0.1em solid;
 	padding: 0.2em;
+	outline: none;
 }
 
 .result_container
