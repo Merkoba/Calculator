@@ -1,0 +1,23 @@
+body
+{
+	background-color: #c1c1c1;
+	color: black;
+}
+
+.button
+{
+	background-color: #bdbdbd;
+	border-color: #c5c5c5;
+	color: black;
+}
+
+#infobar
+{
+	background-color: #adadad;
+	color: black;
+}
+
+#title 
+{
+	color: black;
+}

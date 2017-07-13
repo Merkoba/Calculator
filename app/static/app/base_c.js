@@ -31,6 +31,7 @@ var BASE = (function()
 		'bulb',
 		'lake',
 		'vapor',
+		'cobalt',
 		'bubble',
 		'carbon'
 	];
