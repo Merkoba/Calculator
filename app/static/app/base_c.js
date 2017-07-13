@@ -331,6 +331,9 @@ var BASE = (function()
 
 			var prog = user_data.programs[key];
 
+			var pt1 = '';
+			var pt2 = '';
+
 			var t1 = 'Primary';
 			var t2 = 'Secondary';
 			
@@ -342,6 +345,11 @@ var BASE = (function()
 					if(prog.primary.title !== '')
 					{
 						t1 = prog.primary.title;
+
+						if(prog.primary.doubleclick)
+						{
+							pt1 = "Double ";
+						}
 					}
 				}
 
@@ -350,12 +358,17 @@ var BASE = (function()
 					if(prog.secondary.title !== '')
 					{
 						t2 = prog.secondary.title;
+
+						if(prog.secondary.doubleclick)
+						{
+							pt2 = "Double ";
+						}
 					}				
 				}
 			}
 
-			s += "Click: " + t1 + " &nbsp;|&nbsp; ";
-			s += "Right Click: " + t2 + " &nbsp;|&nbsp; ";
+			s += pt1 + "Click: " + t1 + " &nbsp;|&nbsp; ";
+			s += pt2 + "Right Click: " + t2 + " &nbsp;|&nbsp; ";
 			s += 'Middle Click: Program';
 
 			place_button_programmable(key, s);
@@ -363,10 +376,10 @@ var BASE = (function()
 
 		$('.button.programmable').each(function()
 		{
-			$(this).click(function(e)
+			this.addEventListener('mouseup', function(event) 
 			{
-				prog_press($(this).text(), e.which);
-			});
+				prog_press($(this).text(), event);
+			}, false);	
 
 			$(this).on('auxclick', function(e)
 			{
@@ -1251,28 +1264,44 @@ var BASE = (function()
 
 	function prog_press(key, e)
 	{
-		if(e === 2)
+		if(e.which === 2)
 		{
 			open_program_editor(key);
 			return false;
 		}
 
+		focus_if_isnt(focused.input);
+
 		var prog = user_data.programs[key];
 
 		if(prog !== undefined)
 		{
-			if(e === 1)
+			if(e.which === 1)
 			{
+				if(prog.primary.doubleclick)
+				{
+					if(e.detail % 2 !== 0)
+					{
+						return;
+					}
+				}
+
 				execute_program(prog.primary.commands);
 			}
 
-			if(e === 3)
+			if(e.which === 3)
 			{
+				if(prog.secondary.doubleclick)
+				{
+					if(e.detail % 2 !== 0)
+					{
+						return;
+					}
+				}
+
 				execute_program(prog.secondary.commands);
 			}	
 		}
-
-		focus_if_isnt(focused.input);
 	}
 
 	function clear_input(input)
@@ -2738,33 +2767,43 @@ var BASE = (function()
 	{
 		var s = "";
 
-		s += "Primary Action Title</b2>";
-		s += "<br><input class='prog_input'></input>";
+		s += "<span class='b2'>" + key + "</span><br><br>";
+
+		s += "<div class='prog_label'>Primary Action Title</b2></div>";
+		s += "<input class='prog_input'></input>";
 
 		s += "<br><br><br>";
 
-		s += "Primary Action Commands";
-		s += "<br><input class='prog_input'></input>";
+		s += "<div class='prog_label'>Primary Action Commands</div>";
+		s += "<input class='prog_input'></input>";
 
 		s += "<br><br><br>";
 
-		s += "Secondary Action Title";
-		s += "<br><input class='prog_input'></input>";
+		s += "<div class='prog_label'>Require Double Click</div>";
+		s += "<input type='checkbox' id='prog_chk_p'>"
+
+		s += "<br><br><br><br>";
+
+		s += "<div class='prog_label'>Secondary Action Title</div>";
+		s += "<input class='prog_input'></input>";
 
 		s += "<br><br><br>";
 
-		s += "Secondary Action Commands";
-		s += "<br><input class='prog_input'></input>";
+		s += "<div class='prog_label'>Secondary Action Commands</div>";
+		s += "<input class='prog_input'></input>";
 
+		s += "<br><br><br>";
+
+		s += "<div class='prog_label'>Require Double Click</div>";
+		s += "<input type='checkbox' id='prog_chk_s'>"
+		
 		s += "<br><br><br>";
 
 		s += "<span id='prog_save' class='linky2'>Save</span>";
 
 		s += "<br><br><br>";
 
-		s += "Available Commands";
-
-		s += "<br><br>";
+		s += "<div class='prog_label'>Available Commands:</div>";
 
 		for(let i=0; i<commands.length; i++)
 		{
@@ -2773,8 +2812,7 @@ var BASE = (function()
 
 		s += "<br><br>";
 
-		s += "Examples";
-		s += "<br><br>";
+		s += "<div class='prog_label'>Examples:</div>";
 		s += "insert 34<br>";
 		s += "insert pi<br>";
 		s += "add line; insert cos(55)<br>";
@@ -2787,11 +2825,14 @@ var BASE = (function()
 
 		if(prog !== undefined)
 		{
-			$('#msg').find('input').get(0).value = prog.primary.title;
-			$('#msg').find('input').get(1).value = prog.primary.commands;
+			$('#msg').find('.prog_input').get(0).value = prog.primary.title;
+			$('#msg').find('.prog_input').get(1).value = prog.primary.commands;
 
-			$('#msg').find('input').get(2).value = prog.secondary.title;
-			$('#msg').find('input').get(3).value = prog.secondary.commands;
+			$('#msg').find('.prog_input').get(2).value = prog.secondary.title;
+			$('#msg').find('.prog_input').get(3).value = prog.secondary.commands;
+
+			$('#prog_chk_p').prop('checked', prog.primary.doubleclick);
+			$('#prog_chk_s').prop('checked', prog.secondary.doubleclick);
 		}
 
 		$('#msg').find('input').first().focus();
@@ -2805,11 +2846,13 @@ var BASE = (function()
 
 	function save_program(key)
 	{
-		var p_title = $('#msg').find('input').get(0).value.trim().replace(/\s+/g, ' ');
-		var p_commands = $('#msg').find('input').get(1).value.trim().replace(/\s+/g, ' ');
+		var p_title = $('#msg').find('.prog_input').get(0).value.trim().replace(/\s+/g, ' ');
+		var p_commands = $('#msg').find('.prog_input').get(1).value.trim().replace(/\s+/g, ' ');
+		var p_dbl = $('#prog_chk_p').prop('checked');
 
-		var s_title = $('#msg').find('input').get(2).value.trim().replace(/\s+/g, ' ');
-		var s_commands = $('#msg').find('input').get(3).value.trim().replace(/\s+/g, ' ');
+		var s_title = $('#msg').find('.prog_input').get(2).value.trim().replace(/\s+/g, ' ');
+		var s_commands = $('#msg').find('.prog_input').get(3).value.trim().replace(/\s+/g, ' ');
+		var s_dbl = $('#prog_chk_s').prop('checked');
 
 		if(user_data.programs[key] === undefined)
 		{
@@ -2818,9 +2861,11 @@ var BASE = (function()
 
 		user_data.programs[key].primary.title = p_title;
 		user_data.programs[key].primary.commands = p_commands;
+		user_data.programs[key].primary.doubleclick = p_dbl;
 
 		user_data.programs[key].secondary.title = s_title;
 		user_data.programs[key].secondary.commands = s_commands;
+		user_data.programs[key].secondary.doubleclick = s_dbl;
 
 		draw_prog_buttons();
 
