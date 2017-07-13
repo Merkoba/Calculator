@@ -3010,6 +3010,11 @@ var BASE = (function()
 
 	function execute_program(cmds, run=true)
 	{
+		if(cmds.length === 0)
+		{
+			return "ok";
+		}
+
 		var split = cmds.split(';');
 
 		for(let i=0; i<split.length; i++)
