@@ -341,3 +341,11 @@ sup
 {
 	padding-bottom: 0.5em;
 }
+
+.error_message
+{
+	display: none;
+	color: red;
+	padding-top: 0.5em;
+	margin-bottom: -1.2em;
+}
