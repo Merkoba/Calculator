@@ -239,7 +239,7 @@ var BASE = (function()
 		place_button(7, 'Right Click: 1/7 &nbsp;|&nbsp; Middle Click: 0.7');
 		place_button(8, 'Right Click: 1/8 &nbsp;|&nbsp; Middle Click: 0.8');
 		place_button(9, 'Right Click: 1/9 &nbsp;|&nbsp; Middle Click: 0.9');
-		place_button(0, 'Right Click: 00 &nbsp;|&nbsp; Middle Click: 000');
+		place_button(0, 'Right Click: 0. &nbsp;|&nbsp; Middle Click: 000');
 
 		place_button('.');
 		place_button(',');
@@ -1102,7 +1102,7 @@ var BASE = (function()
 			{
 				if(aux === 3)
 				{
-					return "00";
+					return "0.";
 				}
 
 				else if(aux === 2)
