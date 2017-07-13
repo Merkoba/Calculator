@@ -1928,8 +1928,8 @@ var BASE = (function()
 		s += "Clicking on a result copies the result to the clipboard.";
 
 		s += "<br><br><br><span class='b2'>Exporting</span><br><br>";
-		s += "User data is stored in the local storage in your browser.<br><br>";
-		s += "In case you need to export them to another browser you can manually copy the object string from one browser to another.<br><br>";
+		s += "User data is stored in the local storage of your browser.<br><br>";
+		s += "In case you need to export it to another browser you can manually copy the object string from one browser to another.<br><br>";
 		s += "To access the object string use localStorage.getItem(BASE.ls_user_data).<br><br>";
 		s += "To copy the value to another browser use localStorage.setItem(BASE.ls_user_data, string).";
 
