@@ -1937,8 +1937,8 @@ var BASE = (function()
 		s += "To access the saved object use localStorage.getItem('saved_v2').<br><br>";
 		s += "To access the programs object use localStorage.getItem('programs_v2').<br><br>";
 		s += "To copy the values to another browser use localStorage.setItem.<br><br>";
-		s += "For instance, localStorage.setItem('programs_v2', string).<br><br>";
-		s += "Using older versions of objects, for instance options_v1, is not supported.";
+		s += "For example, localStorage.setItem('programs_v2', string).<br><br>";
+		s += "Using older versions of objects (for instance, options_v1), is not supported.";
 
 		about = s;
 	}
