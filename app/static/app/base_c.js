@@ -106,8 +106,6 @@ var BASE = (function()
 		{
 			load_saved_content();
 		}
-
-		console.log('Started.\n');
 	}
 
 	function key_detection()
@@ -1455,7 +1453,6 @@ var BASE = (function()
 
 			if(n > 10000)
 			{
-				console.log('Exceeded Loop Limit');
 				return;
 			}
 		}
@@ -2962,8 +2959,6 @@ var BASE = (function()
 			programs[key].secondary.commands = s_commands;
 			programs[key].secondary.doubleclick = s_dbl;
 
-			console.log(programs[key]);
-
 			draw_prog_buttons();
 
 			update_programs();
@@ -2988,7 +2983,7 @@ var BASE = (function()
 		{
 			$('#prog_p_commands_error').text(response).css('display', 'block');
 			
-			$('#msg').scrollTop($('#prog_p_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop());
+			$('#msg').scrollTop($('#prog_p_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop() - 10);
 			
 			ok = false;
 		}
@@ -3006,7 +3001,7 @@ var BASE = (function()
 
 			if(ok)
 			{
-				$('#msg').scrollTop($('#prog_s_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop())				
+				$('#msg').scrollTop($('#prog_s_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop() - 10);				
 			}
 			
 			ok = false;
