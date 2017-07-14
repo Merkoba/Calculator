@@ -42,9 +42,12 @@ var BASE = (function()
 		'insert x',
 		'clear',
 		'erase',
+		'new line',
 		'add line',
 		'add line before',
 		'add line after',
+		'go to first line',
+		'go to last line',
 		'remove line',
 		'remove last line',
 		'remove all lines',
@@ -3070,6 +3073,11 @@ var BASE = (function()
 			erase_character();
 		}
 
+		else if(command === "new line")
+		{
+			focus_next_or_add();
+		}
+
 		else if(command === "add line")
 		{
 			add_line();
@@ -3083,6 +3091,16 @@ var BASE = (function()
 		else if(command === "add line after")
 		{
 			add_line_after();
+		}
+
+		else if(command === "go to first line")
+		{
+			go_to_first_input();
+		}
+
+		else if(command === "go to last line")
+		{
+			go_to_last_input();
 		}
 
 		else if(command === "remove line")
@@ -3215,6 +3233,16 @@ var BASE = (function()
 		{
 			play('nope');
 		}
+	}
+
+	function go_to_first_input()
+	{
+		focus_input($('.input').first()[0]);
+	}
+
+	function go_to_last_input()
+	{
+		focus_input($('.input').last()[0]);
 	}
 
 	return global;
