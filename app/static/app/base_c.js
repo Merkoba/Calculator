@@ -119,7 +119,23 @@ var BASE = (function()
 			{
 				if(msg_open)
 				{
-					hide_overlay();
+					if($('input[type=text]').is(':focus'))
+					{
+						if(document.activeElement.value !== '')
+						{
+							document.activeElement.value = '';
+						}
+
+						else
+						{
+							hide_overlay();
+						}
+					}
+
+					else
+					{
+						hide_overlay();
+					}
 				}
 
 				else
@@ -2882,12 +2898,12 @@ var BASE = (function()
 		s += "<span class='b2'>" + key + "</span><br><br>";
 
 		s += "<div id='prog_p_label' class='prog_label'>Primary Action Title</b2></div>";
-		s += "<input id='prog_p_title' class='prog_input prog_input_smaller'></input>";
+		s += "<input type='text' id='prog_p_title' class='prog_input prog_input_smaller'></input>";
 
 		s += "<br><br><br>";
 
 		s += "<div class='prog_label'>Primary Action Commands</div>";
-		s += "<input id='prog_p_commands' class='prog_input'></input>";
+		s += "<input type='text' id='prog_p_commands' class='prog_input'></input>";
 		s += "<div id='prog_p_commands_error' class='error_message'></div>"
 
 		s += "<br><br><br>";
@@ -2898,12 +2914,12 @@ var BASE = (function()
 		s += "<br><br><br><br>";
 
 		s += "<div id='prog_s_label' class='prog_label'>Secondary Action Title</div>";
-		s += "<input id='prog_s_title' class='prog_input prog_input_smaller'></input>";
+		s += "<input type='text' id='prog_s_title' class='prog_input prog_input_smaller'></input>";
 
 		s += "<br><br><br>";
 
 		s += "<div class='prog_label'>Secondary Action Commands</div>";
-		s += "<input id='prog_s_commands' class='prog_input'></input>";
+		s += "<input type='text' id='prog_s_commands' class='prog_input'></input>";
 		s += "<div id='prog_s_commands_error' class='error_message'></div>"
 
 		s += "<br><br><br>";
