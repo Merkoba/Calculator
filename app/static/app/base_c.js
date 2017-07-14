@@ -42,10 +42,10 @@ var BASE = (function()
 		'insert x',
 		'clear',
 		'erase',
-		'new line',
 		'add line',
 		'add line before',
 		'add line after',
+		'go to next empty line',
 		'go to first line',
 		'go to last line',
 		'remove line',
@@ -57,6 +57,9 @@ var BASE = (function()
 		'prev variable',
 		'prev input',
 		'prev result',
+		'next variable',
+		'next input',
+		'next result',
 		'go up',
 		'go down',
 		'move line up',
@@ -2057,9 +2060,17 @@ var BASE = (function()
 		$('#done')[0].volume = 0.7;
 	}
 
-	function add_ans()
+	function add_ans(next=false)
 	{
-		var variable = $(focused.input).parent().prev('.line').find('.input').data('variable');
+		if(next)
+		{
+			var variable = $(focused.input).parent().next('.line').find('.input').data('variable');
+		}
+
+		else
+		{
+			var variable = $(focused.input).parent().prev('.line').find('.input').data('variable');
+		}
 
 		if(variable !== undefined)
 		{
@@ -2067,9 +2078,17 @@ var BASE = (function()
 		}
 	}
 
-	function add_result()
+	function add_result(next=false)
 	{
-		var result = $(focused.input).parent().prev('.line').find('.result')[0];
+		if(next)
+		{
+			var result = $(focused.input).parent().next('.line').find('.result')[0];
+		}
+
+		else
+		{
+			var result = $(focused.input).parent().prev('.line').find('.result')[0];
+		}	
 
 		if(result !== undefined)
 		{
@@ -2077,9 +2096,17 @@ var BASE = (function()
 		}
 	}
 
-	function add_input()
+	function add_input(next=false)
 	{
-		var value = $(focused.input).parent().prev('.line').find('.input')[0].value;
+		if(next)
+		{
+			var value = $(focused.input).parent().next('.line').find('.input')[0].value;
+		}	
+
+		else
+		{
+			var value = $(focused.input).parent().prev('.line').find('.input')[0].value;
+		}	
 
 		if(value !== undefined && value !== '')
 		{
@@ -2906,7 +2933,7 @@ var BASE = (function()
 		s += "insert pi<br>";
 		s += "add line; insert cos(55)<br>";
 		s += "go up; erase; format<br>";
-		s += "insert 1; add line; prev variable; insert + 2";
+		s += "insert 1; add line after; prev variable; insert + 2";
 
 		msg(s);		
 
@@ -3077,11 +3104,6 @@ var BASE = (function()
 			erase_character();
 		}
 
-		else if(command === "new line")
-		{
-			focus_next_or_add();
-		}
-
 		else if(command === "add line")
 		{
 			add_line();
@@ -3107,6 +3129,11 @@ var BASE = (function()
 			go_to_last_input();
 		}
 
+		else if(command === "go to next empty line")
+		{
+			focus_next_or_add();
+		}
+
 		else if(command === "remove line")
 		{
 			remove_line();
@@ -3122,21 +3149,6 @@ var BASE = (function()
 			remove_all_lines();
 		}
 
-		else if(command === "variable down")
-		{
-			press($(focused.input).data('variable'));
-		}		
-
-		else if(command === "input down")
-		{
-			copy_input_down();
-		}
-
-		else if(command === "result down")
-		{
-			copy_result_down();
-		}
-
 		else if(command === "prev variable")
 		{
 			add_ans();
@@ -3150,6 +3162,21 @@ var BASE = (function()
 		else if(command === "prev result")
 		{
 			add_result();
+		}
+
+		else if(command === "next variable")
+		{
+			add_ans(true);
+		}
+
+		else if(command === "next input")
+		{
+			add_input(true);
+		}
+
+		else if(command === "next result")
+		{
+			add_result(true);
 		}
 
 		else if(command === "go up")
