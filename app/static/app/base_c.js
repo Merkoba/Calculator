@@ -51,9 +51,6 @@ var BASE = (function()
 		'remove line',
 		'remove last line',
 		'remove all lines',
-		'variable down',
-		'input down',
-		'result down',
 		'prev variable',
 		'prev input',
 		'prev result',
@@ -1693,7 +1690,7 @@ var BASE = (function()
 
 		if(s.trim().replace(/@!#/g, '').length < 1)
 		{
-			refresh_page();
+			remove_all_lines();
 			return;
 		}
 
@@ -1703,13 +1700,13 @@ var BASE = (function()
 
 			if(conf) 
 			{
-				refresh_page();
+				remove_all_lines();
 			}
 		}
 
 		else
 		{
-			refresh_page();
+			remove_all_lines();
 		}		
 	}
 
@@ -2489,7 +2486,7 @@ var BASE = (function()
 		{
 			this.value = this.value + s;
 
-			$(this).parent().next('.line').find('.input')[0].value = ($(this).data('variable'));
+			$(this).parent().next('.line').find('.input').val($(this).data('variable'));
 		});
 
 		update_results();
