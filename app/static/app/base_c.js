@@ -30,6 +30,7 @@ var BASE = (function()
 		'paper',
 		'leaf',
 		'bulb',
+		'wine',
 		'lake',
 		'vapor',
 		'cobalt',
@@ -1637,7 +1638,7 @@ var BASE = (function()
 			$(this).css('border-width', '0.1em');
 		});
 
-		$(focused.input).css('border-width', '0.22em');
+		$(focused.input).css('border-width', '0.245em');
 	}
 
 	function place_lines_container()

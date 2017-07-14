@@ -1,0 +1,28 @@
+body
+{
+	background-color: #8f6067;
+	color: white;
+}
+
+.button
+{
+	background-color: #d9b6b6;
+	border-color: #ebb9b9;
+	color: black;
+}
+
+#infobar
+{
+	background-color: #d9bdbd;
+	color: black;
+}
+
+#title
+{
+	color: white;
+}
+
+.input
+{
+	border-color: #d0a6a6;
+}
