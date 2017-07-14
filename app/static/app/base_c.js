@@ -2677,7 +2677,7 @@ var BASE = (function()
 					return match;
 				}
 
-				var v = $('#' + match.substring(1))[0].val();
+				var v = $('#' + match.substring(1)).val();
 
 				if(v !== undefined && v.trim() !== '')
 				{
