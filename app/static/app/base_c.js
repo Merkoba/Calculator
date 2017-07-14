@@ -2509,7 +2509,7 @@ var BASE = (function()
 
 		else
 		{
-			s += $(el).text();
+			s += $(el).text().replace(/,/g, '');
 		}
 
 		return s;		
