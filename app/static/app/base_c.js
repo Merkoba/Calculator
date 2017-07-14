@@ -2859,35 +2859,35 @@ var BASE = (function()
 
 		s += "<span class='b2'>" + key + "</span><br><br>";
 
-		s += "<div class='prog_label'>Primary Action Title</b2></div>";
-		s += "<input class='prog_input prog_input_smaller'></input>";
+		s += "<div id='prog_p_label' class='prog_label'>Primary Action Title</b2></div>";
+		s += "<input id='prog_p_title' class='prog_input prog_input_smaller'></input>";
 
 		s += "<br><br><br>";
 
 		s += "<div class='prog_label'>Primary Action Commands</div>";
-		s += "<input class='prog_input'></input>";
-		s += "<div id='p_commands_error' class='error_message'></div>"
+		s += "<input id='prog_p_commands' class='prog_input'></input>";
+		s += "<div id='prog_p_commands_error' class='error_message'></div>"
 
 		s += "<br><br><br>";
 
 		s += "<div class='prog_label'>Require Double Click</div>";
-		s += "<input type='checkbox' id='prog_chk_p'>"
+		s += "<input type='checkbox' id='prog_p_dbl'>"
 
 		s += "<br><br><br><br>";
 
-		s += "<div class='prog_label'>Secondary Action Title</div>";
-		s += "<input class='prog_input prog_input_smaller'></input>";
+		s += "<div id='prog_s_label' class='prog_label'>Secondary Action Title</div>";
+		s += "<input id='prog_s_title' class='prog_input prog_input_smaller'></input>";
 
 		s += "<br><br><br>";
 
 		s += "<div class='prog_label'>Secondary Action Commands</div>";
-		s += "<input class='prog_input'></input>";
-		s += "<div id='s_commands_error' class='error_message'></div>"
+		s += "<input id='prog_s_commands' class='prog_input'></input>";
+		s += "<div id='prog_s_commands_error' class='error_message'></div>"
 
 		s += "<br><br><br>";
 
 		s += "<div class='prog_label'>Require Double Click</div>";
-		s += "<input type='checkbox' id='prog_chk_s'>"
+		s += "<input type='checkbox' id='prog_s_dbl'>"
 		
 		s += "<br><br><br>";
 
@@ -2911,23 +2911,23 @@ var BASE = (function()
 		s += "go up; erase; format<br>";
 		s += "insert 1; add line; prev variable; insert + 2";
 
-		msg(s);
+		msg(s);		
 
 		var prog = programs[key];
 
 		if(prog !== undefined)
 		{
-			$('#msg').find('.prog_input').get(0).value = prog.primary.title;
-			$('#msg').find('.prog_input').get(1).value = prog.primary.commands;
+			$('#prog_p_title')[0].value = prog.primary.title;
+			$('#prog_p_commands')[0].value = prog.primary.commands;
 
-			$('#msg').find('.prog_input').get(2).value = prog.secondary.title;
-			$('#msg').find('.prog_input').get(3).value = prog.secondary.commands;
+			$('#prog_s_title')[0].value = prog.secondary.title;
+			$('#prog_s_commands')[0].value = prog.secondary.commands;
 
-			$('#prog_chk_p').prop('checked', prog.primary.doubleclick);
-			$('#prog_chk_s').prop('checked', prog.secondary.doubleclick);
-		}
+			$('#prog_p_dbl').prop('checked', prog.primary.doubleclick);
+			$('#prog_s_dbl').prop('checked', prog.secondary.doubleclick);
+		}		
 
-		$('#msg').find('.prog_input').first().focus();
+		$('#prog_p_title').focus();
 
 		$('#prog_save').click(function()
 		{
@@ -2937,13 +2937,13 @@ var BASE = (function()
 
 	function save_program(key)
 	{
-		var p_title = $('#msg').find('.prog_input').get(0).value.trim().replace(/\s+/g, ' ');
-		var p_commands = $('#msg').find('.prog_input').get(1).value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '');
-		var p_dbl = $('#prog_chk_p').prop('checked');
+		var p_title = $('#prog_p_title')[0].value.trim().replace(/\s+/g, ' ');
+		var p_commands = $('#prog_p_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '');
+		var p_dbl = $('#prog_p_dbl').prop('checked');
 
-		var s_title = $('#msg').find('.prog_input').get(2).value.trim().replace(/\s+/g, ' ');
-		var s_commands = $('#msg').find('.prog_input').get(3).value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '');
-		var s_dbl = $('#prog_chk_s').prop('checked');
+		var s_title = $('#prog_s_title')[0].value.trim().replace(/\s+/g, ' ');
+		var s_commands = $('#prog_s_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '');
+		var s_dbl = $('#prog_s_dbl').prop('checked');
 
 		if(check_program(p_commands, s_commands))
 		{
@@ -2962,6 +2962,8 @@ var BASE = (function()
 			programs[key].secondary.commands = s_commands;
 			programs[key].secondary.doubleclick = s_dbl;
 
+			console.log(programs[key]);
+
 			draw_prog_buttons();
 
 			update_programs();
@@ -2969,11 +2971,9 @@ var BASE = (function()
 
 		else
 		{
-			$('.prog_input').get(1).value = p_commands;
-			$('.prog_input').get(3).value = s_commands;
+			$('#prog_p_commands')[0].value = p_commands;
+			$('#prog_s_commands')[0].value = s_commands;
 
-			$('#msg').scrollTop(0);
-			
 			play('nope');
 		}
 	}
@@ -2986,28 +2986,35 @@ var BASE = (function()
 
 		if(response !== 'ok')
 		{
+			$('#prog_p_commands_error').text(response).css('display', 'block');
+			
+			$('#msg').scrollTop($('#prog_p_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop());
+			
 			ok = false;
-
-			$('#p_commands_error').text(response).css('display', 'block');
 		}
 
 		else
 		{
-			$('#p_commands_error').css('display', 'none');
+			$('#prog_p_commands_error').css('display', 'none');
 		}
 
 		response = execute_program(s_commands, false);
 
 		if(response !== 'ok')
 		{
-			ok = false;
+			$('#prog_s_commands_error').text(response).css('display', 'block');
 
-			$('#s_commands_error').text(response).css('display', 'block');
+			if(ok)
+			{
+				$('#msg').scrollTop($('#prog_s_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop())				
+			}
+			
+			ok = false;
 		}
 
 		else
 		{
-			$('#s_commands_error').css('display', 'none');
+			$('#prog_s_commands_error').css('display', 'none');
 		}
 
 		return ok;
