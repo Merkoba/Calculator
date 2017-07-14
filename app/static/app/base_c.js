@@ -2106,12 +2106,12 @@ var BASE = (function()
 	{
 		if(next)
 		{
-			var value = $(focused.input).parent().next('.line').find('.input')[0].value;
+			var value = $(focused.input).parent().next('.line').find('.input').val();
 		}	
 
 		else
 		{
-			var value = $(focused.input).parent().prev('.line').find('.input')[0].value;
+			var value = $(focused.input).parent().prev('.line').find('.input').val();
 		}	
 
 		if(value !== undefined && value !== '')
@@ -2677,7 +2677,7 @@ var BASE = (function()
 					return match;
 				}
 
-				var v = $('#' + match.substring(1))[0].value;
+				var v = $('#' + match.substring(1))[0].val();
 
 				if(v !== undefined && v.trim() !== '')
 				{
