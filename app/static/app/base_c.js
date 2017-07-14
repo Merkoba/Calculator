@@ -2972,6 +2972,8 @@ var BASE = (function()
 			$('.prog_input').get(1).value = p_commands;
 			$('.prog_input').get(3).value = s_commands;
 
+			$('#msg').scrollTop(0);
+			
 			play('nope');
 		}
 	}
