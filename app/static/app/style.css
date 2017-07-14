@@ -355,3 +355,8 @@ sup
 	padding-top: 0.5em;
 	margin-bottom: -1.2em;
 }
+
+.underline
+{
+	text-decoration: underline;
+}

@@ -2919,7 +2919,7 @@ var BASE = (function()
 
 		s += "<br><br><br>";
 
-		s += "<div class='prog_label'>Available Commands:</div>";
+		s += "<div class='prog_label underline'>Available Commands</div>";
 
 		for(let i=0; i<commands.length; i++)
 		{
@@ -2928,7 +2928,7 @@ var BASE = (function()
 
 		s += "<br><br>";
 
-		s += "<div class='prog_label'>Examples:</div>";
+		s += "<div class='prog_label underline'>Examples</div>";
 		s += "insert 34<br>";
 		s += "insert pi<br>";
 		s += "add line; insert cos(55)<br>";
