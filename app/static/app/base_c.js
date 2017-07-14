@@ -119,17 +119,9 @@ var BASE = (function()
 			{
 				if(msg_open)
 				{
-					if($('input[type=text]').is(':focus'))
+					if($('input[type=text]').is(':focus') && document.activeElement.value !== '')
 					{
-						if(document.activeElement.value !== '')
-						{
-							document.activeElement.value = '';
-						}
-
-						else
-						{
-							hide_overlay();
-						}
+						document.activeElement.value = '';
 					}
 
 					else
@@ -2983,6 +2975,9 @@ var BASE = (function()
 		var s_commands = $('#prog_s_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '');
 		var s_dbl = $('#prog_s_dbl').prop('checked');
 
+		$('#prog_p_commands')[0].value = p_commands;
+		$('#prog_s_commands')[0].value = s_commands;
+
 		if(check_program(p_commands, s_commands))
 		{
 			hide_overlay();
@@ -3015,19 +3010,13 @@ var BASE = (function()
 	{
 		var ok = true;
 
-		var prog_p_commands = $('#prog_p_commands')[0];
-		prog_p_commands.value = p_commands;
-
-		var prog_s_commands = $('#prog_s_commands')[0];
-		prog_s_commands.value = s_commands;
-
 		var response = execute_program(p_commands, false);
 		
 		if(response[0] !== 'ok')
 		{
 			$('#prog_p_commands_error').text('"' + response[1] + '" is not a valid command.').css('display', 'block');
 
-			focus_command_error(prog_p_commands, response);
+			focus_command_error($('#prog_p_commands')[0], response);
 
 			$('#msg').scrollTop($('#prog_p_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop() - 10);
 			
@@ -3047,7 +3036,7 @@ var BASE = (function()
 
 			if(ok)
 			{
-				focus_command_error(prog_s_commands, response);
+				focus_command_error($('#prog_s_commands')[0], response);
 
 				$('#msg').scrollTop($('#prog_s_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop() - 10);
 			}
