@@ -2991,9 +2991,6 @@ var BASE = (function()
 
 		else
 		{
-			$('#prog_p_commands')[0].value = p_commands;
-			$('#prog_s_commands')[0].value = s_commands;
-
 			play('nope');
 		}
 	}
@@ -3002,12 +2999,20 @@ var BASE = (function()
 	{
 		var ok = true;
 
-		var response = execute_program(p_commands, false);
+		var prog_p_commands = $('#prog_p_commands')[0];
+		prog_p_commands.value = p_commands;
 
-		if(response !== 'ok')
+		var prog_s_commands = $('#prog_s_commands')[0];
+		prog_s_commands.value = s_commands;
+
+		var response = execute_program(p_commands, false);
+		
+		if(response[0] !== 'ok')
 		{
-			$('#prog_p_commands_error').text(response).css('display', 'block');
-			
+			$('#prog_p_commands_error').text('"' + response[1] + '" is not a valid command.').css('display', 'block');
+
+			focus_command_error(prog_p_commands, response);
+
 			$('#msg').scrollTop($('#prog_p_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop() - 10);
 			
 			ok = false;
@@ -3020,13 +3025,15 @@ var BASE = (function()
 
 		response = execute_program(s_commands, false);
 
-		if(response !== 'ok')
+		if(response[0] !== 'ok')
 		{
-			$('#prog_s_commands_error').text(response).css('display', 'block');
+			$('#prog_s_commands_error').text('"' + response[1] + '" is not a valid command.').css('display', 'block');
 
 			if(ok)
 			{
-				$('#msg').scrollTop($('#prog_s_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop() - 10);				
+				focus_command_error(prog_s_commands, response);
+
+				$('#msg').scrollTop($('#prog_s_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop() - 10);
 			}
 			
 			ok = false;
@@ -3040,11 +3047,48 @@ var BASE = (function()
 		return ok;
 	}
 
+	function focus_command_error(input, response)
+	{
+		var indices = [];
+
+		var str = input.value;
+
+		for(var i=0; i<str.length;i++) 
+		{
+			if (str[i] === ";") indices.push(i);
+		}
+
+		if(indices.length === 0)
+		{
+			var index = 0;
+		}
+
+		else
+		{
+			if(response[2] === indices.length)
+			{
+				var index = input.value.length - response[1].length;
+			}
+
+			else
+			{
+				var index = indices[response[2]] - response[1].length;	
+			}
+		}
+
+		if(index !== undefined)
+		{
+			input.setSelectionRange(index, index);
+		}
+
+		input.focus();		
+	}	
+
 	function execute_program(cmds, run=true)
 	{
 		if(cmds.length === 0)
 		{
-			return "ok";
+			return ["ok"];
 		}
 
 		var split = cmds.split(';');
@@ -3083,11 +3127,11 @@ var BASE = (function()
 
 			else
 			{
-				return '"' + command + '" is not a valid command.';
+				return ["fail", command, i];
 			}
 		}
 
-		return "ok";
+		return ["ok"];
 	}
 
 	function execute_command(command)
