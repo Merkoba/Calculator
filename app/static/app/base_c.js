@@ -3136,7 +3136,7 @@ var BASE = (function()
 			{
 				if(run)
 				{
-					execute_command(command);
+					execute_command(command.toLowerCase());
 				}
 			}
 
