@@ -2984,7 +2984,17 @@ var BASE = (function()
 
 			if(programs[key] === undefined)
 			{
-				programs[key] = {primary:{}, secondary:{}}
+				programs[key] = {}
+			}
+
+			if(programs[key].primary === undefined)
+			{
+				programs[key].primary = {};	
+			}
+
+			if(programs[key].secondary === undefined)
+			{
+				programs[key].secondary = {};	
 			}
 
 			programs[key].primary.title = p_title;
