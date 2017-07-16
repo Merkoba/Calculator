@@ -285,8 +285,8 @@ var BASE = (function()
 		place_button('/');
 		place_button('(');
 		place_button(')');
-		place_button('pow');
-		place_button('sqrt', 'Right Click: Cube Root');
+		place_button('^', 'Right Click: ^2 &nbsp;|&nbsp; Middle Click: ^3');
+		place_button('sqrt', 'Right Click: Cube Root &nbsp;|&nbsp; Middle Click: nth Root');
 		place_button('sin', 'Right Click: asin &nbsp;|&nbsp; Middle Click: asinh');
 		place_button('cos', 'Right Click: acos &nbsp;|&nbsp; Middle Click: acosh');
 		place_button('tan', 'Right Click: atan &nbsp;|&nbsp; Middle Click: atanh');
@@ -1041,11 +1041,6 @@ var BASE = (function()
 			s = "tan(";
 		}
 
-		else if(s === "pow")
-		{
-			s = "^";
-		}
-
 		else if(s === "sqrt")
 		{
 			s = "sqrt(";
@@ -1200,11 +1195,29 @@ var BASE = (function()
 				}
 			}
 
+			else if(s === "^")
+			{
+				if(aux === 3)
+				{
+					return "^2";
+				}
+
+				else if(aux === 2)
+				{
+					return "^3";
+				}
+			}
+
 			else if(s === "sqrt(")
 			{
 				if(aux === 3)
 				{
 					return "cbrt(";
+				}
+
+				else if(aux === 2)
+				{
+					return "nthRoot(";
 				}
 			}
 
