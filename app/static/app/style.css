@@ -107,6 +107,8 @@ body
 	max-width: 100vw;
 	overflow-wrap: break-word;
 	word-wrap: break-word;
+	letter-spacing: 0.06em;
+	word-spacing: 0.06em;
 }
 
 .result 
