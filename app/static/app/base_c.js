@@ -3137,6 +3137,11 @@ var BASE = (function()
 
 			else
 			{
+				if(run)
+				{
+					show_execution_error(command);
+				}
+
 				return ["fail", command, i];
 			}
 		}
@@ -3326,6 +3331,16 @@ var BASE = (function()
 	function go_to_last_input()
 	{
 		focus_input($('.input').last()[0]);
+	}
+
+	function show_execution_error(command)
+	{
+		var s = "";
+
+		s += 'An error happened while executing "' + command + '".<br><br>';
+		s += 'It is not a valid command.';
+
+		msg(s);
 	}
 
 	return global;
