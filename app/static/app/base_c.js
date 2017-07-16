@@ -67,8 +67,8 @@ var BASE = (function()
 		'format',
 		'format all',
 		'expand',
-		'caret to end',
-		'caret to start',
+		'move caret to end',
+		'move caret to start',
 		'copy variable',
 		'copy input',
 		'copy result',
@@ -3294,12 +3294,12 @@ var BASE = (function()
 			expand_value(focused.input);
 		}
 
-		else if(command === "caret to end")
+		else if(command === "move caret to end")
 		{
 			move_caret_to_end(focused.input);
 		}
 
-		else if(command === "caret to start")
+		else if(command === "move caret to start")
 		{
 			move_caret_to_start(focused.input);
 		}
