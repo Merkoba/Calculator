@@ -2132,11 +2132,6 @@ var BASE = (function()
 
 		msg_align_btns();
 
-		$('#more_options').click(function()
-		{
-			show_options();
-		});
-
 		$('#more_saved').click(function()
 		{
 			show_saved();
