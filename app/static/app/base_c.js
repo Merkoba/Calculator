@@ -298,8 +298,8 @@ var BASE = (function()
 
 		buttons_br();
 
-		place_button_wider('Up', 'Right Click: Move Line Up');
-		place_button_wider('Down', 'Right Click: Move Line Down');
+		place_button_wider('Up', 'Right Click: Move Line Up &nbsp;|&nbsp; Middle Click: Go To First Line');
+		place_button_wider('Down', 'Right Click: Move Line Down &nbsp;|&nbsp; Middle Click: Go To Last Line');
 		place_button_wider('New Line', 'Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before');
 		place_button_wider('Remove Line', 'Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line');
 		place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs');
@@ -340,7 +340,7 @@ var BASE = (function()
 			{
 				delay: [1200, 100],
 				animation: 'scale',
-				hideOnClick: false,
+				hideOnClick: true,
 				duration: 100,
 				arrow: true,
 				performance: true,
@@ -418,7 +418,7 @@ var BASE = (function()
 			{
 				delay: [1200, 100],
 				animation: 'scale',
-				hideOnClick: false,
+				hideOnClick: true,
 				duration: 100,
 				arrow: true,
 				performance: true,
@@ -1241,6 +1241,12 @@ var BASE = (function()
 					move_line_up();
 					return false;
 				}
+
+				else if(aux === 2)
+				{
+					go_to_first_input();
+					return false;
+				}
 			}
 
 			else if(s === "Down")
@@ -1248,6 +1254,12 @@ var BASE = (function()
 				if(aux === 3)
 				{
 					move_line_down();
+					return false;
+				}
+
+				else if(aux === 2)
+				{
+					go_to_last_input();
 					return false;
 				}
 			}
