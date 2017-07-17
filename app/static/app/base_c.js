@@ -65,10 +65,12 @@ var BASE = (function()
 		'undo',
 		'redo',
 		'format',
-		'format all',
 		'expand',
 		'move caret to end',
 		'move caret to start',
+		'comment',
+		'uncomment',
+		'toggle comment',
 		'copy variable',
 		'copy input',
 		'copy result',
@@ -282,7 +284,7 @@ var BASE = (function()
 		place_button('+');
 		place_button('-');
 		place_button('*');
-		place_button('/');
+		place_button('/', 'Right Click: Toggle Comment');
 		place_button('(');
 		place_button(')');
 		place_button('^', 'Right Click: ^2 &nbsp;|&nbsp; Middle Click: ^3');
@@ -1066,7 +1068,6 @@ var BASE = (function()
 		else if(s === "Erase")
 		{
 			erase_character();
-			update_results();
 			return;
 		}
 
@@ -1113,8 +1114,6 @@ var BASE = (function()
 		}
 
 		insert_text(focused.input, s);
-
-		update_results();
 	}
 
 	function blur_focus()
@@ -1234,6 +1233,15 @@ var BASE = (function()
 				}
 			}
 
+			else if(s === "/")
+			{
+				if(aux === 3)
+				{
+					toggle_comment(focused.input);
+					return false;
+				}
+			}			
+
 			else if(s === "Up")
 			{
 				if(aux === 3)
@@ -1314,14 +1322,12 @@ var BASE = (function()
 				if(aux === 3)
 				{
 					undo_change();
-					update_results();
 					return false;
 				}
 
 				else if(aux === 2)
 				{
 					redo_change();
-					update_results();
 					return false;
 				}				
 			}
@@ -1380,7 +1386,6 @@ var BASE = (function()
 		}
 
 		replace_text(input, '');
-		update_results();
 	}
 
 	function update_results()
@@ -1388,7 +1393,6 @@ var BASE = (function()
 		undefine_variables();
 
 		var variables = {};
-
 
 		$('.input').each(function()
 		{
@@ -2410,6 +2414,70 @@ var BASE = (function()
 		}
 	}
 
+function check_programs_key(key, save=true)
+{
+	var mod = false;
+	
+	if(programs[key] === undefined)
+	{
+		programs[key] = {}
+		mod = true;
+	}
+
+	if(programs[key].primary === undefined)
+	{
+		programs[key].primary = {};	
+		mod = true;
+	}
+
+	if(programs[key].primary.title === undefined)
+	{
+		programs[key].primary.title = '';
+		mod = true;
+	}
+
+	if(programs[key].primary.commands === undefined)
+	{
+		programs[key].primary.commands = '';
+		mod = true;
+	}
+
+	if(programs[key].primary.doubleclick === undefined)
+	{
+		programs[key].primary.doubleclick = false;
+		mod = true;
+	}
+
+	if(programs[key].secondary === undefined)
+	{
+		programs[key].secondary = {};	
+		mod = true;
+	}
+
+	if(programs[key].secondary.title === undefined)
+	{
+		programs[key].secondary.title = '';
+		mod = true;
+	}
+
+	if(programs[key].secondary.commands === undefined)
+	{
+		programs[key].secondary.commands = '';
+		mod = true;
+	}
+
+	if(programs[key].secondary.doubleclick === undefined)
+	{
+		programs[key].secondary.doubleclick = false;
+		mod = true;
+	}	
+
+	if(save && mod)
+	{
+		update_programs();
+	}
+}
+
 	function update_programs()
 	{
 		localStorage.setItem(ls_programs, JSON.stringify(programs));
@@ -2651,7 +2719,6 @@ var BASE = (function()
 		if(og_var !== $(focused.input).data('variable'))
 		{
 			replace_text(focused.input, og_val);
-			update_results();
 		}
 	}
 
@@ -2665,7 +2732,6 @@ var BASE = (function()
 		if(og_var !== $(focused.input).data('variable'))
 		{
 			replace_text(focused.input, og_result);
-			update_results();
 		}
 	}
 
@@ -2748,11 +2814,9 @@ var BASE = (function()
 		}
 
 		replace_text(input, val);
-
-		update_results();
 	}
 
-	function format_input(input, update=true)
+	function format_input(input)
 	{
 		var val = input.value;
 
@@ -2779,21 +2843,6 @@ var BASE = (function()
 		}
 
 		replace_text(input, val);
-
-		if(update)
-		{
-			update_results();
-		}
-	}
-
-	function format_all_inputs()
-	{
-		$('.input').each(function()
-		{
-			format_input(this, false);
-		});
-
-		update_results();
 	}
 
 	function insert_text(input, s)
@@ -3008,20 +3057,7 @@ var BASE = (function()
 		{
 			hide_overlay();
 
-			if(programs[key] === undefined)
-			{
-				programs[key] = {}
-			}
-
-			if(programs[key].primary === undefined)
-			{
-				programs[key].primary = {};	
-			}
-
-			if(programs[key].secondary === undefined)
-			{
-				programs[key].secondary = {};	
-			}
+			check_programs_key(key, false);
 
 			programs[key].primary.title = p_title;
 			programs[key].primary.commands = p_commands;
@@ -3187,6 +3223,11 @@ var BASE = (function()
 			clear_input(focused.input);
 		}
 
+		if(command === "clear all")
+		{
+			clear_all();
+		}
+
 		else if(command === "erase")
 		{
 			erase_character();
@@ -3302,11 +3343,6 @@ var BASE = (function()
 			format_input(focused.input);
 		}
 
-		else if(command === "format all")
-		{
-			format_all_inputs();
-		}
-
 		else if(command === "expand")
 		{
 			expand_value(focused.input);
@@ -3320,6 +3356,21 @@ var BASE = (function()
 		else if(command === "move caret to start")
 		{
 			move_caret_to_start(focused.input);
+		}
+
+		else if(command === "comment")
+		{
+			comment(focused.input);
+		}
+
+		else if(command === "uncomment")
+		{
+			uncomment(focused.input);
+		}
+
+		else if(command === "toggle comment")
+		{
+			toggle_comment(focused.input);
 		}
 
 		else if(command === "copy variable")
@@ -3372,6 +3423,35 @@ var BASE = (function()
 		s += 'It is not a valid command.';
 
 		msg(s);
+	}
+
+	function comment(input)
+	{
+		if(!input.value.trim().startsWith('//'))
+		{
+			replace_text(input, '// ' + input.value);
+		}
+	}
+
+	function uncomment(input)
+	{
+		if(input.value.trim().startsWith('//'))
+		{
+			replace_text(input, input.value.replace('//', '').trim());
+		}
+	}
+
+	function toggle_comment(input)
+	{
+		if(!input.value.trim().startsWith('//'))
+		{
+			replace_text(input, '// ' + input.value);
+		}
+
+		else
+		{
+			replace_text(input, input.value.replace('//', '').trim());
+		}
 	}
 
 	return global;
