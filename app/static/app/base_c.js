@@ -3429,7 +3429,7 @@ function check_programs_key(key, save=true)
 	{
 		if(!input.value.trim().startsWith('//'))
 		{
-			replace_text(input, '// ' + input.value);
+			replace_text(input, '// ' + input.value.trim());
 		}
 	}
 
