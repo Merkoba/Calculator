@@ -312,7 +312,7 @@ var BASE = (function()
 		place_button_wider('Down', 'Right Click: Move Line Down &nbsp;|&nbsp; Middle Click: Go To Last Line');
 		place_button_wider('New Line', 'Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before');
 		place_button_wider('Remove Line', 'Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line &nbsp;|&nbsp; Middle Click: Remove All Lines');
-		place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs');
+		place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input');
 		place_button_wider('Erase', 'Right Click: Undo &nbsp;|&nbsp; Middle Click: Redo');
 
 		$('.button').not('.programmable').each(function()
@@ -1315,12 +1315,6 @@ var BASE = (function()
 				if(aux === 3)
 				{
 					format_input(focused.input);
-					return false;
-				}
-
-				else if(aux === 2)
-				{
-					format_all_inputs();
 					return false;
 				}
 			}
