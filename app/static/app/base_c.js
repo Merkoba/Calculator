@@ -3225,11 +3225,6 @@ function check_programs_key(key, save=true)
 			clear_input(focused.input);
 		}
 
-		if(command === "clear all")
-		{
-			clear_all();
-		}
-
 		else if(command === "erase")
 		{
 			erase_character();
