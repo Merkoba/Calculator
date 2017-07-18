@@ -54,10 +54,8 @@ var BASE = (function()
 		'remove all lines',
 		'prev variable',
 		'prev input',
-		'prev result',
 		'next variable',
 		'next input',
-		'next result',
 		'go up',
 		'go down',
 		'move line up',
@@ -65,15 +63,15 @@ var BASE = (function()
 		'undo',
 		'redo',
 		'format',
+		'format all',
 		'expand',
 		'move caret to end',
 		'move caret to start',
 		'comment',
+		'comment all',
 		'uncomment',
+		'uncomment all',
 		'toggle comment',
-		'copy variable',
-		'copy input',
-		'copy result',
 		'play done',
 		'play pup',
 		'play nope'
@@ -312,7 +310,7 @@ var BASE = (function()
 		place_button_wider('Down', 'Right Click: Move Line Down &nbsp;|&nbsp; Middle Click: Go To Last Line');
 		place_button_wider('New Line', 'Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before');
 		place_button_wider('Remove Line', 'Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line &nbsp;|&nbsp; Middle Click: Remove All Lines');
-		place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input');
+		place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs');
 		place_button_wider('Erase', 'Right Click: Undo &nbsp;|&nbsp; Middle Click: Redo');
 
 		$('.button').not('.programmable').each(function()
@@ -458,7 +456,7 @@ var BASE = (function()
 					update_programs();
 					draw_prog_buttons();
 
-					msg(key1 + ' was swapped with ' + key2 + '.');
+					play('pup');
 				}
 			}
 		});				
@@ -1350,6 +1348,12 @@ var BASE = (function()
 					format_input(focused.input);
 					return false;
 				}
+
+				if(aux === 2)
+				{
+					format_all();
+					return false;
+				}
 			}
 
 			else if(s === "Erase")
@@ -1423,7 +1427,20 @@ var BASE = (function()
 		replace_text(input, '');
 	}
 
-	function update_results()
+	var update_results = (function() 
+	{
+		var timer; 
+		return function() 
+		{
+			clearTimeout(timer);
+			timer = setTimeout(function() 
+			{
+				do_update_results();
+			}, 10);
+		};
+	})();
+
+	function do_update_results()
 	{
 		undefine_variables();
 
@@ -2865,6 +2882,14 @@ var BASE = (function()
 		replace_text(input, val);
 	}
 
+	function format_all()
+	{
+		$('.input').each(function()
+		{
+			format_input(this);
+		});
+	}
+
 	function insert_text(input, s)
 	{
 		focus_if_isnt(input);
@@ -2874,7 +2899,7 @@ var BASE = (function()
 	function replace_text(input, s)
 	{
 		focus_if_isnt(input);
-		document.execCommand('selectAll', false, null);
+		input.select()
 		document.execCommand('insertText', false, s);
 	}
 
@@ -3301,11 +3326,6 @@ var BASE = (function()
 			add_input();
 		}
 
-		else if(command === "prev result")
-		{
-			add_result();
-		}
-
 		else if(command === "next variable")
 		{
 			add_ans(true);
@@ -3314,11 +3334,6 @@ var BASE = (function()
 		else if(command === "next input")
 		{
 			add_input(true);
-		}
-
-		else if(command === "next result")
-		{
-			add_result(true);
 		}
 
 		else if(command === "go up")
@@ -3356,6 +3371,11 @@ var BASE = (function()
 			format_input(focused.input);
 		}
 
+		else if(command === "format all")
+		{
+			format_all();
+		}
+
 		else if(command === "expand")
 		{
 			expand_value(focused.input);
@@ -3376,30 +3396,24 @@ var BASE = (function()
 			comment(focused.input);
 		}
 
+		else if(command === "comment all")
+		{
+			comment_all();
+		}
+
 		else if(command === "uncomment")
 		{
 			uncomment(focused.input);
 		}
 
+		else if(command === "uncomment all")
+		{
+			uncomment_all();
+		}
+
 		else if(command === "toggle comment")
 		{
 			toggle_comment(focused.input);
-		}
-
-		else if(command === "copy variable")
-		{
-			copy_to_clipboard($(focused.input).data('variable'));
-		}
-
-		else if(command === "copy input")
-		{
-			copy_to_clipboard(focused.input.value);
-		}
-
-		else if(command === "copy result")
-		{
-			var result = get_result_text($(focused.input).parent().find('.result')[0]);
-			copy_to_clipboard(result);
 		}
 
 		else if(command === "play done")
@@ -3446,12 +3460,28 @@ var BASE = (function()
 		}
 	}
 
+	function comment_all()
+	{
+		$('.input').each(function()
+		{
+			comment(this);
+		});
+	}
+
 	function uncomment(input)
 	{
 		if(input.value.trim().startsWith('//'))
 		{
 			replace_text(input, input.value.replace('//', '').trim());
 		}
+	}
+
+	function uncomment_all()
+	{
+		$('.input').each(function()
+		{
+			uncomment(this);
+		});
 	}
 
 	function toggle_comment(input)
