@@ -256,6 +256,14 @@ var BASE = (function()
 				}
 			}
 
+			else if(code === 191)
+			{
+				if(e.shiftKey && e.ctrlKey)
+				{
+					toggle_comment(focused.input);
+				}
+			}
+
 			if(!e.ctrlKey)
 			{
 				focus_if_isnt(focused.input);
@@ -1971,9 +1979,9 @@ var BASE = (function()
 		s += "Tab and Shift + Tab cycle the focus between lines.<br><br>";
 		s += "Escape clears a line, removes the line if already cleared, or closes popups.<br><br>";
 		s += "Shift + Backspace clears a line.<br><br>";
-		s += "Constants and methods in the Reference will be added to the current line when clicked.<br><br>";
-		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.<br><br>";
-		s += "Clicking on a result copies the result to the clipboard.";
+		s += "Control + Shift + / toggles line comments.<br><br>"
+		s += "Clicking on a result copies the result to the clipboard.<br><br>";
+		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.";
 
 		s += "<br><br><br><span class='b2'>Exporting</span><br><br>";
 		s += "User data is stored in the local storage of your browser.<br><br>";
