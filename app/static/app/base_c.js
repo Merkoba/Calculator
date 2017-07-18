@@ -2008,6 +2008,7 @@ var BASE = (function()
 		s += "Shift + Backspace clears a line.<br><br>";
 		s += "Control + Shift + / toggles line comments.<br><br>"
 		s += "Clicking on a result copies the result to the clipboard.<br><br>";
+		s += "Programmable buttons can be swapped by holding and dragging.<br><br>";
 		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.";
 
 		s += "<br><br><br><span class='b2'>Exporting</span><br><br>";
