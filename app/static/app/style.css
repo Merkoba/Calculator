@@ -360,3 +360,8 @@ sup
 {
 	text-decoration: underline;
 }
+
+.sortable-chosen
+{
+	background-color: #e5e04b !important;
+}

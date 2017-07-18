@@ -359,7 +359,7 @@ var BASE = (function()
 			});
 
 			disable_context_menu(this);
-		});
+		});	
 	}
 
 	function draw_prog_buttons()
@@ -372,6 +372,8 @@ var BASE = (function()
 
 			var key = 'F' + i;
 
+			check_programs_key(key);
+
 			var prog = programs[key];
 
 			var pt1 = '';
@@ -379,34 +381,24 @@ var BASE = (function()
 
 			var t1 = 'Primary';
 			var t2 = 'Secondary';
-			
-			if(prog !== undefined)
+
+			if(prog.primary.title !== '')
 			{
+				t1 = prog.primary.title;
 
-				if(prog.primary !== undefined)
+				if(prog.primary.doubleclick)
 				{
-					if(prog.primary.title !== '')
-					{
-						t1 = prog.primary.title;
-
-						if(prog.primary.doubleclick)
-						{
-							pt1 = "Double ";
-						}
-					}
+					pt1 = "Double ";
 				}
+			}
 
-				if(prog.secondary !== undefined)
+			if(prog.secondary.title !== '')
+			{
+				t2 = prog.secondary.title;
+
+				if(prog.secondary.doubleclick)
 				{
-					if(prog.secondary.title !== '')
-					{
-						t2 = prog.secondary.title;
-
-						if(prog.secondary.doubleclick)
-						{
-							pt2 = "Double ";
-						}
-					}				
+					pt2 = "Double ";
 				}
 			}
 
@@ -437,7 +429,48 @@ var BASE = (function()
 			});
 
 			disable_context_menu(this);
+		});	
+
+		Sortable.create($('#prog_buttons')[0], 
+		{
+			delay: 300,
+			animation: 0,
+			onEnd: function(evt) 
+			{
+				if(evt.oldIndex !== evt.newIndex)
+				{
+					var key1 = $($('.programmable').get(evt.newIndex)).text();
+
+					if(evt.newIndex > evt.oldIndex)
+					{
+						var key2 = $($('.programmable').get(evt.newIndex - 1)).text();
+					}
+
+					else
+					{
+						var key2 = $($('.programmable').get(evt.newIndex + 1)).text();
+					}
+
+					rename_key(programs, key1, key2 + '_temp');
+					rename_key(programs, key2, key1);
+					rename_key(programs, key2 + '_temp', key2);
+
+					update_programs();
+					draw_prog_buttons();
+
+					msg(key1 + ' was swapped with ' + key2 + '.');
+				}
+			}
+		});				
+	}	
+
+	global.asdf = function()
+	{
+		$('.programmable').each(function()
+		{
+			programs[$(this).text()].primary.title = 'btn ' + ($(this).index() + 1);
 		});		
+		update_programs();		
 	}
 
 	function place_button(s, title='')
@@ -2416,69 +2449,53 @@ var BASE = (function()
 		}
 	}
 
-function check_programs_key(key, save=true)
-{
-	var mod = false;
-	
-	if(programs[key] === undefined)
-	{
-		programs[key] = {}
-		mod = true;
-	}
+	function check_programs_key(key)
+	{	
+		if(programs[key] === undefined)
+		{
+			programs[key] = {}
+		}
 
-	if(programs[key].primary === undefined)
-	{
-		programs[key].primary = {};	
-		mod = true;
-	}
+		if(programs[key].primary === undefined)
+		{
+			programs[key].primary = {};	
+		}
 
-	if(programs[key].primary.title === undefined)
-	{
-		programs[key].primary.title = '';
-		mod = true;
-	}
+		if(programs[key].primary.title === undefined)
+		{
+			programs[key].primary.title = '';
+		}
 
-	if(programs[key].primary.commands === undefined)
-	{
-		programs[key].primary.commands = '';
-		mod = true;
-	}
+		if(programs[key].primary.commands === undefined)
+		{
+			programs[key].primary.commands = '';
+		}
 
-	if(programs[key].primary.doubleclick === undefined)
-	{
-		programs[key].primary.doubleclick = false;
-		mod = true;
-	}
+		if(programs[key].primary.doubleclick === undefined)
+		{
+			programs[key].primary.doubleclick = false;
+		}
 
-	if(programs[key].secondary === undefined)
-	{
-		programs[key].secondary = {};	
-		mod = true;
-	}
+		if(programs[key].secondary === undefined)
+		{
+			programs[key].secondary = {};	
+		}
 
-	if(programs[key].secondary.title === undefined)
-	{
-		programs[key].secondary.title = '';
-		mod = true;
-	}
+		if(programs[key].secondary.title === undefined)
+		{
+			programs[key].secondary.title = '';
+		}
 
-	if(programs[key].secondary.commands === undefined)
-	{
-		programs[key].secondary.commands = '';
-		mod = true;
-	}
+		if(programs[key].secondary.commands === undefined)
+		{
+			programs[key].secondary.commands = '';
+		}
 
-	if(programs[key].secondary.doubleclick === undefined)
-	{
-		programs[key].secondary.doubleclick = false;
-		mod = true;
-	}	
-
-	if(save && mod)
-	{
-		update_programs();
+		if(programs[key].secondary.doubleclick === undefined)
+		{
+			programs[key].secondary.doubleclick = false;
+		}	
 	}
-}
 
 	function update_programs()
 	{
@@ -3059,8 +3076,6 @@ function check_programs_key(key, save=true)
 		{
 			hide_overlay();
 
-			check_programs_key(key, false);
-
 			programs[key].primary.title = p_title;
 			programs[key].primary.commands = p_commands;
 			programs[key].primary.doubleclick = p_dbl;
@@ -3448,6 +3463,15 @@ function check_programs_key(key, save=true)
 		else
 		{
 			replace_text(input, input.value.replace('//', '').trim());
+		}
+	}
+
+	function rename_key(obj, old_name, new_name) 
+	{
+		if (obj.hasOwnProperty(old_name)) 
+		{
+			obj[new_name] = obj[old_name];
+			delete obj[old_name];
 		}
 	}
 
