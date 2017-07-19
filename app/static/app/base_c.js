@@ -2582,36 +2582,37 @@ var BASE = (function()
 		s += "<input type='checkbox' id='stor_saved'><br><br><br>";
 		s += "Reset Programs Storage<br><br>";
 		s += "<input type='checkbox' id='stor_programs'><br><br><br>";
-		s += "<span class='linky2' id='stor_apply'>Reset Selected And Refresh</span>";
+		s += "<span class='linky2' id='stor_apply'>Reset Selected</span>";
 
 		msg(s);
 
 		$('#stor_apply').click(function()
 		{
-			var refresh = false;
-
 			if($(stor_options).prop('checked'))
 			{
 				localStorage.removeItem(ls_options);
-				refresh = true;
+				get_options();
+				update_results();
+				update_infobar();
+				apply_theme(options.theme);
+				apply_mode();
 			}
 
 			if($(stor_saved).prop('checked'))
 			{
 				localStorage.removeItem(ls_saved);
-				refresh = true;
+				get_saved();
+				saved_content = '';
 			}
 
 			if($(stor_programs).prop('checked'))
 			{
 				localStorage.removeItem(ls_programs);
-				refresh = true;
+				get_programs();
+				draw_prog_buttons();
 			}
 
-			if(refresh)
-			{
-				refresh_page();
-			}
+			hide_overlay();
 		});
 	}
 
