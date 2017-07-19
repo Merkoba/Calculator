@@ -314,9 +314,22 @@ select
 	font-size: 1.1em;
 }
 
+.mwhole 
+{
+	padding-right: 0.4em;
+	font-size: 1.2em;
+	vertical-align: middle;
+}
+
+.fraction
+{
+	display: inline-flex;
+	flex-direction: column;
+	vertical-align: middle;
+}
+
 sup, sub
 {
-	display: inline-block;
 	padding: 0 0.1em;
 	font-size: 1.2em;
 }

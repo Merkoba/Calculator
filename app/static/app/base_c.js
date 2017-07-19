@@ -973,6 +973,13 @@ var BASE = (function()
 		linevars[$(input).data('variable').replace('$', '_')] = val;
 	}
 
+	function improper_to_mixed(n, d)
+	{
+		i = parseInt(n / d);
+		n -= i * d;
+		return [i, n, d];
+	}
+
 	function format_result(n, f=false)
 	{
 		if(options.fraction && !f)
@@ -984,7 +991,33 @@ var BASE = (function()
 				var sup = split[0];
 				var sub = split[1];
 
-				return `<span class='resolved'><sup>${sup}</sup><br><sub>${sub}</sub></span>`
+				var nsup = parseInt(sup);
+				var nsub = parseInt(sub);
+
+				if(options.mixed && nsup >= nsub)
+				{
+					var mixed = improper_to_mixed(nsup, nsub);
+
+					var mwhole = mixed[0];
+
+					if(mixed[1] !== 0 && mixed[2] !== 0)
+					{
+						sup = mixed[1];
+						sub = mixed[2];
+					}
+
+					else
+					{
+						return format_result(mwhole, true);
+					}
+					
+					return `<span class='resolved'><span class='mwhole'>${mwhole}</span><span class='fraction'><sup>${sup}</sup><sub>${sub}</sub></span></span>`;
+				}
+
+				else
+				{
+					return `<span class='resolved'><span class='fraction'><sup>${sup}</sup><sub>${sub}</sub></span></span>`;
+				}
 			}
 
 			else
@@ -2239,7 +2272,19 @@ var BASE = (function()
 		s += "<option value='3'>3</option>";
 		s += "<option value='4'>4</option>";
 		s += "<option value='5'>5</option>";
-		s += "</select>"		
+		s += "</select>";
+
+		s += "<br><br><br>Mixed Fractions<br><br>";
+
+		if(options.mixed)
+		{
+			s += "<input id='chk_mixed' type='checkbox' checked>";
+		}
+
+		else
+		{
+			s += "<input id='chk_mixed' type='checkbox'>";
+		}				
 
 		s += "<br><br><br>Enable Sound<br><br>";
 
@@ -2303,9 +2348,11 @@ var BASE = (function()
 			update_options();
 		});
 
-		$('#chk_fraction').change(function()
+		$('#chk_mixed').change(function()
 		{
-			toggle_fraction();
+			options.mixed = $(this).prop('checked');
+			update_results();
+			update_options();
 		});		
 
 		$('#chk_sound').change(function()
@@ -2373,6 +2420,12 @@ var BASE = (function()
 		if(options.fraction === undefined)
 		{
 			options.fraction = false;
+			mod = true;
+		}
+
+		if(options.mixed === undefined)
+		{
+			options.mixed = false;
 			mod = true;
 		}
 
@@ -2693,6 +2746,11 @@ var BASE = (function()
 
 		if($(el).find('sup').length > 0)
 		{
+			if($(el).find('.mwhole').length > 0)
+			{
+				s += $(el).find('.mwhole').text() + ' ';
+			}
+
 			s += $(el).find('sup').text();
 
 			s += "/";
