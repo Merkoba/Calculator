@@ -428,16 +428,7 @@ var BASE = (function()
 
 			disable_context_menu(this);
 		});				
-	}	
-
-	global.asdf = function()
-	{
-		$('.programmable').each(function()
-		{
-			programs[$(this).text()].primary.title = 'btn ' + ($(this).index() + 1);
-		});		
-		update_programs();		
-	}
+	}		
 
 	function place_button(s, title='')
 	{
@@ -2599,6 +2590,16 @@ var BASE = (function()
 		update_results();
 	}
 
+	global.test2 = function()
+	{
+		$('.programmable').each(function()
+		{
+			programs[$(this).text()].primary.title = 'btn ' + ($(this).index() + 1);
+		});
+				
+		update_programs();		
+	}	
+
 	function disable_context_menu(el)
 	{
 		el.addEventListener('contextmenu', event => event.preventDefault());
@@ -3039,7 +3040,20 @@ var BASE = (function()
 			s += "<option value='F" + (i + 1) + "'>F" + (i + 1) + "</option>";
 		}
 
-		s += "</select>"			
+		s += "</select>";
+
+		s += "<br><br><br><div class='prog_label'>Move To</div>";
+
+		s += "<select id='sel_prog_move'>";
+
+		s += "<option value='0'></option>";
+
+		for(let i=0; i<$('.button.programmable').length; i++)
+		{
+			s += "<option value='F" + (i + 1) + "'>F" + (i + 1) + "</option>";
+		}
+
+		s += "</select>";		
 
 		msg(s);		
 
@@ -3066,15 +3080,96 @@ var BASE = (function()
 
 		$('#sel_prog_swap').change(function()
 		{
-			if(this.value !== '0')
-			{
-				rename_key(programs, key, this.value + '_temp');
-				rename_key(programs, this.value, key);
-				rename_key(programs, this.value + '_temp', this.value);
+			prog_swap(key, this.value);
+		});	
 
-				open_program_editor(this.value)				
-			}
+		$('#sel_prog_move').change(function()
+		{
+			prog_move(key, this.value);
 		});		
+	}
+
+	function prog_swap(key1, key2)
+	{
+		if(key2 !== '0')
+		{
+			rename_key(programs, key1, key2 + '_temp');
+			rename_key(programs, key2, key1);
+			rename_key(programs, key2 + '_temp', key2);
+
+			update_programs();
+			draw_prog_buttons();
+			open_program_editor(key2);			
+		}
+	}
+
+	function prog_move(oldKey, newKey)
+	{
+		if(oldKey !== newKey)
+		{
+			var oldIndex = parseInt(oldKey.substring(1)) - 1;
+			var newIndex = parseInt(newKey.substring(1)) - 1;
+
+			if(newIndex > oldIndex)
+			{
+				for(let i=newIndex; i>oldIndex; i--)
+				{
+					var key1 = $($('.programmable').get(i)).text();
+					var key2 = $($('.programmable').get(i - 1)).text();
+
+					if(i === newIndex)
+					{	
+						programs[key1 + '_temp'] = programs[$($('.programmable').get(oldIndex)).text()];
+					}
+
+					programs[key2 + '_temp'] = programs[key1];
+				}
+
+				var keys = Object.keys(programs);
+
+				for(let i=0; i<keys.length; i++)
+				{
+					if(keys[i].indexOf('_temp') !== -1)
+					{
+						delete programs[keys[i].replace('_temp', '')];
+						programs[keys[i].replace('_temp', '')] = programs[keys[i]];
+						delete programs[keys[i]];
+					}
+				}
+			}
+
+			else
+			{
+				for(let i=newIndex; i<oldIndex; i++)
+				{
+					var key1 = $($('.programmable').get(i)).text();
+					var key2 = $($('.programmable').get(i + 1)).text();
+
+					if(i === newIndex)
+					{	
+						programs[key1 + '_temp'] = programs[$($('.programmable').get(oldIndex)).text()];
+					}
+
+					programs[key2 + '_temp'] = programs[key1];
+				}
+
+				var keys = Object.keys(programs);
+
+				for(let i=0; i<keys.length; i++)
+				{
+					if(keys[i].indexOf('_temp') !== -1)
+					{
+						delete programs[keys[i].replace('_temp', '')];
+						programs[keys[i].replace('_temp', '')] = programs[keys[i]];
+						delete programs[keys[i]];
+					}
+				}
+			}
+
+			update_programs();
+			draw_prog_buttons();
+			open_program_editor(newKey);
+		}		
 	}
 
 	function save_program(key)
