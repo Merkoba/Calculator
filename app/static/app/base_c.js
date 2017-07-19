@@ -2574,7 +2574,7 @@ var BASE = (function()
 		var s = "";
 
 		s += "Select the local storage objects you want to reset.<br>";
-		s += "Do this if something became corrupt or you know what you're doing.<br><br><br>";
+		s += "Do this if something became corrupt or if you know what you're doing.<br><br><br>";
 
 		s += "Reset Options Storage<br><br>";
 		s += "<input type='checkbox' id='stor_options'><br><br><br>";
