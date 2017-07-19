@@ -2596,7 +2596,7 @@ var BASE = (function()
 		{
 			programs[$(this).text()].primary.title = 'btn ' + ($(this).index() + 1);
 		});
-				
+
 		update_programs();		
 	}	
 
@@ -3091,21 +3091,21 @@ var BASE = (function()
 
 	function prog_swap(key1, key2)
 	{
-		if(key2 !== '0')
+		if(key2 !== '0' && key1 !== key2)
 		{
 			rename_key(programs, key1, key2 + '_temp');
 			rename_key(programs, key2, key1);
 			rename_key(programs, key2 + '_temp', key2);
 
-			update_programs();
-			draw_prog_buttons();
 			open_program_editor(key2);			
+			draw_prog_buttons();
+			update_programs();
 		}
 	}
 
 	function prog_move(oldKey, newKey)
 	{
-		if(oldKey !== newKey)
+		if(newKey !== '0' && oldKey !== newKey)
 		{
 			var oldIndex = parseInt(oldKey.substring(1)) - 1;
 			var newIndex = parseInt(newKey.substring(1)) - 1;
@@ -3166,9 +3166,9 @@ var BASE = (function()
 				}
 			}
 
-			update_programs();
-			draw_prog_buttons();
 			open_program_editor(newKey);
+			draw_prog_buttons();
+			update_programs();
 		}		
 	}
 
