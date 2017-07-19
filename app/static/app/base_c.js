@@ -2568,13 +2568,16 @@ var BASE = (function()
 	{
 		var s = "";
 
+		s += "Double clicking on these will reset the corresponding local storage object.<br>";
+		s += "Do this if something became corrupt or you know what you're doing.<br><br><br>";
+
 		s += "<span><span class='linky2 unclicked' id='stor_options'>Reset Options Storage</span><br><br><br></span>";
 		s += "<span><span class='linky2 unclicked' id='stor_saved'>Reset Saved Storage</span><br><br><br></span>";
 		s += "<span><span class='linky2 unclicked' id='stor_programs'>Reset Programs Storage</span></span>";
 
 		msg(s);
 
-		$('#stor_options').click(function()
+		$('#stor_options').dblclick(function()
 		{
 			if($(this).text() === "Done.")
 			{
@@ -2588,14 +2591,9 @@ var BASE = (function()
 			$(this).text('Done.');
 
 			$(this).removeClass('unclicked').css('cursor', 'default');
-
-			if($('#msg').find('.unclicked').length === 0)
-			{
-				hide_overlay();
-			}
 		});
 
-		$('#stor_saved').click(function()
+		$('#stor_saved').dblclick(function()
 		{
 			if($(this).text() === "Done.")
 			{
@@ -2609,14 +2607,9 @@ var BASE = (function()
 			$(this).text('Done.');
 
 			$(this).removeClass('unclicked').css('cursor', 'default');
-
-			if($('#msg').find('.unclicked').length === 0)
-			{
-				hide_overlay();
-			}
 		});
 
-		$('#stor_programs').click(function()
+		$('#stor_programs').dblclick(function()
 		{
 			if($(this).text() === "Done.")
 			{
@@ -2630,11 +2623,6 @@ var BASE = (function()
 			$(this).text('Done.');
 
 			$(this).removeClass('unclicked').css('cursor', 'default');
-
-			if($('#msg').find('.unclicked').length === 0)
-			{
-				hide_overlay();
-			}
 		});
 	}
 
