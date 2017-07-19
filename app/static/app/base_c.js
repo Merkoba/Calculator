@@ -427,38 +427,6 @@ var BASE = (function()
 			});
 
 			disable_context_menu(this);
-		});	
-
-		Sortable.create($('#prog_buttons')[0], 
-		{
-			delay: 300,
-			animation: 0,
-			onEnd: function(evt) 
-			{
-				if(evt.oldIndex !== evt.newIndex)
-				{
-					var key1 = $($('.programmable').get(evt.newIndex)).text();
-
-					if(evt.newIndex > evt.oldIndex)
-					{
-						var key2 = $($('.programmable').get(evt.newIndex - 1)).text();
-					}
-
-					else
-					{
-						var key2 = $($('.programmable').get(evt.newIndex + 1)).text();
-					}
-
-					rename_key(programs, key1, key2 + '_temp');
-					rename_key(programs, key2, key1);
-					rename_key(programs, key2 + '_temp', key2);
-
-					update_programs();
-					draw_prog_buttons();
-
-					play('pup');
-				}
-			}
 		});				
 	}	
 
@@ -2025,7 +1993,6 @@ var BASE = (function()
 		s += "Shift + Backspace clears a line.<br><br>";
 		s += "Control + Shift + / toggles line comments.<br><br>"
 		s += "Clicking on a result copies the result to the clipboard.<br><br>";
-		s += "Programmable buttons can be swapped by holding and dragging.<br><br>";
 		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.";
 
 		s += "<br><br><br><span class='b2'>Exporting</span><br><br>";
@@ -3061,6 +3028,19 @@ var BASE = (function()
 		s += "go up; erase; format<br>";
 		s += "insert 1; add line after; prev variable; insert + 2";
 
+		s += "<br><br><br><div class='prog_label'>Swap With</div>";
+
+		s += "<select id='sel_prog_swap'>";
+
+		s += "<option value='0'></option>";
+
+		for(let i=0; i<$('.button.programmable').length; i++)
+		{
+			s += "<option value='F" + (i + 1) + "'>F" + (i + 1) + "</option>";
+		}
+
+		s += "</select>"			
+
 		msg(s);		
 
 		var prog = programs[key];
@@ -3083,6 +3063,18 @@ var BASE = (function()
 		{
 			save_program(key);
 		});
+
+		$('#sel_prog_swap').change(function()
+		{
+			if(this.value !== '0')
+			{
+				rename_key(programs, key, this.value + '_temp');
+				rename_key(programs, this.value, key);
+				rename_key(programs, this.value + '_temp', this.value);
+
+				open_program_editor(this.value)				
+			}
+		});		
 	}
 
 	function save_program(key)

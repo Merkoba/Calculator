@@ -8,7 +8,6 @@ body
 	text-align: center;
 	font-family: sans-serif;
 	font-size: 14px;
-
 }
 
 #buttons 
@@ -359,9 +358,4 @@ sup
 .underline
 {
 	text-decoration: underline;
-}
-
-.sortable-chosen
-{
-	background-color: #e5e04b !important;
 }
