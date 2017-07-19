@@ -1734,6 +1734,11 @@ var BASE = (function()
 		}
 	}
 
+	function refresh_page()
+	{
+		document.location = site_root;
+	}
+
 	function new_sheet()
 	{
 		remove_all_lines();
@@ -2568,61 +2573,45 @@ var BASE = (function()
 	{
 		var s = "";
 
-		s += "Double clicking on these will reset the corresponding local storage object.<br>";
+		s += "Select the local storage objects you want to reset.<br>";
 		s += "Do this if something became corrupt or you know what you're doing.<br><br><br>";
 
-		s += "<span><span class='linky2 unclicked' id='stor_options'>Reset Options Storage</span><br><br><br></span>";
-		s += "<span><span class='linky2 unclicked' id='stor_saved'>Reset Saved Storage</span><br><br><br></span>";
-		s += "<span><span class='linky2 unclicked' id='stor_programs'>Reset Programs Storage</span></span>";
+		s += "Reset Options Storage<br><br>";
+		s += "<input type='checkbox' id='stor_options'><br><br><br>";
+		s += "Reset Saved Storage<br><br>";
+		s += "<input type='checkbox' id='stor_saved'><br><br><br>";
+		s += "Reset Programs Storage<br><br>";
+		s += "<input type='checkbox' id='stor_programs'><br><br><br>";
+		s += "<span class='linky2' id='stor_apply'>Reset Selected And Refresh</span>";
 
 		msg(s);
 
-		$('#stor_options').dblclick(function()
+		$('#stor_apply').click(function()
 		{
-			if($(this).text() === "Done.")
+			var refresh = false;
+
+			if($(stor_options).prop('checked'))
 			{
-				return;
+				localStorage.removeItem(ls_options);
+				refresh = true;
 			}
 
-			localStorage.removeItem(ls_options);
-			get_options();
-			update_results();
-
-			$(this).text('Done.');
-
-			$(this).removeClass('unclicked').css('cursor', 'default');
-		});
-
-		$('#stor_saved').dblclick(function()
-		{
-			if($(this).text() === "Done.")
+			if($(stor_saved).prop('checked'))
 			{
-				return;
+				localStorage.removeItem(ls_saved);
+				refresh = true;
 			}
 
-			localStorage.removeItem(ls_saved);
-			get_saved();
-			saved_content = '';
-
-			$(this).text('Done.');
-
-			$(this).removeClass('unclicked').css('cursor', 'default');
-		});
-
-		$('#stor_programs').dblclick(function()
-		{
-			if($(this).text() === "Done.")
+			if($(stor_programs).prop('checked'))
 			{
-				return;
+				localStorage.removeItem(ls_programs);
+				refresh = true;
 			}
 
-			localStorage.removeItem(ls_programs);
-			get_programs();
-			draw_prog_buttons();
-
-			$(this).text('Done.');
-
-			$(this).removeClass('unclicked').css('cursor', 'default');
+			if(refresh)
+			{
+				refresh_page();
+			}
 		});
 	}
 
