@@ -2178,7 +2178,7 @@ var BASE = (function()
 
 		s += "<span class='linky2' id='more_saved'>Saved</span><br><br><br>";
 		
-		s += "<span class='linky2' id='more_storage'>Storage</span><br><br><br>";
+		s += "<span class='linky2' id='more_reset'>Reset</span><br><br><br>";
 
 		s += "<span class='linky2' id='more_about'>About</span>";
 
@@ -2191,9 +2191,9 @@ var BASE = (function()
 			show_saved();
 		});
 
-		$('#more_storage').click(function()
+		$('#more_reset').click(function()
 		{
-			show_storage();
+			show_reset();
 		});
 
 		$('#more_about').click(function()
@@ -2569,7 +2569,7 @@ var BASE = (function()
 		}
 	}
 
-	function show_storage()
+	function show_reset()
 	{
 		var s = "";
 
