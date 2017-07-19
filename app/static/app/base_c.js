@@ -1734,18 +1734,19 @@ var BASE = (function()
 		}
 	}
 
-	function refresh_page()
+	function new_sheet()
 	{
-		document.location = site_root;
+		remove_all_lines();
+		edit_url('');		
 	}
 
-	function check_refresh()
+	function check_new_sheet()
 	{
 		var s = stringify_sheet();
 
 		if(s.trim().replace(/@!#/g, '').length < 1)
 		{
-			remove_all_lines();
+			new_sheet();
 			return;
 		}
 
@@ -1755,13 +1756,13 @@ var BASE = (function()
 
 			if(conf) 
 			{
-				remove_all_lines();
+				new_sheet();
 			}
 		}
 
 		else
 		{
-			remove_all_lines();
+			new_sheet();
 		}		
 	}
 
@@ -1769,7 +1770,7 @@ var BASE = (function()
 	{
 		$('#lnk_new').click(function()
 		{
-			check_refresh();
+			check_new_sheet();
 		});	
 
 		$('#lnk_save').click(function()
@@ -2171,6 +2172,8 @@ var BASE = (function()
 		var s = "";
 
 		s += "<span class='linky2' id='more_saved'>Saved</span><br><br><br>";
+		
+		s += "<span class='linky2' id='more_storage'>Storage</span><br><br><br>";
 
 		s += "<span class='linky2' id='more_about'>About</span>";
 
@@ -2181,6 +2184,11 @@ var BASE = (function()
 		$('#more_saved').click(function()
 		{
 			show_saved();
+		});
+
+		$('#more_storage').click(function()
+		{
+			show_storage();
 		});
 
 		$('#more_about').click(function()
@@ -2556,6 +2564,80 @@ var BASE = (function()
 		}
 	}
 
+	function show_storage()
+	{
+		var s = "";
+
+		s += "<span><span class='linky2 unclicked' id='stor_options'>Reset Options Storage</span><br><br><br></span>";
+		s += "<span><span class='linky2 unclicked' id='stor_saved'>Reset Saved Storage</span><br><br><br></span>";
+		s += "<span><span class='linky2 unclicked' id='stor_programs'>Reset Programs Storage</span></span>";
+
+		msg(s);
+
+		$('#stor_options').click(function()
+		{
+			if($(this).text() === "Done.")
+			{
+				return;
+			}
+
+			localStorage.removeItem(ls_options);
+			get_options();
+			update_results();
+
+			$(this).text('Done.');
+
+			$(this).removeClass('unclicked').css('cursor', 'default');
+
+			if($('#msg').find('.unclicked').length === 0)
+			{
+				hide_overlay();
+			}
+		});
+
+		$('#stor_saved').click(function()
+		{
+			if($(this).text() === "Done.")
+			{
+				return;
+			}
+
+			localStorage.removeItem(ls_saved);
+			get_saved();
+			saved_content = '';
+
+			$(this).text('Done.');
+
+			$(this).removeClass('unclicked').css('cursor', 'default');
+
+			if($('#msg').find('.unclicked').length === 0)
+			{
+				hide_overlay();
+			}
+		});
+
+		$('#stor_programs').click(function()
+		{
+			if($(this).text() === "Done.")
+			{
+				return;
+			}
+
+			localStorage.removeItem(ls_programs);
+			get_programs();
+			draw_prog_buttons();
+
+			$(this).text('Done.');
+
+			$(this).removeClass('unclicked').css('cursor', 'default');
+
+			if($('#msg').find('.unclicked').length === 0)
+			{
+				hide_overlay();
+			}
+		});
+	}
+
 	function fill_sheet(x=false)
 	{
 		if(x)
@@ -2597,7 +2679,8 @@ var BASE = (function()
 			programs[$(this).text()].primary.title = 'btn ' + ($(this).index() + 1);
 		});
 
-		update_programs();		
+		update_programs();
+		draw_prog_buttons();		
 	}	
 
 	function disable_context_menu(el)
