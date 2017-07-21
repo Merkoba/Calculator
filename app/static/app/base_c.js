@@ -2266,12 +2266,12 @@ var BASE = (function()
 		s += "<br><br><br>Round Places<br><br>";
 
 		s += "<select id='sel_round_places'>";
-		s += "<option value='0'>0</option>";
-		s += "<option value='1'>1</option>";
-		s += "<option value='2'>2</option>";
-		s += "<option value='3'>3</option>";
-		s += "<option value='4'>4</option>";
-		s += "<option value='5'>5</option>";
+
+		for(let i=0; i<31; i++)
+		{
+			s += "<option value='" + i + "'>" + i + "</option>";
+		}
+
 		s += "</select>";
 
 		s += "<br><br><br>Mixed Fractions<br><br>";
@@ -2413,7 +2413,7 @@ var BASE = (function()
 
 		if(options.round_places === undefined)
 		{
-			options.round_places = 5;
+			options.round_places = 10;
 			mod = true;
 		}
 
