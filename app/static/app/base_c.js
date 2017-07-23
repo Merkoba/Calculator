@@ -364,15 +364,13 @@ var BASE = (function()
 	{
 		$('#prog_buttons').html('');
 
-		for(let i=1; i<13; i++)
+		for(let i=0; i<12; i++)
 		{
 			var s = '';
 
-			var key = 'F' + i;
+			check_programs_key(i);
 
-			check_programs_key(key);
-
-			var prog = programs[key];
+			var prog = programs[i];
 
 			var pt1 = '';
 			var pt2 = '';
@@ -404,14 +402,14 @@ var BASE = (function()
 			s += pt2 + "Right Click: " + t2 + " &nbsp;|&nbsp; ";
 			s += 'Middle Click: Program';
 
-			place_button_programmable(key, s);
+			place_button_programmable(prog.name, s);
 		}
 
-		$('.button.programmable').each(function()
+		$('.button.programmable').each(function(i)
 		{
 			this.addEventListener('mouseup', function(event) 
 			{
-				prog_press($(this).text(), event);
+				prog_press(i, event);
 			}, false);	
 			
 			tippy(this, 
@@ -1371,7 +1369,7 @@ var BASE = (function()
 	{
 		if(e.which === 2)
 		{
-			open_program_editor(key);
+			show_program_editor(key);
 			return;
 		}
 
@@ -2481,7 +2479,7 @@ var BASE = (function()
 
 		if(programs === null)
 		{
-			programs = {};
+			programs = [];
 			mod = true;
 		}
 
@@ -2496,6 +2494,11 @@ var BASE = (function()
 		if(programs[key] === undefined)
 		{
 			programs[key] = {}
+		}
+
+		if(programs[key].name === undefined)
+		{
+			programs[key].name = 'F' + (key + 1);
 		}
 
 		if(programs[key].primary === undefined)
@@ -3090,11 +3093,11 @@ var BASE = (function()
 		input.setSelectionRange(0, 0);
 	}
 
-	function open_program_editor(key)
+	function show_program_editor(key)
 	{
 		var s = "";
 
-		s += "<span class='b2'>" + key + "</span><br><br>";
+		s += "<input maxlength='5' id='prog_key_name' class='prog_key_input'><br><br><br>";
 
 		s += "<div id='prog_p_label' class='prog_label'>Primary Action Title</b2></div>";
 		s += "<input type='text' id='prog_p_title' class='prog_input prog_input_smaller'></input>";
@@ -3152,11 +3155,11 @@ var BASE = (function()
 
 		s += "<select id='sel_prog_swap'>";
 
-		s += "<option value='0'></option>";
+		s += "<option value='--'></option>";
 
-		for(let i=0; i<$('.button.programmable').length; i++)
+		for(let i=0; i<programs.length; i++)
 		{
-			s += "<option value='F" + (i + 1) + "'>F" + (i + 1) + "</option>";
+			s += "<option value=" + i + ">" + programs[i].name + "</option>";
 		}
 
 		s += "</select>";
@@ -3165,12 +3168,12 @@ var BASE = (function()
 
 		s += "<select id='sel_prog_move'>";
 
-		s += "<option value='0'></option>";
+		s += "<option value='--'></option>";
 
-		for(let i=0; i<$('.button.programmable').length; i++)
+		for(let i=0; i<programs.length; i++)
 		{
-			s += "<option value='F" + (i + 1) + "'>F" + (i + 1) + "</option>";
-		}
+			s += "<option value=" + i + ">" + programs[i].name + "</option>";
+		}		
 
 		s += "</select>";		
 
@@ -3180,6 +3183,8 @@ var BASE = (function()
 
 		if(prog !== undefined)
 		{
+			$('#prog_key_name')[0].value = prog.name;
+
 			$('#prog_p_title')[0].value = prog.primary.title;
 			$('#prog_p_commands')[0].value = prog.primary.commands;
 
@@ -3188,7 +3193,7 @@ var BASE = (function()
 
 			$('#prog_p_dbl').prop('checked', prog.primary.doubleclick);
 			$('#prog_s_dbl').prop('checked', prog.secondary.doubleclick);
-		}		
+		}
 
 		$('#prog_p_title').focus();
 
@@ -3199,24 +3204,25 @@ var BASE = (function()
 
 		$('#sel_prog_swap').change(function()
 		{
-			prog_swap(key, this.value);
+			prog_swap(key, parseInt(this.value));
 		});	
 
 		$('#sel_prog_move').change(function()
 		{
-			prog_move(key, this.value);
+			prog_move(key, parseInt(this.value));
 		});		
 	}
 
-	function prog_swap(key1, key2)
+	function prog_swap(index1, index2)
 	{
-		if(key2 !== '0' && key1 !== key2)
+		if(index2 !== '--' && index1 !== index2)
 		{
-			rename_key(programs, key1, key2 + '_temp');
-			rename_key(programs, key2, key1);
-			rename_key(programs, key2 + '_temp', key2);
+			var temp = programs[index1];
 
-			open_program_editor(key2);			
+			programs[index1] = programs[index2];
+			programs[index2] = temp;
+
+			show_program_editor(index2);			
 			draw_prog_buttons();
 			update_programs();
 		}
@@ -3224,68 +3230,11 @@ var BASE = (function()
 
 	function prog_move(oldKey, newKey)
 	{
-		if(newKey !== '0' && oldKey !== newKey)
+		if(newKey !== '--' && oldKey !== newKey)
 		{
-			var oldIndex = parseInt(oldKey.substring(1)) - 1;
-			var newIndex = parseInt(newKey.substring(1)) - 1;
+			move_in_array(programs, oldKey, newKey);
 
-			if(newIndex > oldIndex)
-			{
-				for(let i=newIndex; i>oldIndex; i--)
-				{
-					var key1 = $($('.programmable').get(i)).text();
-					var key2 = $($('.programmable').get(i - 1)).text();
-
-					if(i === newIndex)
-					{	
-						programs[key1 + '_temp'] = programs[$($('.programmable').get(oldIndex)).text()];
-					}
-
-					programs[key2 + '_temp'] = programs[key1];
-				}
-
-				var keys = Object.keys(programs);
-
-				for(let i=0; i<keys.length; i++)
-				{
-					if(keys[i].indexOf('_temp') !== -1)
-					{
-						delete programs[keys[i].replace('_temp', '')];
-						programs[keys[i].replace('_temp', '')] = programs[keys[i]];
-						delete programs[keys[i]];
-					}
-				}
-			}
-
-			else
-			{
-				for(let i=newIndex; i<oldIndex; i++)
-				{
-					var key1 = $($('.programmable').get(i)).text();
-					var key2 = $($('.programmable').get(i + 1)).text();
-
-					if(i === newIndex)
-					{	
-						programs[key1 + '_temp'] = programs[$($('.programmable').get(oldIndex)).text()];
-					}
-
-					programs[key2 + '_temp'] = programs[key1];
-				}
-
-				var keys = Object.keys(programs);
-
-				for(let i=0; i<keys.length; i++)
-				{
-					if(keys[i].indexOf('_temp') !== -1)
-					{
-						delete programs[keys[i].replace('_temp', '')];
-						programs[keys[i].replace('_temp', '')] = programs[keys[i]];
-						delete programs[keys[i]];
-					}
-				}
-			}
-
-			open_program_editor(newKey);
+			show_program_editor(newKey);
 			draw_prog_buttons();
 			update_programs();
 		}		
@@ -3293,6 +3242,8 @@ var BASE = (function()
 
 	function save_program(key)
 	{
+		var p_key_name = $('#prog_key_name')[0].value.trim().replace(/\s+/g, '');
+
 		var p_title = $('#prog_p_title')[0].value.trim().replace(/\s+/g, ' ');
 		var p_commands = $('#prog_p_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '');
 		var p_dbl = $('#prog_p_dbl').prop('checked');
@@ -3307,6 +3258,8 @@ var BASE = (function()
 		if(check_program(p_commands, s_commands))
 		{
 			hide_overlay();
+
+			programs[key].name = p_key_name;
 
 			programs[key].primary.title = p_title;
 			programs[key].primary.commands = p_commands;
@@ -3710,6 +3663,31 @@ var BASE = (function()
 			obj[new_name] = obj[old_name];
 			delete obj[old_name];
 		}
+	}
+
+	function move_in_array(array, old_index, new_index)
+	{
+		while(old_index < 0) 
+		{
+			old_index += array.length;
+		}
+
+		while(new_index < 0) 
+		{
+			new_index += array.length;
+		}
+
+		if(new_index >= array.length) 
+		{
+			var k = new_index - array.length;
+
+			while((k--) + 1) 
+			{
+				array.push(undefined);
+			}
+		}
+
+		array.splice(new_index, 0, array.splice(old_index, 1)[0]);		
 	}
 
 	return global;
