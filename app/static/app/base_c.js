@@ -24,7 +24,7 @@ var BASE = (function()
 	var programs;
 	var ls_options = 'options_v2';
 	var ls_saved = 'saved_v2';
-	var ls_programs = 'programs_v2';
+	var ls_programs = 'programs_v3';
 
 	var themes = [
 		'paper',
@@ -2026,9 +2026,9 @@ var BASE = (function()
 		s += "<br><br><br><span class='b2'>Exporting</span><br><br>";
 		s += "User data is stored in the local storage of your browser.<br><br>";
 		s += "In case you need to export it to another browser you can manually copy the object strings from one browser to another.<br><br>";
-		s += "To access the options object use localStorage.getItem('options_v2').<br><br>";
-		s += "To access the saved object use localStorage.getItem('saved_v2').<br><br>";
-		s += "To access the programs object use localStorage.getItem('programs_v2').<br><br>";
+		s += "To access the options object use localStorage.getItem('" + ls_options + "').<br><br>";
+		s += "To access the saved object use localStorage.getItem('" + ls_saved + "').<br><br>";
+		s += "To access the programs object use localStorage.getItem('" + ls_programs + "').<br><br>";
 		s += "To copy the values to another browser use localStorage.setItem.<br><br>";
 		s += "For example, localStorage.setItem('programs_v2', string).<br><br>";
 		s += "Using older versions of objects (for instance, options_v1) is not supported.";
