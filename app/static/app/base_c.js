@@ -1850,6 +1850,7 @@ var BASE = (function()
 
 		$.post('/save_sheet/',
 		{
+			csrfmiddlewaretoken: csrf_token,
 			content: s
 		})
 

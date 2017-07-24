@@ -4,7 +4,7 @@ import random
 import string
 import datetime
 from django.db import IntegrityError
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from app.models import *
@@ -43,6 +43,7 @@ def random_alpha(n):
 def now():
 	return datetime.datetime.now()
 
+@csrf_protect
 def main(request):
 
 	if request.method == 'POST':
@@ -54,6 +55,7 @@ def main(request):
 
 	return render(request, 'index.html', c)
 
+@csrf_protect
 def load_sheet(request, uid):
 
 	try:
@@ -67,7 +69,7 @@ def load_sheet(request, uid):
 
 	return render(request, 'index.html', c)
 
-@csrf_exempt
+@csrf_protect
 def save_sheet(request):
 
 	if request.method == 'POST':
