@@ -3133,24 +3133,6 @@ var BASE = (function()
 
 		s += "<span id='prog_save' class='linky2'>Save</span>";
 
-		s += "<br><br><br>";
-
-		s += "<div class='prog_label underline'>Available Commands</div>";
-
-		for(let i=0; i<commands.length; i++)
-		{
-			s += commands[i] + "<br>";
-		}
-
-		s += "<br><br>";
-
-		s += "<div class='prog_label underline'>Examples</div>";
-		s += "insert 34<br>";
-		s += "insert pi<br>";
-		s += "add line; insert cos(55)<br>";
-		s += "go up; erase; format<br>";
-		s += "insert 1; add line after; prev variable; insert + 2";
-
 		s += "<br><br><br><div class='prog_label'>Swap With</div>";
 
 		s += "<select id='sel_prog_swap'>";
@@ -3175,7 +3157,25 @@ var BASE = (function()
 			s += "<option value=" + i + ">" + programs[i].name + "</option>";
 		}		
 
-		s += "</select>";		
+		s += "</select>";	
+
+		s += "<br><br><br>";
+
+		s += "<div class='prog_label underline'>Available Commands</div>";
+
+		for(let i=0; i<commands.length; i++)
+		{
+			s += commands[i] + "<br>";
+		}
+
+		s += "<br><br>";
+
+		s += "<div class='prog_label underline'>Examples</div>";
+		s += "insert 34<br>";
+		s += "insert pi<br>";
+		s += "add line; insert cos(55)<br>";
+		s += "go up; erase; format<br>";
+		s += "insert 1; add line after; prev variable; insert + 2";
 
 		msg(s);		
 
@@ -3195,7 +3195,7 @@ var BASE = (function()
 			$('#prog_s_dbl').prop('checked', prog.secondary.doubleclick);
 		}
 
-		$('#prog_p_title').focus();
+		$('#prog_key_name').focus();
 
 		$('#prog_save').click(function()
 		{
@@ -3222,7 +3222,7 @@ var BASE = (function()
 			programs[index1] = programs[index2];
 			programs[index2] = temp;
 
-			show_program_editor(index2);			
+			hide_overlay();			
 			draw_prog_buttons();
 			update_programs();
 		}
@@ -3234,7 +3234,7 @@ var BASE = (function()
 		{
 			move_in_array(programs, oldKey, newKey);
 
-			show_program_editor(newKey);
+			hide_overlay();
 			draw_prog_buttons();
 			update_programs();
 		}		
