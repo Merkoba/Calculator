@@ -3098,7 +3098,7 @@ var BASE = (function()
 	{
 		var s = "";
 
-		s += "<input maxlength='5' id='prog_key_name' class='prog_key_input'><br><br><br>";
+		s += "<input maxlength='5' id='prog_key_name' class='prog_input prog_key_input'><br><br><br>";
 
 		s += "<div id='prog_p_label' class='prog_label'>Primary Action Title</b2></div>";
 		s += "<input type='text' id='prog_p_title' class='prog_input prog_input_smaller'></input>";
@@ -3200,7 +3200,7 @@ var BASE = (function()
 
 		$('#prog_save').click(function()
 		{
-			save_program(key);
+			save_program(key, prog.name);
 		});
 
 		$('#sel_prog_swap').change(function()
@@ -3246,9 +3246,9 @@ var BASE = (function()
 		}		
 	}
 
-	function save_program(key)
+	function save_program(key, name)
 	{
-		var p_key_name = $('#prog_key_name')[0].value.trim().replace(/\s+/g, '');
+		var prog_key_name = $('#prog_key_name')[0].value.trim().replace(/\s+/g, '');
 
 		var p_title = $('#prog_p_title')[0].value.trim().replace(/\s+/g, ' ');
 		var p_commands = $('#prog_p_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '');
@@ -3258,12 +3258,18 @@ var BASE = (function()
 		var s_commands = $('#prog_s_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '');
 		var s_dbl = $('#prog_s_dbl').prop('checked');
 
+		if(prog_key_name === '')
+		{
+			prog_key_name = name;
+			$('#prog_key_name')[0].value = name;
+		}
+
 		$('#prog_p_commands')[0].value = p_commands;
 		$('#prog_s_commands')[0].value = s_commands;
 
 		if(check_program(p_commands, s_commands))
 		{
-			programs[key].name = p_key_name;
+			programs[key].name = prog_key_name;
 
 			programs[key].primary.title = p_title;
 			programs[key].primary.commands = p_commands;

@@ -339,17 +339,6 @@ sup
 	border-bottom: 0.08em solid;
 }
 
-.prog_key_input
-{
-	width: 4.5em;
-	font-size: 1.2em;
-	text-align: center;
-	border: 0.02em solid black;
-	padding: 0.2em;
-	letter-spacing: 0.06em;
-	word-spacing: 0.06em;	
-}
-
 .prog_input
 {
 	font-size: 1em;	
@@ -364,6 +353,17 @@ sup
 .prog_input_smaller
 {
 	width: 15em;
+}
+
+.prog_key_input
+{
+	width: 4.5em;
+	font-size: 1.2em;
+	text-align: center;
+	border: 0.02em solid black;
+	padding: 0.2em;
+	letter-spacing: 0.06em;
+	word-spacing: 0.06em;	
 }
 
 .prog_label
