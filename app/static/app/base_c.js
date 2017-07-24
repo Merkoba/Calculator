@@ -3210,7 +3210,12 @@ var BASE = (function()
 		$('#sel_prog_move').change(function()
 		{
 			prog_move(key, parseInt(this.value));
-		});		
+		});	
+
+		$('.prog_input').on('input', function()
+		{
+			$('#prog_save').text('Save');
+		});
 	}
 
 	function prog_swap(index1, index2)
@@ -3257,8 +3262,6 @@ var BASE = (function()
 
 		if(check_program(p_commands, s_commands))
 		{
-			hide_overlay();
-
 			programs[key].name = p_key_name;
 
 			programs[key].primary.title = p_title;
@@ -3270,8 +3273,9 @@ var BASE = (function()
 			programs[key].secondary.doubleclick = s_dbl;
 
 			draw_prog_buttons();
-
 			update_programs();
+
+			$('#prog_save').text('Saved');
 		}
 
 		else
