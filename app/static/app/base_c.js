@@ -3142,7 +3142,15 @@ var BASE = (function()
 
 		for(let i=0; i<programs.length; i++)
 		{
-			s += "<option value=" + i + ">" + programs[i].name + "</option>";
+			if(i === key)
+			{
+				s += "<option value='" + i + "' disabled>" + programs[i].name + "</option>";
+			}
+
+			else
+			{
+				s += "<option value='" + i + "'>" + programs[i].name + "</option>";
+			}
 		}
 
 		s += "</select>";
@@ -3155,7 +3163,15 @@ var BASE = (function()
 
 		for(let i=0; i<programs.length; i++)
 		{
-			s += "<option value=" + i + ">" + programs[i].name + "</option>";
+			if(i === key)
+			{
+				s += "<option value='" + i + "' disabled>" + programs[i].name + "</option>";
+			}
+
+			else
+			{
+				s += "<option value='" + i + "'>" + programs[i].name + "</option>";
+			} 
 		}		
 
 		s += "</select>";	
@@ -3211,11 +3227,6 @@ var BASE = (function()
 		$('#sel_prog_move').change(function()
 		{
 			prog_move(key, parseInt(this.value));
-		});	
-
-		$('.prog_input').on('input', function()
-		{
-			$('#prog_save').text('Save');
 		});
 	}
 
@@ -3269,6 +3280,8 @@ var BASE = (function()
 
 		if(check_program(p_commands, s_commands))
 		{
+			hide_overlay();
+			
 			programs[key].name = prog_key_name;
 
 			programs[key].primary.title = p_title;
@@ -3281,8 +3294,6 @@ var BASE = (function()
 
 			draw_prog_buttons();
 			update_programs();
-
-			$('#prog_save').text('Saved');
 		}
 
 		else
