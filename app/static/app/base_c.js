@@ -27,15 +27,15 @@ var BASE = (function()
 	var ls_programs = 'programs_v3';
 
 	var themes = [
-		'paper',
+		'lake',
 		'leaf',
 		'bulb',
 		'wine',
-		'lake',
-		'vapor',
-		'cobalt',
 		'bubble',
+		'vapor',
 		'clouds',
+		'paper',
+		'cobalt',
 		'carbon'
 	];
 
@@ -2430,7 +2430,7 @@ var BASE = (function()
 
 		if(options.theme === undefined)
 		{
-			options.theme = 'paper';
+			options.theme = 'lake';
 			mod = true;
 		}
 
@@ -2438,7 +2438,7 @@ var BASE = (function()
 		{
 			if(themes.indexOf(options.theme) === -1)
 			{
-				options.theme = 'paper';
+				options.theme = 'lake';
 				mod = true;
 			}
 		}
