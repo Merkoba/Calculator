@@ -22,9 +22,9 @@ var BASE = (function()
 	var options;
 	var saved;
 	var programs;
-	var ls_options = 'options_v2';
-	var ls_saved = 'saved_v2';
-	var ls_programs = 'programs_v3';
+	var ls_options = 'options_v4';
+	var ls_saved = 'saved_v4';
+	var ls_programs = 'programs_v4';
 
 	var themes = [
 		'lake',
@@ -368,9 +368,7 @@ var BASE = (function()
 		{
 			var s = '';
 
-			check_programs_key(i);
-
-			var prog = programs[i];
+			var prog = programs.items[i];
 
 			var pt1 = '';
 			var pt2 = '';
@@ -1375,7 +1373,7 @@ var BASE = (function()
 
 		focus_if_isnt(focused.input);
 
-		var prog = programs[key];
+		var prog = programs.items[key];
 
 		if(prog !== undefined)
 		{
@@ -1940,7 +1938,7 @@ var BASE = (function()
 			sample += line + '\n';
 		}
 
-		saved.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample, options.fraction]);
+		saved.items.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample, options.fraction]);
 
 		update_saved();
 	}
@@ -2005,6 +2003,7 @@ var BASE = (function()
 		s += "Calculations are done automatically in real time using topological sorting.<br><br>";
 		s += "Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>";
 		s += "You can save a sheet for future use or sharing.<br><br>";
+		s += "There are 12 programmable buttons that can be set to execute certain commands in order.<br><br>";
 		s += "Note: Formatting and rounding are only applied to the displayed results, not to internal calculations.";
 
 		s += "<br><br><br><span class='b2'>Shortcuts</span><br><br>";
@@ -2023,16 +2022,6 @@ var BASE = (function()
 		s += "Control + Shift + / toggles line comments.<br><br>"
 		s += "Clicking on a result copies the result to the clipboard.<br><br>";
 		s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does.";
-
-		s += "<br><br><br><span class='b2'>Exporting</span><br><br>";
-		s += "User data is stored in the local storage of your browser.<br><br>";
-		s += "In case you need to export it to another browser you can manually copy the object strings from one browser to another.<br><br>";
-		s += "To access the options object use localStorage.getItem('" + ls_options + "').<br><br>";
-		s += "To access the saved object use localStorage.getItem('" + ls_saved + "').<br><br>";
-		s += "To access the programs object use localStorage.getItem('" + ls_programs + "').<br><br>";
-		s += "To copy the values to another browser use localStorage.setItem.<br><br>";
-		s += "For example, localStorage.setItem('" + ls_programs + "', string).<br><br>";
-		s += "Using older versions of objects (for instance, options_v1) is not supported.";
 
 		about = s;
 	}
@@ -2210,7 +2199,7 @@ var BASE = (function()
 
 		s += "<span class='linky2' id='more_saved'>Saved</span><br><br><br>";
 		
-		s += "<span class='linky2' id='more_reset'>Reset</span><br><br><br>";
+		s += "<span class='linky2' id='more_data'>Data</span><br><br><br>";
 
 		s += "<span class='linky2' id='more_about'>About</span>";
 
@@ -2223,9 +2212,9 @@ var BASE = (function()
 			show_saved();
 		});
 
-		$('#more_reset').click(function()
+		$('#more_data').click(function()
 		{
-			show_reset();
+			show_data_menu();
 		});
 
 		$('#more_about').click(function()
@@ -2392,6 +2381,12 @@ var BASE = (function()
 			mod = true;
 		}
 
+		if(options.version === undefined)
+		{
+			options.version = ls_options;
+			mod = true;
+		}
+
 		if(options.sound === undefined)
 		{
 			options.sound = true;
@@ -2457,7 +2452,19 @@ var BASE = (function()
 
 		if(saved === null)
 		{
-			saved = [];
+			saved = {};
+			mod = true;
+		}
+
+		if(saved.version === undefined)
+		{
+			saved.version = ls_saved;
+			mod = true;
+		}
+
+		if(saved.items === undefined)
+		{
+			saved.items = [];
 			mod = true;
 		}
 
@@ -2480,67 +2487,88 @@ var BASE = (function()
 
 		if(programs === null)
 		{
-			programs = [];
+			programs = {};
 			mod = true;
+		}
+
+		if(programs.version === undefined)
+		{
+			programs.version = ls_programs;
+			mod = true;
+		}
+
+		if(programs.items === undefined)
+		{
+			programs.items = [];
+			mod = true;
+		}
+
+		for(var i=0; i<12; i++)
+		{
+			if(programs.items[i] === undefined)
+			{
+				programs.items[i] = {}
+				mod = true;
+			}
+
+			if(programs.items[i].name === undefined)
+			{
+				programs.items[i].name = 'F' + (i + 1);
+				mod = true;
+			}
+
+			if(programs.items[i].primary === undefined)
+			{
+				programs.items[i].primary = {};
+				mod = true;	
+			}
+
+			if(programs.items[i].primary.title === undefined)
+			{
+				programs.items[i].primary.title = '';
+				mod = true;
+			}
+
+			if(programs.items[i].primary.commands === undefined)
+			{
+				programs.items[i].primary.commands = '';
+				mod = true;
+			}
+
+			if(programs.items[i].primary.doubleclick === undefined)
+			{
+				programs.items[i].primary.doubleclick = false;
+				mod = true;
+			}
+
+			if(programs.items[i].secondary === undefined)
+			{
+				programs.items[i].secondary = {};
+				mod = true;	
+			}
+
+			if(programs.items[i].secondary.title === undefined)
+			{
+				programs.items[i].secondary.title = '';
+			}
+
+			if(programs.items[i].secondary.commands === undefined)
+			{
+				programs.items[i].secondary.commands = '';
+				mod = true;
+			}
+
+			if(programs.items[i].secondary.doubleclick === undefined)
+			{
+				programs.items[i].secondary.doubleclick = false;
+				mod = true;
+			}
 		}
 
 		if(mod)
 		{
 			update_programs();
-		}
-	}
-
-	function check_programs_key(key)
-	{	
-		if(programs[key] === undefined)
-		{
-			programs[key] = {}
-		}
-
-		if(programs[key].name === undefined)
-		{
-			programs[key].name = 'F' + (key + 1);
-		}
-
-		if(programs[key].primary === undefined)
-		{
-			programs[key].primary = {};	
-		}
-
-		if(programs[key].primary.title === undefined)
-		{
-			programs[key].primary.title = '';
-		}
-
-		if(programs[key].primary.commands === undefined)
-		{
-			programs[key].primary.commands = '';
-		}
-
-		if(programs[key].primary.doubleclick === undefined)
-		{
-			programs[key].primary.doubleclick = false;
-		}
-
-		if(programs[key].secondary === undefined)
-		{
-			programs[key].secondary = {};	
-		}
-
-		if(programs[key].secondary.title === undefined)
-		{
-			programs[key].secondary.title = '';
-		}
-
-		if(programs[key].secondary.commands === undefined)
-		{
-			programs[key].secondary.commands = '';
-		}
-
-		if(programs[key].secondary.doubleclick === undefined)
-		{
-			programs[key].secondary.doubleclick = false;
-		}	
+		}		
 	}
 
 	function update_programs()
@@ -2550,7 +2578,7 @@ var BASE = (function()
 
 	function show_saved(j=0)
 	{
-		if(saved.length === 0)
+		if(saved.items.length === 0)
 		{
 			msg('Nothing saved yet.');
 			return;
@@ -2560,15 +2588,15 @@ var BASE = (function()
 		{
 			var s = "";
 			
-			var n = Math.min(20 + j, saved.length);
+			var n = Math.min(20 + j, saved.items.length);
 
 			for(var i=j; i<n; i++)
 			{
-				s += "<a class='ancher1' target=_blank href='" + saved[i][1] + "' title='" + saved[i][3] + "'>";
+				s += "<a class='ancher1' target=_blank href='" + saved.items[i][1] + "' title='" + saved.items[i][3] + "'>";
 				
-				s += saved[i][0];
+				s += saved.items[i][0];
 
-				var num_lines = saved[i][2];
+				var num_lines = saved.items[i][2];
 				
 				s += "<br>" + num_lines;
 
@@ -2582,7 +2610,7 @@ var BASE = (function()
 					s += " Lines";
 				}
 
-				if(saved[i][4])
+				if(saved.items[i][4])
 				{
 					s += " - Fraction";
 				}
@@ -2600,7 +2628,7 @@ var BASE = (function()
 				}
 			}
 
-			if(n < saved.length)
+			if(n < saved.items.length)
 			{
 				s += "<br><br><div id='svd_load_more' class='linky3' data-j=" + n + ">Load More</div>";
 			}
@@ -2626,47 +2654,225 @@ var BASE = (function()
 		}
 	}
 
-	function show_reset()
+	function show_data_menu()
 	{
 		var s = "";
 
-		s += "Select the local storage objects you want to reset.<br>";
-		s += "Do this if something became corrupt or if you know what you're doing.<br><br><br>";
+		s += "<span class='linky2' id='get_data'>View Data</span><br><br><br>";
 
-		s += "Reset Options Storage<br><br>";
-		s += "<input type='checkbox' id='stor_options'><br><br><br>";
-		s += "Reset Saved Storage<br><br>";
-		s += "<input type='checkbox' id='stor_saved'><br><br><br>";
-		s += "Reset Programs Storage<br><br>";
-		s += "<input type='checkbox' id='stor_programs'><br><br><br>";
-		s += "<span class='linky2' id='stor_apply'>Reset Selected</span>";
+		s += "<span class='linky2' id='reset_data'>Reset Data</span>";
 
 		msg(s);
 
-		$('#stor_apply').click(function()
+		msg_align_btns();
+
+		$('#get_data').click(function()
 		{
-			if($(stor_options).prop('checked'))
+			show_get_data();
+		});	
+
+		$('#reset_data').click(function()
+		{
+			show_reset_data();
+		});
+	}
+
+	function show_get_data()
+	{
+		var s = "";
+
+		s += "Options Data<br>";
+		s += "<textarea rows='5' class='data_get_area' id='data_text_options'></textarea><br>";
+		s += "<span class='data_click_item' id='copy_options_data'>Copy To Clipboard</span>";
+		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_save_options'>Save Modification</span><br><br><br>";
+
+		s += "Saved Data<br>";
+		s += "<textarea rows='5' class='data_get_area' id='data_text_saved'></textarea><br>";
+		s += "<span class='data_click_item' id='copy_saved_data'>Copy To Clipboard</span>";		
+		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_save_saved'>Save Modification</span><br><br><br>";
+
+		s += "Programs Data<br>";
+		s += "<textarea rows='5' class='data_get_area' id='data_text_programs'></textarea><br>";
+		s += "<span class='data_click_item' id='copy_programs_data'>Copy To Clipboard</span>";		
+		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_save_programs'>Save Modification</span><br><br><br>";
+
+		msg(s);
+
+		$('#data_text_options').val(localStorage.getItem(ls_options));
+		$('#data_text_saved').val(localStorage.getItem(ls_saved));
+		$('#data_text_programs').val(localStorage.getItem(ls_programs));
+
+		$('#copy_options_data').click(function()
+		{
+			copy_to_clipboard($('#data_text_options').val());
+			play('pup');
+		});
+
+		$('#copy_saved_data').click(function()
+		{
+			copy_to_clipboard($('#data_text_saved').val());
+			play('pup');
+		});
+
+		$('#copy_programs_data').click(function()
+		{
+			copy_to_clipboard($('#data_text_programs').val());
+			play('pup');
+		});
+
+		$('#data_save_options').click(function()
+		{
+			var options_val = $('#data_text_options').val();
+			
+			try
 			{
-				localStorage.removeItem(ls_options);
-				get_options();
-				update_results();
-				update_infobar();
-				apply_theme(options.theme);
-				apply_mode();
+				var parsed = JSON.parse(options_val);
+
+				if(parsed.version !== ls_options)
+				{
+					play('nope');
+					return;
+				}
+
+				reset_options(options_val);
+				play('done');
 			}
 
-			if($(stor_saved).prop('checked'))
+			catch(err)
 			{
-				localStorage.removeItem(ls_saved);
-				get_saved();
-				saved_content = '';
+				play('nope');
+			}
+		});	
+
+		$('#data_save_saved').click(function()
+		{
+			var saved_val = $('#data_text_saved').val();
+			
+			try
+			{
+				var parsed = JSON.parse(saved_val);
+
+				if(parsed.version !== ls_saved)
+				{
+					play('nope');
+					return;
+				}
+
+				reset_saved(saved_val);
+				play('done');
 			}
 
-			if($(stor_programs).prop('checked'))
+			catch(err)
 			{
-				localStorage.removeItem(ls_programs);
-				get_programs();
-				draw_prog_buttons();
+				play('nope');
+			}
+		});	
+
+		$('#data_save_programs').click(function()
+		{
+			var programs_val = $('#data_text_programs').val();
+
+			try
+			{
+				var parsed = JSON.parse(programs_val);
+
+				if(parsed.version !== ls_programs)
+				{
+					play('nope');
+					return;
+				}
+
+				reset_programs(programs_val);
+				play('done');
+			}
+
+			catch(err)
+			{
+				play('nope');
+			}
+		});		
+	}
+
+	function reset_options(data=false)
+	{
+		if(data)
+		{
+			localStorage.setItem(ls_options, data);
+		}
+
+		else
+		{
+			localStorage.removeItem(ls_options);
+		}
+
+		get_options();
+		update_results();
+		update_infobar();
+		apply_theme(options.theme);
+		apply_mode();
+	}
+
+	function reset_saved(data=false)
+	{
+		if(data)
+		{
+			localStorage.setItem(ls_saved, data);
+		}
+
+		else
+		{
+			localStorage.removeItem(ls_saved);
+		}
+
+		get_saved();
+		saved_content = '';
+	}
+
+	function reset_programs(data=false)
+	{
+		if(data)
+		{
+			localStorage.setItem(ls_programs, data);
+		}
+
+		else
+		{
+			localStorage.removeItem(ls_programs);
+		}
+
+		get_programs();
+		draw_prog_buttons();
+	}
+
+	function show_reset_data()
+	{
+		var s = "";
+
+		s += "Reset Options Data<br><br>";
+		s += "<input type='checkbox' id='data_options'><br><br><br>";
+		s += "Reset Saved Data<br><br>";
+		s += "<input type='checkbox' id='data_saved'><br><br><br>";
+		s += "Reset Programs Data<br><br>";
+		s += "<input type='checkbox' id='data_programs'><br><br><br>";
+		s += "<span class='linky2' id='data_apply'>Reset Selected</span>";
+
+		msg(s);
+
+		$('#data_apply').click(function()
+		{
+			if($(data_options).prop('checked'))
+			{
+				reset_options();
+			}
+
+			if($(data_saved).prop('checked'))
+			{
+				reset_saved();
+			}
+
+			if($(data_programs).prop('checked'))
+			{
+				reset_programs();
 			}
 
 			hide_overlay();
@@ -2706,17 +2912,6 @@ var BASE = (function()
 
 		update_results();
 	}
-
-	global.test2 = function()
-	{
-		$('.programmable').each(function()
-		{
-			programs[$(this).text()].primary.title = 'btn ' + ($(this).index() + 1);
-		});
-
-		update_programs();
-		draw_prog_buttons();		
-	}	
 
 	function disable_context_menu(el)
 	{
@@ -3145,16 +3340,16 @@ var BASE = (function()
 
 		s += "<option value='--'></option>";
 
-		for(let i=0; i<programs.length; i++)
+		for(let i=0; i<programs.items.length; i++)
 		{
 			if(i === key)
 			{
-				s += "<option value='" + i + "' disabled>" + programs[i].name + "</option>";
+				s += "<option value='" + i + "' disabled>" + programs.items[i].name + "</option>";
 			}
 
 			else
 			{
-				s += "<option value='" + i + "'>" + programs[i].name + "</option>";
+				s += "<option value='" + i + "'>" + programs.items[i].name + "</option>";
 			}
 		}
 
@@ -3166,16 +3361,16 @@ var BASE = (function()
 
 		s += "<option value='--'></option>";
 
-		for(let i=0; i<programs.length; i++)
+		for(let i=0; i<programs.items.length; i++)
 		{
 			if(i === key)
 			{
-				s += "<option value='" + i + "' disabled>" + programs[i].name + "</option>";
+				s += "<option value='" + i + "' disabled>" + programs.items[i].name + "</option>";
 			}
 
 			else
 			{
-				s += "<option value='" + i + "'>" + programs[i].name + "</option>";
+				s += "<option value='" + i + "'>" + programs.items[i].name + "</option>";
 			} 
 		}		
 
@@ -3201,7 +3396,7 @@ var BASE = (function()
 
 		msg(s);		
 
-		var prog = programs[key];
+		var prog = programs.items[key];
 
 		if(prog !== undefined)
 		{
@@ -3239,10 +3434,10 @@ var BASE = (function()
 	{
 		if(index2 !== '--' && index1 !== index2)
 		{
-			var temp = programs[index1];
+			var temp = programs.items[index1];
 
-			programs[index1] = programs[index2];
-			programs[index2] = temp;
+			programs.items[index1] = programs.items[index2];
+			programs.items[index2] = temp;
 
 			hide_overlay();			
 			draw_prog_buttons();
@@ -3254,7 +3449,7 @@ var BASE = (function()
 	{
 		if(newKey !== '--' && oldKey !== newKey)
 		{
-			move_in_array(programs, oldKey, newKey);
+			move_in_array(programs.items, oldKey, newKey);
 
 			hide_overlay();
 			draw_prog_buttons();
@@ -3287,15 +3482,15 @@ var BASE = (function()
 		{
 			hide_overlay();
 
-			programs[key].name = prog_key_name;
+			programs.items[key].name = prog_key_name;
 
-			programs[key].primary.title = p_title;
-			programs[key].primary.commands = p_commands;
-			programs[key].primary.doubleclick = p_dbl;
+			programs.items[key].primary.title = p_title;
+			programs.items[key].primary.commands = p_commands;
+			programs.items[key].primary.doubleclick = p_dbl;
 
-			programs[key].secondary.title = s_title;
-			programs[key].secondary.commands = s_commands;
-			programs[key].secondary.doubleclick = s_dbl;
+			programs.items[key].secondary.title = s_title;
+			programs.items[key].secondary.commands = s_commands;
+			programs.items[key].secondary.doubleclick = s_dbl;
 
 			draw_prog_buttons();
 			update_programs();
