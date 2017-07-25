@@ -2997,14 +2997,19 @@ var BASE = (function()
 	function erase_character()
 	{
 		var ss = focused.input.selectionStart;
+		var se = focused.input.selectionEnd;
 
-		if(ss === 0)
+		if(ss === se)
 		{
-			focus_input(focused.input);
-			return;
+			if(ss === 0)
+			{
+				focus_input(focused.input);
+				return;
+			}
+
+			focused.input.setSelectionRange(ss - 1, ss);
 		}
 
-		focused.input.setSelectionRange(ss - 1, ss);
 		insert_text(focused.input, '');		
 	}
 
@@ -3281,7 +3286,7 @@ var BASE = (function()
 		if(check_program(p_commands, s_commands))
 		{
 			hide_overlay();
-			
+
 			programs[key].name = prog_key_name;
 
 			programs[key].primary.title = p_title;
