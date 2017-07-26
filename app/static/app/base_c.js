@@ -3179,14 +3179,33 @@ var BASE = (function()
 	function insert_text(input, s)
 	{
 		focus_if_isnt(input);
-		document.execCommand('insertText', false, s)
+		do_exec_insert(input, s);
 	}
 
 	function replace_text(input, s)
 	{
 		focus_if_isnt(input);
 		input.select()
-		document.execCommand('insertText', false, s);
+		do_exec_insert(input, s);
+	}
+
+	function do_exec_insert(input, s)
+	{
+		if(!document.execCommand('insertText', false, s))
+		{
+			var ss = input.selectionStart;
+			var se = input.selectionEnd;
+			var value = input.value;
+			var sel = value.substring(ss, se);
+
+			var ns = value.substring(0, ss) + s + value.substring(se, value.length);
+
+			input.value = ns;
+
+			input.setSelectionRange(ss + s.length, ss + s.length);
+		}
+
+		update_results();
 	}
 
 	function erase_character()
