@@ -2731,6 +2731,7 @@ var BASE = (function()
 				if(parsed.version !== ls_options)
 				{
 					play('nope');
+					alert("You're attempting to save an incompatible version.");
 					return;
 				}
 
@@ -2741,6 +2742,7 @@ var BASE = (function()
 			catch(err)
 			{
 				play('nope');
+				alert('There was an error parsing the JSON.\n\n' + err);
 			}
 		});	
 
@@ -2755,6 +2757,7 @@ var BASE = (function()
 				if(parsed.version !== ls_saved)
 				{
 					play('nope');
+					alert("You're attempting to save an incompatible version.");
 					return;
 				}
 
@@ -2765,6 +2768,7 @@ var BASE = (function()
 			catch(err)
 			{
 				play('nope');
+				alert('There was an error parsing the JSON.\n\n' + err);
 			}
 		});	
 
@@ -2779,6 +2783,7 @@ var BASE = (function()
 				if(parsed.version !== ls_programs)
 				{
 					play('nope');
+					alert("You're attempting to save an incompatible version.");
 					return;
 				}
 
@@ -2789,6 +2794,7 @@ var BASE = (function()
 			catch(err)
 			{
 				play('nope');
+				alert('There was an error parsing the JSON.\n\n' + err);
 			}
 		});		
 	}
