@@ -3179,17 +3179,17 @@ var BASE = (function()
 	function insert_text(input, s)
 	{
 		focus_if_isnt(input);
-		do_exec_insert(input, s);
+		exec_insert(input, s);
 	}
 
 	function replace_text(input, s)
 	{
 		focus_if_isnt(input);
 		input.select()
-		do_exec_insert(input, s);
+		exec_insert(input, s);
 	}
 
-	function do_exec_insert(input, s)
+	function exec_insert(input, s)
 	{
 		if(!document.execCommand('insertText', false, s))
 		{
@@ -3203,9 +3203,9 @@ var BASE = (function()
 			input.value = ns;
 
 			input.setSelectionRange(ss + s.length, ss + s.length);
+			
+			update_results();
 		}
-
-		update_results();
 	}
 
 	function erase_character()
