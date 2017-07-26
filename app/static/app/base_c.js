@@ -3412,8 +3412,6 @@ var BASE = (function()
 			$('#prog_s_dbl').prop('checked', prog.secondary.doubleclick);
 		}
 
-		$('#prog_key_name').focus();
-
 		$('#prog_save').click(function()
 		{
 			save_program(key, prog.name);
@@ -3427,6 +3425,16 @@ var BASE = (function()
 		$('#sel_prog_move').change(function()
 		{
 			prog_move(key, parseInt(this.value));
+		});
+
+		$('.prog_input').keyup(function(e)
+		{
+			var code = e.keyCode;
+
+			if(code === 13)
+			{
+				save_program(key, prog.name);
+			}
 		});
 	}
 
