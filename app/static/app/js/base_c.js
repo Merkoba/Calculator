@@ -3785,8 +3785,8 @@ var BASE = (function()
 
 	function init_msg_and_stor()
 	{
-		msg = msgjs();
-		stor = storageUI(
+		msg = Msg();
+		stor = StorageUI(
 		{
 			items:
 			[
@@ -3839,7 +3839,14 @@ var BASE = (function()
 					}
 				}
 			],
-			msg: msg
+			msg: msg,
+			after_reset: function(list)
+			{
+				if(list.length > 0)
+				{
+					play('done');
+				}
+			}
 		});
 	}
 
