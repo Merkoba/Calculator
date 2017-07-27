@@ -15,7 +15,6 @@ var BASE = (function()
 	
 	var letters = "abcdefghijklmnopqrstuvwxyz";
 	var linevars = {};
-	var msg_open = false;
 	var about;
 	var site_root;
 	var save_enabled = true;
@@ -25,6 +24,8 @@ var BASE = (function()
 	var ls_options = 'options_v4';
 	var ls_saved = 'saved_v4';
 	var ls_programs = 'programs_v4';
+	var msg;
+	var stor;
 
 	var themes = [
 		'lake',
@@ -83,6 +84,7 @@ var BASE = (function()
 
 	global.init = function()
 	{
+		init_msg_and_stor();
 		get_local_storage();
 		apply_theme(options.theme);
 		apply_mode();
@@ -93,7 +95,6 @@ var BASE = (function()
 		place_lines_container();
 		key_detection();
 		resize_events();
-		overlay_clicked();
 		title_click_events();
 		get_site_root();
 		adjust_volumes();
@@ -117,7 +118,7 @@ var BASE = (function()
 
 			if(code === 27)
 			{
-				if(msg_open)
+				if(msg.is_open())
 				{
 					if($('input[type=text]').is(':focus') && document.activeElement.value !== '')
 					{
@@ -126,7 +127,7 @@ var BASE = (function()
 
 					else
 					{
-						hide_overlay();
+						msg.close();
 					}
 				}
 
@@ -149,7 +150,7 @@ var BASE = (function()
 
 		$(document).keydown(function(e)
 		{
-			if(msg_open)
+			if(msg.is_open())
 			{
 				return;
 			}
@@ -1834,13 +1835,13 @@ var BASE = (function()
 
 		if(s.trim().replace(/@!#/g, '').length < 1)
 		{
-			msg("You can't save an empty sheet.");
+			msg.show("You can't save an empty sheet.");
 			return;
 		}
 
 		else if(s.length > 50000)
 		{
-			msg("Sheet is too big.");
+			msg.show("Sheet is too big.");
 			return;
 		}
 
@@ -1859,7 +1860,7 @@ var BASE = (function()
 
 		.fail(function(data)
 		{
-			msg('A network error occurred.');
+			msg.show('A network error occurred.');
 		})
 
 		.always(function()
@@ -1872,12 +1873,12 @@ var BASE = (function()
 	{
 		if(response === 'empty')
 		{
-			msg("You can't save an empty sheet.");
+			msg.show("You can't save an empty sheet.");
 		}
 
 		else if(response === 'toobig')
 		{
-			msg("Sheet is too big.");
+			msg.show("Sheet is too big.");
 		}
 
 		else
@@ -1894,7 +1895,7 @@ var BASE = (function()
 
 			s += "<span id='ctcb' class='linky2'>Copy To Clipboard</span>";
 
-			msg(s);
+			msg.show(s);
 
 			play('done');
 
@@ -1902,7 +1903,7 @@ var BASE = (function()
 			{
 				copy_to_clipboard(url);
 				play('pup');
-				hide_overlay();
+				msg.close();
 			});
 
 			add_to_saved(url, svd);
@@ -2033,44 +2034,14 @@ var BASE = (function()
 			create_about();
 		}
 
-		msg(about);
-	}
-
-	function overlay_clicked()
-	{
-		$('#overlay').click(function()
-		{
-			hide_overlay();
-		});
-	}
-
-	function hide_overlay()
-	{
-		$('#overlay').css('display', 'none');
-		$('#msg').css('display', 'none');
-		$('#msg').html('');
-
-		msg_open = false;
-
-		focus_input(focused.input);
-	}
-
-	function msg(txt, temp_disable=false)
-	{
-		$('#overlay').css('display', 'block');
-		$('#msg').html(txt);
-		$('#msg').css('display', 'block');
-		$('#msg').scrollTop(0);
-		$('#msg').focus();
-		
-		msg_open = true;
+		msg.show(about);
 	}
 
 	function msg_align_btns(alt=false)
 	{
 		if(alt)
 		{
-			$('#msg').find('.dialog_btn').each(function()
+			$('#msgjs-container').find('.dialog_btn').each(function()
 			{
 				$(this).width($(this).outerWidth());
 			});		
@@ -2080,12 +2051,12 @@ var BASE = (function()
 		{
 			var w = 0;
 
-			$('#msg').find('.dialog_btn').each(function()
+			$('#msgjs-container').find('.dialog_btn').each(function()
 			{
 				w = Math.max(w, $(this).outerWidth());
 			});
 
-			$('#msg').find('.dialog_btn').each(function()
+			$('#msgjs-container').find('.dialog_btn').each(function()
 			{
 				$(this).width(w);
 			});
@@ -2203,7 +2174,7 @@ var BASE = (function()
 
 		s += "<span class='linky2' id='more_about'>About</span>";
 
-		msg(s);
+		msg.show(s);
 
 		msg_align_btns();
 
@@ -2297,7 +2268,7 @@ var BASE = (function()
 
 		s += "</select>"
 
-		msg(s);
+		msg.show(s);
 
 		$('#sel_round_places').find('option').each(function()
 		{
@@ -2580,7 +2551,7 @@ var BASE = (function()
 	{
 		if(saved.items.length === 0)
 		{
-			msg('Nothing saved yet.');
+			msg.show('Nothing saved yet.');
 			return;
 		}
 
@@ -2640,7 +2611,7 @@ var BASE = (function()
 
 			else
 			{
-				msg(s);
+				msg.show(s);
 			}
 
 			$('#svd_load_more').click(function()
@@ -2656,165 +2627,25 @@ var BASE = (function()
 
 	function show_data_menu()
 	{
-		var s = "";
-
-		s += "<span class='linky2' id='get_data'>View Data</span><br><br><br>";
-
-		s += "<span class='linky2' id='reset_data'>Reset Data</span>";
-
-		msg(s);
-
-		msg_align_btns();
-
-		$('#get_data').click(function()
-		{
-			show_get_data();
-		});	
-
-		$('#reset_data').click(function()
-		{
-			show_reset_data();
-		});
+		stor.menu();
 	}
 
-	function show_get_data()
+	function reset_object(ls_name, data=false)
 	{
-		var s = "";
-
-		s += "Options Data<br>";
-		s += "<textarea rows='5' class='data_get_area' id='data_text_options'></textarea><br>";
-		s += "<span class='data_click_item' id='copy_options_data'>Copy To Clipboard</span>";
-		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_options_selectall'>Select All</span>";
-		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_save_options'>Save Modification</span><br><br><br>";
-
-		s += "Saved Data<br>";
-		s += "<textarea rows='5' class='data_get_area' id='data_text_saved'></textarea><br>";
-		s += "<span class='data_click_item' id='copy_saved_data'>Copy To Clipboard</span>";		
-		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_saved_selectall'>Select All</span>";
-		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_save_saved'>Save Modification</span><br><br><br>";
-
-		s += "Programs Data<br>";
-		s += "<textarea rows='5' class='data_get_area' id='data_text_programs'></textarea><br>";
-		s += "<span class='data_click_item' id='copy_programs_data'>Copy To Clipboard</span>";		
-		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_programs_selectall'>Select All</span>";
-		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_save_programs'>Save Modification</span>";
-
-		msg(s);
-
-		$('#data_text_options').val(localStorage.getItem(ls_options));
-		$('#data_text_saved').val(localStorage.getItem(ls_saved));
-		$('#data_text_programs').val(localStorage.getItem(ls_programs));
-
-		$('#copy_options_data').click(function()
+		if(ls_name === ls_options)
 		{
-			copy_to_clipboard($('#data_text_options').val());
-			play('pup');
-		});
+			reset_options(data)
+		}
 
-		$('#copy_saved_data').click(function()
+		else if(ls_name === ls_saved)
 		{
-			copy_to_clipboard($('#data_text_saved').val());
-			play('pup');
-		});
+			reset_saved(data)
+		}
 
-		$('#copy_programs_data').click(function()
+		else if(ls_name === ls_programs)
 		{
-			copy_to_clipboard($('#data_text_programs').val());
-			play('pup');
-		});
-
-		$('#data_options_selectall').click(function()
-		{
-			$('#data_text_options')[0].select();
-		});
-
-		$('#data_saved_selectall').click(function()
-		{
-			$('#data_text_saved')[0].select();
-		});
-
-		$('#data_programs_selectall').click(function()
-		{
-			$('#data_text_programs')[0].select();
-		});
-
-		$('#data_save_options').click(function()
-		{
-			var options_val = $('#data_text_options').val();
-			
-			try
-			{
-				var parsed = JSON.parse(options_val);
-
-				if(parsed.version !== ls_options)
-				{
-					play('nope');
-					alert("You're attempting to save an incompatible version.");
-					return;
-				}
-
-				reset_options(options_val);
-				play('done');
-			}
-
-			catch(err)
-			{
-				play('nope');
-				alert('There was an error parsing the JSON.\n\n' + err);
-			}
-		});	
-
-		$('#data_save_saved').click(function()
-		{
-			var saved_val = $('#data_text_saved').val();
-			
-			try
-			{
-				var parsed = JSON.parse(saved_val);
-
-				if(parsed.version !== ls_saved)
-				{
-					play('nope');
-					alert("You're attempting to save an incompatible version.");
-					return;
-				}
-
-				reset_saved(saved_val);
-				play('done');
-			}
-
-			catch(err)
-			{
-				play('nope');
-				alert('There was an error parsing the JSON.\n\n' + err);
-			}
-		});	
-
-		$('#data_save_programs').click(function()
-		{
-			var programs_val = $('#data_text_programs').val();
-
-			try
-			{
-				var parsed = JSON.parse(programs_val);
-
-				if(parsed.version !== ls_programs)
-				{
-					play('nope');
-					alert("You're attempting to save an incompatible version.");
-					return;
-				}
-
-				reset_programs(programs_val);
-				play('done');
-			}
-
-			catch(err)
-			{
-				play('nope');
-				alert('There was an error parsing the JSON.\n\n' + err);
-			}
-		});		
+			reset_programs(data);
+		}
 	}
 
 	function reset_options(data=false)
@@ -2866,41 +2697,6 @@ var BASE = (function()
 
 		get_programs();
 		draw_prog_buttons();
-	}
-
-	function show_reset_data()
-	{
-		var s = "";
-
-		s += "Reset Options Data<br><br>";
-		s += "<input type='checkbox' id='data_options'><br><br><br>";
-		s += "Reset Saved Data<br><br>";
-		s += "<input type='checkbox' id='data_saved'><br><br><br>";
-		s += "Reset Programs Data<br><br>";
-		s += "<input type='checkbox' id='data_programs'><br><br><br>";
-		s += "<span class='linky2' id='data_apply'>Reset Selected</span>";
-
-		msg(s);
-
-		$('#data_apply').click(function()
-		{
-			if($(data_options).prop('checked'))
-			{
-				reset_options();
-			}
-
-			if($(data_saved).prop('checked'))
-			{
-				reset_saved();
-			}
-
-			if($(data_programs).prop('checked'))
-			{
-				reset_programs();
-			}
-
-			hide_overlay();
-		});
 	}
 
 	function fill_sheet(x=false)
@@ -3038,7 +2834,7 @@ var BASE = (function()
 
 		if(c === "")
 		{
-			msg('Nothing to generate.');
+			msg.show('Nothing to generate.');
 			return;
 		}
 
@@ -3046,13 +2842,13 @@ var BASE = (function()
 
 		c2 = c2.substring(0, c2.length - 1);
 
-		msg(s);
+		msg.show(s);
 
 		$('#ctcb').click(function()
 		{
 			copy_to_clipboard(c2);
 			play('pup');
-			hide_overlay();
+			msg.close();
 		});		
 	}
 
@@ -3437,7 +3233,7 @@ var BASE = (function()
 		s += "go up; erase; format<br>";
 		s += "insert 1; add line after; prev variable; insert + 2";
 
-		msg(s);		
+		msg.show(s);		
 
 		var prog = programs.items[key];
 
@@ -3490,7 +3286,7 @@ var BASE = (function()
 			programs.items[index1] = programs.items[index2];
 			programs.items[index2] = temp;
 
-			hide_overlay();			
+			msg.close();			
 			draw_prog_buttons();
 			update_programs();
 		}
@@ -3502,7 +3298,7 @@ var BASE = (function()
 		{
 			move_in_array(programs.items, oldKey, newKey);
 
-			hide_overlay();
+			msg.close();
 			draw_prog_buttons();
 			update_programs();
 		}		
@@ -3531,7 +3327,7 @@ var BASE = (function()
 
 		if(check_program(p_commands, s_commands))
 		{
-			hide_overlay();
+			msg.close();
 
 			programs.items[key].name = prog_key_name;
 
@@ -3881,7 +3677,7 @@ var BASE = (function()
 		s += 'An error happened while executing "' + command + '".<br><br>';
 		s += 'It is not a valid command.';
 
-		msg(s);
+		msg.show(s);
 	}
 
 	function comment(input)
@@ -3961,6 +3757,90 @@ var BASE = (function()
 		}
 
 		array.splice(new_index, 0, array.splice(old_index, 1)[0]);		
+	}
+
+	function on_object_modified(item)
+	{
+		try
+		{
+			var parsed = JSON.parse(item.value);
+
+			if(parsed.version !== item.ls_name)
+			{
+				play('nope');
+				alert("You're attempting to save an incompatible version.");
+				return;
+			}
+
+			reset_object(item.ls_name, item.value);
+			play('done');
+		}
+
+		catch(err)
+		{
+			play('nope');
+			alert('There was an error parsing the JSON.\n\n' + err);
+		}		
+	}
+
+	function init_msg_and_stor()
+	{
+		msg = msgjs();
+		stor = storageUI(
+		{
+			items:
+			[
+				{
+					name: "Options Data",
+					ls_name: ls_options,
+					on_copied: function(item)
+					{
+						play('pup');
+					},
+					on_save: function(item)
+					{
+						on_object_modified(item);
+					},
+					on_reset: function(item)
+					{
+						reset_object(item.ls_name);
+					}
+				},
+				{
+					name: "Saved Data",
+					ls_name: ls_saved,
+					on_copied: function(item)
+					{
+						play('pup');
+					},
+					on_save: function(item)
+					{
+						on_object_modified(item);
+					},
+					on_reset: function(item)
+					{
+						reset_object(item.ls_name);
+					}
+				},
+				{
+					name: "Programs Data",
+					ls_name: ls_programs,
+					on_copied: function(item)
+					{
+						play('pup');
+					},
+					on_save: function(item)
+					{
+						on_object_modified(item);
+					},
+					on_reset: function(item)
+					{
+						reset_object(item.ls_name);
+					}
+				}
+			],
+			msg: msg
+		});
 	}
 
 	return global;
