@@ -2684,17 +2684,20 @@ var BASE = (function()
 		s += "Options Data<br>";
 		s += "<textarea rows='5' class='data_get_area' id='data_text_options'></textarea><br>";
 		s += "<span class='data_click_item' id='copy_options_data'>Copy To Clipboard</span>";
+		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_options_selectall'>Select All</span>";
 		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_save_options'>Save Modification</span><br><br><br>";
 
 		s += "Saved Data<br>";
 		s += "<textarea rows='5' class='data_get_area' id='data_text_saved'></textarea><br>";
 		s += "<span class='data_click_item' id='copy_saved_data'>Copy To Clipboard</span>";		
+		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_saved_selectall'>Select All</span>";
 		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_save_saved'>Save Modification</span><br><br><br>";
 
 		s += "Programs Data<br>";
 		s += "<textarea rows='5' class='data_get_area' id='data_text_programs'></textarea><br>";
 		s += "<span class='data_click_item' id='copy_programs_data'>Copy To Clipboard</span>";		
-		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_save_programs'>Save Modification</span><br><br><br>";
+		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_programs_selectall'>Select All</span>";
+		s += "&nbsp; | &nbsp;<span class='data_click_item' id='data_save_programs'>Save Modification</span>";
 
 		msg(s);
 
@@ -2718,6 +2721,21 @@ var BASE = (function()
 		{
 			copy_to_clipboard($('#data_text_programs').val());
 			play('pup');
+		});
+
+		$('#data_options_selectall').click(function()
+		{
+			$('#data_text_options')[0].select();
+		});
+
+		$('#data_saved_selectall').click(function()
+		{
+			$('#data_text_saved')[0].select();
+		});
+
+		$('#data_programs_selectall').click(function()
+		{
+			$('#data_text_programs')[0].select();
 		});
 
 		$('#data_save_options').click(function()
