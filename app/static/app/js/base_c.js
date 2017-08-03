@@ -310,6 +310,11 @@ var BASE = (function()
 						{
 							press($(this).text());
 						}
+
+						else
+						{
+							focus_input(focused.input);
+						}
 					}
 				}, false);					
 			}
