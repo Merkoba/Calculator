@@ -931,12 +931,12 @@ var BASE = (function()
 
 			if(options.fraction)
 			{
-				var result = math_fraction.eval(val.replace(/\$/g, '_') + '*1', linevars);
+				var result = math_fraction.eval(val + '*1', linevars);
 			}
 
 			else
 			{
-				var result = math_normal.eval(val.replace(/\$/g, '_') + '*1', linevars);
+				var result = math_normal.eval(val + '*1', linevars);
 			}
 
 			update_variable(input, result);
@@ -967,7 +967,7 @@ var BASE = (function()
 
 	function update_variable(input, val)
 	{
-		linevars[$(input).data('variable').replace('$', '_')] = val;
+		linevars[$(input).data('variable')] = val;
 	}
 
 	function improper_to_mixed(n, d)
@@ -2975,7 +2975,7 @@ var BASE = (function()
 
 		try
 		{
-			val = math_normal.parse(val.replace(/\$/g, '_')).toString({parenthesis: 'auto'});
+			val = math_normal.parse(val).toString({parenthesis: 'auto'});
 			val = val.replace(/_/g, '$');
 		}
 
@@ -3785,7 +3785,11 @@ var BASE = (function()
 
 	function init_msg_and_stor()
 	{
-		msg = Msg();
+		msg = Msg(
+		{
+			lock: false
+		});
+
 		stor = StorageUI(
 		{
 			items:
