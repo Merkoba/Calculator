@@ -118,32 +118,14 @@ var BASE = (function()
 
 			if(code === 27)
 			{
-				if(msg.is_open())
+				if(focused.input.value === '')
 				{
-					if($('input[type=text]').is(':focus') && document.activeElement.value !== '')
-					{
-						document.activeElement.value = '';
-					}
-
-					else
-					{
-						msg.close();
-					}
+					remove_line();
 				}
 
 				else
 				{
-					var result = $(focused.input).next('.result');
-
-					if(focused.input.value === '')
-					{
-						remove_line();
-					}
-
-					else
-					{
-						clear_input(focused.input);
-					}
+					clear_input(focused.input);
 				}
 			}
 		});
@@ -3095,6 +3077,7 @@ var BASE = (function()
 		$('#ib_fraction_toggle').click(function()
 		{
 			toggle_fraction();
+			focus_input(focused.input);
 		});
 	}
 
@@ -3787,7 +3770,9 @@ var BASE = (function()
 	{
 		msg = Msg(
 		{
-			lock: false
+			lock: false,
+			clear_editables: true,
+			after_close: msg_after_close
 		});
 
 		stor = StorageUI(
@@ -3852,6 +3837,11 @@ var BASE = (function()
 				}
 			}
 		});
+	}
+
+	function msg_after_close()
+	{
+		focus_input(focused.input);
 	}
 
 	return global;
