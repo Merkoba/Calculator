@@ -3082,7 +3082,6 @@ var BASE = (function()
 		$('#ib_fraction_toggle').click(function()
 		{
 			toggle_fraction();
-			focus_input(focused.input);
 		});
 	}
 
@@ -3776,8 +3775,7 @@ var BASE = (function()
 		msg = Msg(
 		{
 			lock: false,
-			clear_editables: true,
-			after_close: msg_after_close
+			clear_editables: true
 		});
 
 		stor = StorageUI(
@@ -3842,11 +3840,6 @@ var BASE = (function()
 				}
 			}
 		});
-	}
-
-	function msg_after_close()
-	{
-		focus_input(focused.input);
 	}
 
 	return global;
