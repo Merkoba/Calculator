@@ -1822,13 +1822,13 @@ var BASE = (function()
 
 		if(s.trim().replace(/@!#/g, '').length < 1)
 		{
-			msg.show("You can't save an empty sheet.");
+			show_modal("You can't save an empty sheet.");
 			return;
 		}
 
 		else if(s.length > 50000)
 		{
-			msg.show("Sheet is too big.");
+			show_modal("Sheet is too big.");
 			return;
 		}
 
@@ -1847,7 +1847,7 @@ var BASE = (function()
 
 		.fail(function(data)
 		{
-			msg.show('A network error occurred.');
+			show_modal('A network error occurred.');
 		})
 
 		.always(function()
@@ -1860,12 +1860,12 @@ var BASE = (function()
 	{
 		if(response === 'empty')
 		{
-			msg.show("You can't save an empty sheet.");
+			show_modal("You can't save an empty sheet.");
 		}
 
 		else if(response === 'toobig')
 		{
-			msg.show("Sheet is too big.");
+			show_modal("Sheet is too big.");
 		}
 
 		else
@@ -1882,7 +1882,7 @@ var BASE = (function()
 
 			s += "<span id='ctcb' class='linky2'>Copy To Clipboard</span>";
 
-			msg.show(s);
+			show_modal(s);
 
 			play('done');
 
@@ -2021,7 +2021,7 @@ var BASE = (function()
 			create_about();
 		}
 
-		msg.show(about);
+		show_modal(about);
 	}
 
 	function msg_align_btns(alt=false)
@@ -2161,7 +2161,7 @@ var BASE = (function()
 
 		s += "<span class='linky2' id='more_about'>About</span>";
 
-		msg.show(s);
+		show_modal(s);
 
 		msg_align_btns();
 
@@ -2255,7 +2255,7 @@ var BASE = (function()
 
 		s += "</select>"
 
-		msg.show(s);
+		show_modal(s);
 
 		$('#sel_round_places').find('option').each(function()
 		{
@@ -2538,7 +2538,7 @@ var BASE = (function()
 	{
 		if(saved.items.length === 0)
 		{
-			msg.show('Nothing saved yet.');
+			show_modal('Nothing saved yet.');
 			return;
 		}
 
@@ -2598,7 +2598,7 @@ var BASE = (function()
 
 			else
 			{
-				msg.show(s);
+				show_modal(s);
 			}
 
 			$('#svd_load_more').click(function()
@@ -2821,7 +2821,7 @@ var BASE = (function()
 
 		if(c === "")
 		{
-			msg.show('Nothing to generate.');
+			show_modal('Nothing to generate.');
 			return;
 		}
 
@@ -2829,7 +2829,7 @@ var BASE = (function()
 
 		c2 = c2.substring(0, c2.length - 1);
 
-		msg.show(s);
+		show_modal(s);
 
 		$('#ctcb').click(function()
 		{
@@ -3219,7 +3219,7 @@ var BASE = (function()
 		s += "go up; erase; format<br>";
 		s += "insert 1; add line after; prev variable; insert + 2";
 
-		msg.show(s);		
+		show_modal(s);		
 
 		var prog = programs.items[key];
 
@@ -3663,7 +3663,7 @@ var BASE = (function()
 		s += 'An error happened while executing "' + command + '".<br><br>';
 		s += 'It is not a valid command.';
 
-		msg.show(s);
+		show_modal(s);
 	}
 
 	function comment(input)
@@ -3774,7 +3774,8 @@ var BASE = (function()
 		msg = Msg(
 		{
 			lock: false,
-			clear_editables: true
+			clear_editables: true,
+			enable_inner_x: false
 		});
 
 		stor = StorageUI(
@@ -3839,6 +3840,11 @@ var BASE = (function()
 				}
 			}
 		});
+	}
+	
+	function show_modal(html)
+	{
+		msg.set_or_show(html);
 	}
 
 	return global;
