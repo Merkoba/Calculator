@@ -2934,7 +2934,7 @@ var BASE = (function()
 
 		try
 		{
-			val = math_normal.parse(val).toString({parenthesis: 'auto'});
+			val = math_normal.parse(val).toString({parenthesis: 'auto', implicit: 'show'});
 		}
 
 		catch(err)
@@ -2962,7 +2962,7 @@ var BASE = (function()
 
 		try
 		{
-			val = math_normal.parse(val).toString({parenthesis: 'auto'});
+			val = math_normal.parse(val).toString({parenthesis: 'auto', implicit: 'show'});
 		}
 
 		catch(err)
