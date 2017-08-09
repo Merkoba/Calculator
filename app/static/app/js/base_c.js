@@ -2963,7 +2963,6 @@ var BASE = (function()
 		try
 		{
 			val = math_normal.parse(val).toString({parenthesis: 'auto'});
-			val = val.replace(/_/g, '$');
 		}
 
 		catch(err)
