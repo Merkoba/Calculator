@@ -2185,6 +2185,10 @@ var BASE = (function()
 	{
 		var s = "";
 
+		s += "<div class='options_section'>";
+
+		s += "<span class='options_item'>";
+
 		s += "Add Commas<br><br>";
 
 		if(options.commas)
@@ -2196,8 +2200,14 @@ var BASE = (function()
 		{
 			s += "<input id='chk_commas' type='checkbox'>";
 		}
+
+		s += "</span>";
+
+		s += "<span class='options_hseparator'></span>";
+
+		s += "<span class='options_item'>";
 		
-		s += "<br><br><br>Round Results<br><br>";
+		s += "Round Results<br><br>";
 
 		if(options.round)
 		{
@@ -2209,7 +2219,13 @@ var BASE = (function()
 			s += "<input id='chk_round' type='checkbox'>";
 		}
 
-		s += "<br><br><br>Round Places<br><br>";
+		s += "</span>";
+
+		s += "<span class='options_hseparator'></span>";
+
+		s += "<span class='options_item'>";
+
+		s += "Round Places<br><br>";
 
 		s += "<select id='sel_round_places'>";
 
@@ -2220,7 +2236,17 @@ var BASE = (function()
 
 		s += "</select>";
 
-		s += "<br><br><br>Mixed Fractions<br><br>";
+		s += "</span><br><br>";
+
+		s += "</div>";
+
+		s += "<div class='options_vseparator'></div>";
+
+		s += "<div class='options_section'>";
+
+		s += "<span class='options_item'>";
+
+		s += "Mixed Fractions<br><br>";
 
 		if(options.mixed)
 		{
@@ -2230,9 +2256,15 @@ var BASE = (function()
 		else
 		{
 			s += "<input id='chk_mixed' type='checkbox'>";
-		}				
+		}
 
-		s += "<br><br><br>Enable Sound<br><br>";
+		s += "</span>";	
+
+		s += "<span class='options_hseparator'></span>";
+
+		s += "<span class='options_item'>";
+
+		s += "Enable Sound<br><br>";
 
 		if(options.sound)
 		{
@@ -2244,7 +2276,13 @@ var BASE = (function()
 			s += "<input id='chk_sound' type='checkbox'>";
 		}
 
-		s += "<br><br><br>Color Theme<br><br>";
+		s += "</span>";
+
+		s += "<span class='options_hseparator'></span>";
+
+		s += "<span class='options_item'>";	
+
+		s += "Color Theme<br><br>";
 
 		s += "<select id='sel_theme'>";
 
@@ -2253,7 +2291,11 @@ var BASE = (function()
 			s += "<option value='" + themes[i] + "'>" + capitalize_string(themes[i]) + "</option>";
 		}
 
-		s += "</select>"
+		s += "</select>";
+
+		s += "</span>";
+
+		s += "</div>";
 
 		show_modal(s);
 
@@ -3775,7 +3817,9 @@ var BASE = (function()
 		{
 			lock: false,
 			clear_editables: true,
-			enable_inner_x: false
+			enable_inner_x: false,
+			fade_in: false,
+			fade_out: false
 		});
 
 		stor = StorageUI(

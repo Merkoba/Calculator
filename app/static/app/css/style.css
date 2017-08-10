@@ -410,3 +410,27 @@ sup
 	-ms-user-select: none;
 	user-select: none;	
 }
+
+.options_section
+{
+
+}
+
+.options_vseparator
+{
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+.options_hseparator
+{
+	padding-left: 1em;
+	padding-right: 1em;
+	display: inline-block;
+}
+
+.options_item
+{
+	padding-right:2em;
+	display: inline-block;
+}
