@@ -2221,7 +2221,12 @@ var BASE = (function()
 
 		s += "</span>";
 
-		s += "<span class='options_hseparator'></span>";
+		s += "</div>";
+
+		s += "<div class='options_vseparator'></div>";		
+
+		s += "<div class='options_section'>";
+
 
 		s += "<span class='options_item'>";
 
@@ -2236,13 +2241,9 @@ var BASE = (function()
 
 		s += "</select>";
 
-		s += "</span><br><br>";
+		s += "</span>";
 
-		s += "</div>";
-
-		s += "<div class='options_vseparator'></div>";
-
-		s += "<div class='options_section'>";
+		s += "<span class='options_hseparator'></span>";
 
 		s += "<span class='options_item'>";
 
@@ -2260,7 +2261,11 @@ var BASE = (function()
 
 		s += "</span>";	
 
-		s += "<span class='options_hseparator'></span>";
+		s += "</div>";
+
+		s += "<div class='options_vseparator'></div>";
+
+		s += "<div class='options_section'>";
 
 		s += "<span class='options_item'>";
 
