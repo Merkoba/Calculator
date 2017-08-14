@@ -2207,6 +2207,29 @@ var BASE = (function()
 
 		s += "<span class='options_item'>";
 		
+		s += "Mixed Fractions<br><br>";
+
+		if(options.mixed)
+		{
+			s += "<input id='chk_mixed' type='checkbox' checked>";
+		}
+
+		else
+		{
+			s += "<input id='chk_mixed' type='checkbox'>";
+		}
+
+		s += "</span>";
+
+		s += "</div>";
+
+		s += "<div class='options_vseparator'></div>";		
+
+		s += "<div class='options_section'>";
+
+
+		s += "<span class='options_item'>";
+
 		s += "Round Results<br><br>";
 
 		if(options.round)
@@ -2221,12 +2244,7 @@ var BASE = (function()
 
 		s += "</span>";
 
-		s += "</div>";
-
-		s += "<div class='options_vseparator'></div>";		
-
-		s += "<div class='options_section'>";
-
+		s += "<span class='options_hseparator'></span>";
 
 		s += "<span class='options_item'>";
 
@@ -2240,24 +2258,6 @@ var BASE = (function()
 		}
 
 		s += "</select>";
-
-		s += "</span>";
-
-		s += "<span class='options_hseparator'></span>";
-
-		s += "<span class='options_item'>";
-
-		s += "Mixed Fractions<br><br>";
-
-		if(options.mixed)
-		{
-			s += "<input id='chk_mixed' type='checkbox' checked>";
-		}
-
-		else
-		{
-			s += "<input id='chk_mixed' type='checkbox'>";
-		}
 
 		s += "</span>";	
 
