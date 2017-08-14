@@ -2227,7 +2227,6 @@ var BASE = (function()
 
 		s += "<div class='options_section'>";
 
-
 		s += "<span class='options_item'>";
 
 		s += "Round Results<br><br>";
