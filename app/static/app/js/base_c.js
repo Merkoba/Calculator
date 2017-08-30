@@ -3889,9 +3889,9 @@ var BASE = (function()
 		});
 	}
 	
-	function show_modal(html)
+	function show_modal(html, callback=function(){})
 	{
-		msg.set_or_show(html);
+		msg.set_or_show(html, callback);
 	}
 
 	return global;
