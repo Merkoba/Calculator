@@ -1882,9 +1882,10 @@ var BASE = (function()
 
 			s += "<span id='ctcb' class='linky2'>Copy To Clipboard</span>";
 
-			show_modal(s);
-
-			play('done');
+			show_modal(s, function()
+			{
+				play('done');
+			});
 
 			$('#ctcb').click(function()
 			{
