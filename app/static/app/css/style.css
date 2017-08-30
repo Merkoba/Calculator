@@ -433,3 +433,8 @@ sup
 {
 	display: inline-block;
 }
+
+.saved_item
+{
+	white-space: nowrap;
+}

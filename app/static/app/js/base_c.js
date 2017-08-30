@@ -2597,7 +2597,7 @@ var BASE = (function()
 
 			for(var i=j; i<n; i++)
 			{
-				s += "<a class='ancher1' target=_blank href='" + saved.items[i][1] + "' title='" + saved.items[i][3] + "'>";
+				s += "<a class='saved_item ancher1' target=_blank href='" + saved.items[i][1] + "' title='" + saved.items[i][3] + "'>";
 				
 				s += saved.items[i][0];
 
@@ -2647,6 +2647,22 @@ var BASE = (function()
 			{
 				show_modal(s);
 			}
+
+			$('.saved_item').each(function()
+			{
+				tippy(this, 
+				{
+					delay: [100, 100],
+					animation: 'scale',
+					hideOnClick: true,
+					duration: 100,
+					arrow: true,
+					performance: true,
+					size: 'regular',
+					arrowSize: 'small',
+					zIndex: 60000000
+				});
+			});	
 
 			$('#svd_load_more').click(function()
 			{
