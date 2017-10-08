@@ -3839,6 +3839,8 @@ var BASE = (function()
 			lock: false,
 			clear_editables: true,
 			window_x: "floating_right",
+			close_effect: "none",
+			show_effect: "none"
 		});
 
 		stor = StorageUI(
