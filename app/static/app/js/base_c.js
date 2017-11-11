@@ -3836,11 +3836,20 @@ var BASE = (function()
 	{
 		msg = Msg(
 		{
+			id: "default",
 			lock: false,
 			clear_editables: true,
-			window_x: "floating_right",
+			window_x: "inner_right",
 			close_effect: "none",
-			show_effect: "none"
+			show_effect: "none",
+			after_show: function()
+			{
+				$(`#Msg-content-container-default`).getNiceScroll().resize()
+			},
+			after_set: function()
+			{
+				$(`#Msg-content-container-default`).getNiceScroll().resize()
+			}
 		});
 
 		stor = StorageUI(
@@ -3904,7 +3913,18 @@ var BASE = (function()
 					play('done');
 				}
 			}
-		});
+		})
+	
+		msg.create()
+
+		$(`#Msg-content-container-default`).niceScroll
+		({
+			zindex: 9999999,
+			autohidemode: false,
+			cursorcolor: "#AFAFAF",
+			cursorborder: "0px solid white",
+			cursorwidth: "7px"	
+		})	
 	}
 	
 	function show_modal(html, callback=function(){})

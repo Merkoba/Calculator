@@ -438,3 +438,8 @@ sup
 {
 	white-space: nowrap;
 }
+
+.Msg-content
+{
+	font-size: 18px !important;
+}
