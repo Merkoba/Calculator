@@ -26,6 +26,7 @@ var BASE = (function()
 	var ls_programs = 'programs_v4';
 	var msg;
 	var stor;
+	var main_scrollbar;
 
 	var themes = [
 		'lake',
@@ -98,6 +99,7 @@ var BASE = (function()
 		title_click_events();
 		get_site_root();
 		adjust_volumes();
+		start_main_scrollbar();
 
 		if(saved_content === '')
 		{
@@ -549,6 +551,8 @@ var BASE = (function()
 		focus_input(input);
 
 		move_caret_to_end(input);
+
+		update_main_scrollbar()
 	}
 
 	function add_line_before()
@@ -585,6 +589,8 @@ var BASE = (function()
 		{
 			move_lines_up();
 		}
+
+		update_main_scrollbar()
 	}
 
 	function remove_all_lines()
@@ -888,6 +894,8 @@ var BASE = (function()
 		$(line).remove();
 
 		update_results();
+
+		update_main_scrollbar()
 	}
 
 	function hide_plus()
@@ -3931,6 +3939,27 @@ var BASE = (function()
 	{
 		msg.set_or_show(html, callback);
 	}
+
+	function start_main_scrollbar()
+	{
+		main_scrollbar = new PerfectScrollbar("#lines_container",
+		{
+			minScrollbarLength: 50,
+			suppressScrollX: true,
+			scrollingThreshold: 3000
+		})
+	}
+
+	function update_main_scrollbar()
+	{
+		if(main_scrollbar !== undefined)
+		{
+			if(main_scrollbar.element !== null)
+			{
+				main_scrollbar.update()
+			}
+		}
+	}	
 
 	return global;
 }());

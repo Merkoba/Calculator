@@ -63,7 +63,9 @@ body
 
 #lines_container
 {
-	overflow: auto;
+	position: relative;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 #lines
@@ -442,4 +444,15 @@ sup
 .Msg-content
 {
 	font-size: 18px !important;
+}
+
+.ps__thumb-y
+{
+	right: 0 !important;
+	width: 8px !important;
+}
+
+.ps__rail-y
+{
+	width: 8px !important;
 }
