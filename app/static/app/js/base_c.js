@@ -2033,32 +2033,6 @@ var BASE = (function()
 		show_modal(about);
 	}
 
-	function msg_align_btns(alt=false)
-	{
-		if(alt)
-		{
-			$('#msgjs-container').find('.dialog_btn').each(function()
-			{
-				$(this).width($(this).outerWidth());
-			});		
-		}
-
-		else
-		{
-			var w = 0;
-
-			$('#msgjs-container').find('.dialog_btn').each(function()
-			{
-				w = Math.max(w, $(this).outerWidth());
-			});
-
-			$('#msgjs-container').find('.dialog_btn').each(function()
-			{
-				$(this).width(w);
-			});
-		}
-	}
-
 	function check_params()
 	{
 		if(get_url_param('frac') === null)
@@ -2075,7 +2049,7 @@ var BASE = (function()
 			{
 				toggle_fraction();
 			}
-		}		
+		}
 	}
 
 	function load_saved_content()
@@ -2171,8 +2145,6 @@ var BASE = (function()
 		s += "<span class='linky2' id='more_about'>About</span>";
 
 		show_modal(s);
-
-		msg_align_btns();
 
 		$('#more_saved').click(function()
 		{
@@ -2648,7 +2620,8 @@ var BASE = (function()
 
 			if(j > 0)
 			{
-				$('#msg').append(s);
+				$('#Msg-content-default').append(s);
+				update_modal_scrollbar()
 			}
 
 			else
@@ -3418,7 +3391,7 @@ var BASE = (function()
 
 			focus_command_error($('#prog_p_commands')[0], response);
 
-			$('#msg').scrollTop($('#prog_p_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop() - 10);
+			$('#Msg-content-default').scrollTop($('#prog_p_label').offset().top - $('#Msg-content-default').offset().top + $('#Msg-content-default').scrollTop() - 10);
 			
 			ok = false;
 		}
@@ -3438,7 +3411,7 @@ var BASE = (function()
 			{
 				focus_command_error($('#prog_s_commands')[0], response);
 
-				$('#msg').scrollTop($('#prog_s_label').offset().top - $('#msg').offset().top + $('#msg').scrollTop() - 10);
+				$('#Msg-content-default').scrollTop($('#prog_s_label').offset().top - $('#Msg-content-default').offset().top + $('#Msg-content-default').scrollTop() - 10);
 			}
 			
 			ok = false;
@@ -3842,7 +3815,7 @@ var BASE = (function()
 
 	function init_msg_and_stor()
 	{
-		msg = Msg(
+		msg = Msg.factory(
 		{
 			id: "default",
 			lock: false,
@@ -3852,11 +3825,11 @@ var BASE = (function()
 			show_effect: "none",
 			after_show: function()
 			{
-				$(`#Msg-content-container-default`).getNiceScroll().resize()
+				update_modal_scrollbar()
 			},
 			after_set: function()
 			{
-				$(`#Msg-content-container-default`).getNiceScroll().resize()
+				update_modal_scrollbar()
 			}
 		});
 
@@ -3959,7 +3932,12 @@ var BASE = (function()
 				main_scrollbar.update()
 			}
 		}
-	}	
+	}
+
+	function update_modal_scrollbar()
+	{
+		$(`#Msg-content-container-default`).getNiceScroll().resize()		
+	}
 
 	return global;
 }());
