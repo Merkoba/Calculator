@@ -494,8 +494,17 @@ function add_line(value=false)
 		value = ''
 	}
 
-	var s = `<div class='line'><button class='button variable'>$${letter}</button>`
-	s += `<input type='text' class='input' id='${letter}' value='${value}'><div class='result_container'><span class='result'></span></div></div>`
+	var s = `
+	<div class='line'>
+
+		<button class='button variable'>$${letter}</button>
+		<input type='text' class='input' id='${letter}' value='${value}'>
+		
+		<div class='result_container'>
+			<span class='result'></span>
+		</div>
+
+	</div>`
 	
 	$('#lines').append(s)
 
@@ -1711,10 +1720,10 @@ function change_borders()
 {
 	$('.input').each(function()
 	{
-		$(this).css('border-width', '0.1em')
+		$(this).removeClass("input_focus")
 	})
 
-	$(focused.input).css('border-width', '0.245em')
+	$(focused.input).addClass("input_focus")
 }
 
 function place_lines_container()

@@ -24,7 +24,12 @@ body
 
 .input
 {
-	border-color: #d0a6a6;
+	box-shadow: 0 0 0 2px #cdaeae;
+}
+
+.input_focus
+{
+	box-shadow: 0 0 0 6px #cdaeae !important;
 }
 
 .ps__thumb-y

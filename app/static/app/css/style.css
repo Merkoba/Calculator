@@ -94,7 +94,7 @@ body
 {
 	font-size: 1.1em;	
 	width: 33.5em;
-	border: 0.1em solid;
+	border: none;
 	padding: 0.2em;
 	outline: none;
 	letter-spacing: 0.06em;
