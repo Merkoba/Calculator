@@ -16,7 +16,6 @@
 		<script src="/static/app/js/tippy.min.js?v=1"></script>
 		<script src="/static/app/js/dateformat.min.js?v=1"></script>
 		<script src="/static/app/js/math.min.js?v=2"></script>
-		<script src="/static/app/js/msg.min.js?v=13"></script>
 		<script src="/static/app/js/nicescroll.min.js?v=1"></script>
 		<script src="/static/app/js/storageui.min.js?v=4"></script>
 		<script src="/static/app/js/perfect-scrollbar.min.js?v=1"></script>
@@ -24,28 +23,31 @@
 		<link rel='stylesheet' href="/static/app/css/tippy.min.css?v=1">
 		<link rel='stylesheet' href="/static/app/css/perfect-scrollbar.css?v=1">
 
-		<script src="/static/app/js/base_o.js?v=158"></script>
-		<link rel='stylesheet' href="/static/app/css/style.css?v=37">
+		<script src="/static/app/js/colorlib.js?v=1"></script>
+		<script src="/static/app/js/msg.min.js?v=14"></script>
+
+		<script src="/static/app/js/base.js?v=159"></script>
+		<link rel='stylesheet' href="/static/app/css/style.css?v=38">
 
 		<script>
 
 			$(function()
 			{
-				app_version = "14.7.0";
+				app_version = "20.0.0"
 
-				saved_content = "{{content}}";
+				saved_content = "{{content}}"
 
-				csrf_token = "{{csrf_token}}";
+				csrf_token = "{{csrf_token}}"
 
-				BASE.init();
+				init()
 
-				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-				})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+				// (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				// (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				// m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				// })(window,document,'script','https://www.google-analytics.com/analytics.js','ga')
 
-				ga('create', 'UA-81643957-3', 'auto');
-				ga('send', 'pageview');
+				// ga('create', 'UA-81643957-3', 'auto')
+				// ga('send', 'pageview')
 			})
 			
 		</script>
@@ -79,7 +81,7 @@
 		</div>
 
 		<audio preload class='sound' id='nope' src='/static/app/audio/nope.mp3?v=2'></audio>
-		<audio preload class='sound' id='pup' src='/static/app/audio/pup.mp3?v=2'></audio>
+		<audio preload class='sound' id='pup' src='/static/app/audio/pup.mp3?v=3'></audio>
 		<audio preload class='sound' id='done' src='/static/app/audio/done.mp3?v=2'></audio>
 
 	</body>
