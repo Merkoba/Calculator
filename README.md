@@ -25,8 +25,8 @@
 - Normal or Fraction mode.
 - Mixed or normal fractions.
 - Option to round results or not.
-- Option to add commas to long numbers or not.
-- 0 or 30 decimal places (Arbitrary number).
+- Option to add commas to long displayed results or not.
+- 0 to 30 decimal places in displayed results.
 - History of saved sheets to access them later.
 - Tool to view and modify local storage data.
 
