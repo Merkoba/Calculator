@@ -14,11 +14,11 @@
 
 - 64 bit precision operations using math.js.
 - Multi-line, simulataneous, linked, operations.
-- Instant results
-- Acyclicity check
+- Instant results.
+- Acyclicity check.
 - Various color themes to choose from.
 - Abbility to save sheets to share or access them later.
-- Over 700 lines of calculations. (Arbitrary limit that can be increased later)
+- Over 700 lines of calculations (Arbitrary limit that can be increased later).
 - 12 programmable buttons, with an array of operations available.
 - Input using on screen buttons or keyboard.
 - Keyboard and mouse shortcuts.
