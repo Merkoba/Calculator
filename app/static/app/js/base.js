@@ -333,7 +333,7 @@ function draw_buttons()
 
 		tippy(this, 
 		{
-			delay: [1200, 100],
+			delay: [100, 100],
 			animation: 'scale',
 			hideOnClick: true,
 			duration: 100,
@@ -399,7 +399,7 @@ function draw_prog_buttons()
 		
 		tippy(this, 
 		{
-			delay: [1200, 100],
+			delay: [100, 100],
 			animation: 'scale',
 			hideOnClick: true,
 			duration: 100,
