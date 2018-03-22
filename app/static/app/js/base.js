@@ -3782,6 +3782,7 @@ function init_msg_and_stor()
 		close_effect: "none",
 		show_effect: "none",
 		enable_titlebar: true,
+		center_titlebar: true,
 		titlebar_class: "!custom_titlebar !unselectable",
 		window_inner_x_class: "!titlebar_inner_x",	
 		after_show: function()
