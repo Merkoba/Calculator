@@ -1,31 +1,31 @@
-var math_normal = math.create(
+let math_normal = math.create(
 {
 	number: 'BigNumber',
 	precision: 64
 })
 
-var math_fraction = math.create(
+let math_fraction = math.create(
 {
 	number: 'Fraction'
 })
 
-var letters = "abcdefghijklmnopqrstuvwxyz"
-var linevars = {}
-var about
-var site_root
-var save_enabled = true
-var options
-var saved
-var programs
-var ls_options = 'options_v4'
-var ls_saved = 'saved_v4'
-var ls_programs = 'programs_v4'
-var msg
-var stor
-var main_scrollbar
-var colorlib = ColorLib()
+let letters = "abcdefghijklmnopqrstuvwxyz"
+let linevars = {}
+let about
+let site_root
+let save_enabled = true
+let options
+let saved
+let programs
+let ls_options = 'options_v4'
+let ls_saved = 'saved_v4'
+let ls_programs = 'programs_v4'
+let msg
+let stor
+let main_scrollbar
+let colorlib = ColorLib()
 
-var themes = [
+let themes = [
 	'lake',
 	'leaf',
 	'bulb',
@@ -38,7 +38,7 @@ var themes = [
 	'carbon'
 ]
 
-var commands = [
+let commands = [
 	'insert x',
 	'clear',
 	'erase',
@@ -76,7 +76,7 @@ var commands = [
 	'play nope'
 ]
 
-var focused = {
+let focused = {
 	input: null
 }
 
@@ -113,7 +113,7 @@ function key_detection()
 {
 	$(document).keyup(function(e)
 	{
-		var code = e.keyCode
+		let code = e.keyCode
 
 		if(code === 27)
 		{
@@ -136,7 +136,7 @@ function key_detection()
 			return
 		}
 
-		var code = e.keyCode
+		let code = e.keyCode
 
 		if(code === 13)
 		{
@@ -297,7 +297,7 @@ function draw_buttons()
 
 	$('.button').not('.programmable').each(function()
 	{
-		var dblclickers = ["Remove Line", "Clear"]
+		let dblclickers = ["Remove Line", "Clear"]
 
 		if(dblclickers.indexOf($(this).text()) !== -1)
 		{
@@ -353,15 +353,12 @@ function draw_prog_buttons()
 
 	for(let i=0; i<12; i++)
 	{
-		var s = ''
-
-		var prog = programs.items[i]
-
-		var pt1 = ''
-		var pt2 = ''
-
-		var t1 = 'Primary'
-		var t2 = 'Secondary'
+		let s = ''
+		let prog = programs.items[i]
+		let pt1 = ''
+		let pt2 = ''
+		let t1 = 'Primary'
+		let t2 = 'Secondary'
 
 		if(prog.primary.title !== '')
 		{
@@ -440,19 +437,18 @@ function buttons_br()
 
 function buttons_space()
 {
-	var s = "<span class='buttons_space'></span>"
+	let s = "<span class='buttons_space'></span>"
 	$('#buttons').append(s)
 }
 
 function focus_next_or_add()
 {
-	var nextAll = $(focused.input).parent().nextAll('.line')
-
-	var found_line = false
+	let nextAll = $(focused.input).parent().nextAll('.line')
+	let found_line = false
 
 	$(nextAll).each(function()
 	{
-		var inp = $(this).find('.input')[0]
+		let inp = $(this).find('.input')[0]
 
 		if(inp.value === '')
 		{
@@ -470,7 +466,8 @@ function focus_next_or_add()
 
 function add_line(value=false)
 {
-	var num_lines = $('.line').length
+	let num_lines = $('.line').length
+	let letter
 
 	if(num_lines === get_max_line_length())
 	{
@@ -480,13 +477,13 @@ function add_line(value=false)
 
 	if(num_lines === 0)
 	{
-		var letter = 'a'
+		letter = 'a'
 	}
 
 	else
 	{
-		var last_var = $('.input').last().data('variable')
-		var letter = increase_var(last_var).substring(1)
+		let last_var = $('.input').last().data('variable')
+		letter = increase_var(last_var).substring(1)
 	}
 
 	if(!value)
@@ -494,7 +491,7 @@ function add_line(value=false)
 		value = ''
 	}
 
-	var s = `
+	let s = `
 	<div class='line'>
 
 		<button class='button variable'>$${letter}</button>
@@ -508,7 +505,7 @@ function add_line(value=false)
 	
 	$('#lines').append(s)
 
-	var input = $('.input').last()[0]
+	let input = $('.input').last()[0]
 	
 	focused.input = input
 
@@ -531,7 +528,7 @@ function add_line(value=false)
 
 	$(input).keydown(function(e) 
 	{
-		var code = e.keyCode
+		let code = e.keyCode
 
 		if(code === 38 || code === 40)
 		{
@@ -555,9 +552,7 @@ function add_line(value=false)
 	$(input).data('variable', '$' + letter)
 	
 	focus_input(input)
-
 	move_caret_to_end(input)
-
 	update_main_scrollbar()
 }
 
@@ -610,7 +605,7 @@ function remove_all_lines()
 
 function move_lines_up()
 {
-	var line_length = $('.line').length
+	let line_length = $('.line').length
 
 	if(line_length === 1)
 	{
@@ -618,11 +613,10 @@ function move_lines_up()
 		return
 	}
 
-	var input = focused.input
-	var line = $(input).parent()[0]
-	var v = $(input).data('variable')
-	var index = $(line).index()
-	var last_index = $('.line').last().index()
+	let input = focused.input
+	let line = $(input).parent()[0]
+	let v = $(input).data('variable')
+	let index = $(line).index()
 
 	if(index === (line_length - 1))
 	{
@@ -638,11 +632,11 @@ function move_lines_up()
 		return
 	}
 
-	for(var i=0; i<line_length; i++)
+	for(let i=0; i<line_length; i++)
 	{
-		var ln = $('.line').get(i)
-		var inp = $(ln).find('.input')[0]
-		var val = inp.value
+		let ln = $('.line').get(i)
+		let inp = $(ln).find('.input')[0]
+		let val = inp.value
 
 		if(val.trim() === '')
 		{
@@ -661,7 +655,7 @@ function move_lines_up()
 				return ''
 			}
 
-			var ni = get_var_index(match)
+			let ni = get_var_index(match)
 
 			if(ni > index && ni < line_length)
 			{
@@ -674,23 +668,22 @@ function move_lines_up()
 		inp.value = val
 	}
 
-	for(var i=index + 1; i<line_length; i++)
+	for(let i=index + 1; i<line_length; i++)
 	{
-		var inp = $($('.line').get(i)).find('.input')[0]
-		var ninp = $(inp).parent().prev('.line').find('.input')[0]
+		let inp = $($('.line').get(i)).find('.input')[0]
+		let ninp = $(inp).parent().prev('.line').find('.input')[0]
 
 		ninp.value = inp.value
 		inp.value = ''
 	}
 
 	$('.line').last().remove()
-
 	update_results()
 }
 
 function move_lines_down(alt=false)
 {
-	var line_length = $('.line').length
+	let line_length = $('.line').length
 
 	if(line_length === get_max_line_length())
 	{
@@ -703,17 +696,16 @@ function move_lines_down(alt=false)
 		focus_next()
 	}
 
-	var input = focused.input
-	var line = $(input).parent()[0]
-	var v = $(input).data('variable')
-	var index = $(line).index()
-	var last_index = $('.line').last().index()
+	let input = focused.input
+	let line = $(input).parent()[0]
+	let v = $(input).data('variable')
+	let index = $(line).index()
 
-	for(var i=0; i<line_length; i++)
+	for(let i=0; i<line_length; i++)
 	{
-		var ln = $('.line').get(i)
-		var inp = $(ln).find('.input')[0]
-		var val = inp.value
+		let ln = $('.line').get(i)
+		let inp = $(ln).find('.input')[0]
+		let val = inp.value
 
 		if(val.trim() === '')
 		{
@@ -732,7 +724,7 @@ function move_lines_down(alt=false)
 				return ''
 			}
 
-			var ni = get_var_index(match)
+			let ni = get_var_index(match)
 
 			if(ni > index && ni < line_length)
 			{
@@ -749,10 +741,10 @@ function move_lines_down(alt=false)
 
 	line_length = $('.line').length
 
-	for(var i=line_length - 1; i>index; i--)
+	for(let i=line_length - 1; i>index; i--)
 	{
-		var inp = $($('.line').get(i)).find('.input')[0]
-		var ninp = $(inp).parent().prev('.line').find('.input')[0]
+		let inp = $($('.line').get(i)).find('.input')[0]
+		let ninp = $(inp).parent().prev('.line').find('.input')[0]
 
 		inp.value = ninp.value
 	}
@@ -766,13 +758,11 @@ function move_lines_down(alt=false)
 
 function decrease_var(v)
 {
-	var letter = v.substring(1)
+	let letter = v.substring(1)
+	let res = ''
+	let decrease_next = true
 
-	var res = ''
-
-	var decrease_next = true
-
-	for(var i=letter.length - 1; i>=0; i--)
+	for(let i=letter.length - 1; i>=0; i--)
 	{
 		if(decrease_next)
 		{
@@ -808,13 +798,11 @@ function decrease_var(v)
 
 function increase_var(v)
 {
-	var letter = v.substring(1)
+	let letter = v.substring(1)
+	let res = ''
+	let increase_next = true
 
-	var res = ''
-
-	var increase_next = true
-
-	for(var i=letter.length - 1; i>=0; i--)
+	for(let i=letter.length - 1; i>=0; i--)
 	{
 		if(increase_next)
 		{
@@ -847,19 +835,14 @@ function increase_var(v)
 
 function get_var_index(v)
 {
-	var letter = v.substring(1)
+	let letter = v.substring(1)
+	let n = letter.length - 1
+	let index = 0
 
-	var n = letter.length - 1
-
-	var index = 0
-
-	var last_t
-
-	for(var i=0; i<letter.length; i++)
+	for(let i=0; i<letter.length; i++)
 	{
-		var t = letters.indexOf(letter[i]) + 1
-
-		var p = Math.pow(letters.length, n)
+		let t = letters.indexOf(letter[i]) + 1
+		let p = Math.pow(letters.length, n)
 		
 		t *= p
 
@@ -874,7 +857,6 @@ function get_var_index(v)
 	}
 
 	index -= 1
-
 	return index
 }
 
@@ -886,11 +868,8 @@ function remove_last_line()
 		return
 	}
 
-	var line = $('.line').last()[0]
-
-	var input = $('.input').last()[0]
-
-	var val = input.value
+	let line = $('.line').last()[0]
+	let input = $('.input').last()[0]
 
 	if(input === focused.input)
 	{
@@ -898,9 +877,7 @@ function remove_last_line()
 	}
 
 	$(line).remove()
-
 	update_results()
-
 	update_main_scrollbar()
 }
 
@@ -911,13 +888,12 @@ function hide_plus()
 
 function get_result(input)
 {
-	var result = $(input).parent().find('.result')[0]
-
+	let result = $(input).parent().find('.result')[0]
 	$(result).html('')
 
 	try
 	{
-		var val = input.value
+		let val = input.value
 
 		if(val.trim().startsWith('//'))
 		{
@@ -932,16 +908,15 @@ function get_result(input)
 
 		if(options.fraction)
 		{
-			var result = math_fraction.eval(val + '*1', linevars)
+			result = math_fraction.eval(val + '*1', linevars)
 		}
 
 		else
 		{
-			var result = math_normal.eval(val + '*1', linevars)
+			result = math_normal.eval(val + '*1', linevars)
 		}
 
 		update_variable(input, result)
-
 		show_result(input, format_result(result))
 	}
 
@@ -982,21 +957,20 @@ function format_result(n, f=false)
 {
 	if(options.fraction && !f)
 	{
-		var split = math_fraction.format(n).split('/')
+		let split = math_fraction.format(n).split('/')
 
 		if(split.length === 2)
 		{
-			var sup = split[0]
-			var sub = split[1]
+			let sup = split[0]
+			let sub = split[1]
 
-			var nsup = parseInt(sup)
-			var nsub = parseInt(sub)
+			let nsup = parseInt(sup)
+			let nsub = parseInt(sub)
 
 			if(options.mixed && nsup >= nsub)
 			{
-				var mixed = improper_to_mixed(nsup, nsub)
-
-				var mwhole = mixed[0]
+				let mixed = improper_to_mixed(nsup, nsub)
+				let mwhole = mixed[0]
 
 				if(mixed[1] !== 0 && mixed[2] !== 0)
 				{
@@ -1031,19 +1005,20 @@ function format_result(n, f=false)
 			n = math_normal.round(n, options.round_places)
 		}
 
-		var ns = n.toString()
+		let ns = n.toString()
+		let whole, decimal
 
 		if(ns.indexOf('.') !== -1)
 		{
-			var split = ns.split('.')
-			var whole = split[0].toString() + '.'
-			var decimal = split[1].toString()
+			let split = ns.split('.')
+			whole = split[0].toString() + '.'
+			decimal = split[1].toString()
 		}
 
 		else
 		{
-			var whole = n.toString()
-			var decimal = ''
+			whole = n.toString()
+			decimal = ''
 		}
 
 		if(options.commas)
@@ -1128,7 +1103,7 @@ function press(s, aux=false)
 		return
 	}
 
-	var v = $(focused.input).data('variable')
+	let v = $(focused.input).data('variable')
 
 	if(s === v)
 	{
@@ -1155,7 +1130,7 @@ function check_aux(s, aux)
 {
 	if(aux)
 	{
-		for(var i=1; i<10; i++)
+		for(let i=1; i<10; i++)
 		{
 			if(s == i)
 			{
@@ -1375,7 +1350,7 @@ function prog_press(key, e)
 
 	focus_if_isnt(focused.input)
 
-	var prog = programs.items[key]
+	let prog = programs.items[key]
 
 	if(prog !== undefined)
 	{
@@ -1417,9 +1392,9 @@ function clear_input(input)
 	replace_text(input, '')
 }
 
-var update_results = (function() 
+let update_results = (function() 
 {
-	var timer 
+	let timer 
 	return function() 
 	{
 		clearTimeout(timer)
@@ -1433,27 +1408,20 @@ var update_results = (function()
 function do_update_results()
 {
 	undefine_variables()
-
-	var variables = {}
+	let variables = {}
 
 	$('.input').each(function()
 	{
-		var val = this.value
-
-		var v = $(this).data('variable')
-		
+		let v = $(this).data('variable')
 		variables[v] = {}
-
-		var vr = variables[v]
-		
+		let vr = variables[v]
 		vr.edges = []
 	})
 
 	$('.input').each(function()
 	{
-		var v = $(this).data('variable')
-		
-		var val = this.value
+		let v = $(this).data('variable')
+		let val = this.value
 
 		if(val.trim() === '')
 		{
@@ -1470,7 +1438,7 @@ function do_update_results()
 			return true
 		}
 
-		var matches = val.match(/\$[a-z]+/g)
+		let matches = val.match(/\$[a-z]+/g)
 
 		if(matches !== null)
 		{
@@ -1478,27 +1446,23 @@ function do_update_results()
 		}
 	})
 
-	var sorted = []
-
-	var n = 0
+	let sorted = []
+	let n = 0
 
 	while(Object.keys(variables).length)
 	{
 		n += 1
 
-		var acyclic = false
+		let acyclic = false
+		let vars = Object.assign({}, variables)
+		let keys = Object.keys(vars)
 
-		var vars = Object.assign({}, variables)
-
-		var keys = Object.keys(vars)
-
-		for(var i=0; i<keys.length; i++)
+		for(let i=0; i<keys.length; i++)
 		{
-			var edges = vars[keys[i]].edges
+			let edges = vars[keys[i]].edges
+			let found = false
 
-			var found = false
-
-			for(var el of edges)
+			for(let el of edges)
 			{
 				if(vars[el] !== undefined)
 				{
@@ -1519,9 +1483,8 @@ function do_update_results()
 		{	
 			$('.input').each(function()
 			{
-				var v = $(this).data('variable')
-
-				var letter = v.substring(1)
+				let v = $(this).data('variable')
+				let letter = v.substring(1)
 
 				if(sorted.indexOf(v) !== -1)
 				{
@@ -1543,25 +1506,25 @@ function do_update_results()
 		}
 	}
 
-	for(var i=0; i<sorted.length; i++)
+	for(let i=0; i<sorted.length; i++)
 	{
-		var letter = sorted[i].substring(1)
+		let letter = sorted[i].substring(1)
 		get_result($('#' + letter)[0])
 	}
 }
 
 function check_line_visibility()
 {
-	var it = $(focused.input).parent()[0].getBoundingClientRect().top
-	var ct = $('#lines_container').offset().top
+	let it = $(focused.input).parent()[0].getBoundingClientRect().top
+	let ct = $('#lines_container').offset().top
 
 	if(it < ct)
 	{
 		$('#lines_container').scrollTop($('#lines_container').scrollTop() - (ct - it))
 	}
 
-	var ib = it + $(focused.input).parent().outerHeight()
-	var cb = ct + $('#lines_container').outerHeight()
+	let ib = it + $(focused.input).parent().outerHeight()
+	let cb = ct + $('#lines_container').outerHeight()
 
 	if(ib > cb)
 	{
@@ -1596,7 +1559,7 @@ function line_down()
 
 function move_line_up()
 {
-	var index = $(focused.input).parent().index()
+	let index = $(focused.input).parent().index()
 
 	if(index === 0)
 	{
@@ -1604,24 +1567,24 @@ function move_line_up()
 		return
 	}
 
-	var inp = focused.input
-	var ninp = $(inp).parent().prev('.line').find('.input')[0]
+	let inp = focused.input
+	let ninp = $(inp).parent().prev('.line').find('.input')[0]
 
-	var val = inp.value
-	var nval = ninp.value
+	let val = inp.value
+	let nval = ninp.value
 
-	var v = $(inp).data('variable')
-	var nv = $(ninp).data('variable')
+	let v = $(inp).data('variable')
+	let nv = $(ninp).data('variable')
 
-	var cv = '$@!#' + v.substring(1)
-	var cnv = '$@!#' + nv.substring(1)
+	let cv = '$@!#' + v.substring(1)
+	let cnv = '$@!#' + nv.substring(1)
 
-	var re = new RegExp("\\$" + v.substring(1), 'g')
-	var re2 = new RegExp("\\$" + nv.substring(1), 'g')
+	let re = new RegExp("\\$" + v.substring(1), 'g')
+	let re2 = new RegExp("\\$" + nv.substring(1), 'g')
 
 	$('.input').each(function()
 	{
-		var vl = this.value.replace(re, cnv)
+		let vl = this.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
 		this.value = vl.replace(/@!#/g, '')
 	})
@@ -1639,7 +1602,7 @@ function move_line_up()
 
 function move_line_down()
 {
-	var index = $(focused.input).parent().index()
+	let index = $(focused.input).parent().index()
 
 	if(index === ($('.line').length - 1))
 	{
@@ -1647,24 +1610,24 @@ function move_line_down()
 		return
 	}
 
-	var inp = focused.input
-	var ninp = $(inp).parent().next('.line').find('.input')[0]
+	let inp = focused.input
+	let ninp = $(inp).parent().next('.line').find('.input')[0]
 
-	var val = inp.value
-	var nval = ninp.value
+	let val = inp.value
+	let nval = ninp.value
 
-	var v = $(inp).data('variable')
-	var nv = $(ninp).data('variable')
+	let v = $(inp).data('variable')
+	let nv = $(ninp).data('variable')
 
-	var cv = '$@!#' + v.substring(1)
-	var cnv = '$@!#' + nv.substring(1)
+	let cv = '$@!#' + v.substring(1)
+	let cnv = '$@!#' + nv.substring(1)
 
-	var re = new RegExp("\\$" + v.substring(1), 'g')
-	var re2 = new RegExp("\\$" + nv.substring(1), 'g')
+	let re = new RegExp("\\$" + v.substring(1), 'g')
+	let re2 = new RegExp("\\$" + nv.substring(1), 'g')
 
 	$('.input').each(function()
 	{
-		var vl = this.value.replace(re, cnv)
+		let vl = this.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
 		this.value = vl.replace(/@!#/g, '')		
 	})
@@ -1687,7 +1650,7 @@ function cycle_inputs(direction)
 		return
 	}
 
-	var index = $(focused.input).parent().index()
+	let index = $(focused.input).parent().index()
 
 	if(direction === 'down')
 	{
@@ -1728,8 +1691,7 @@ function change_borders()
 
 function place_lines_container()
 {
-	var h = $(window).height() - $('#app_top').outerHeight()
-
+	let h = $(window).height() - $('#app_top').outerHeight()
 	$('#lines_container').css('height', h + 'px')
 }
 
@@ -1741,9 +1703,9 @@ function resize_events()
 	})
 }
 
-var resize_timer = (function() 
+let resize_timer = (function() 
 {
-	var timer 
+	let timer 
 	return function() 
 	{
 		clearTimeout(timer)
@@ -1778,7 +1740,7 @@ function new_sheet()
 
 function check_new_sheet()
 {
-	var s = stringify_sheet()
+	let s = stringify_sheet()
 
 	if(s.trim().replace(/@!#/g, '').length < 1)
 	{
@@ -1788,7 +1750,7 @@ function check_new_sheet()
 
 	if(saved_content !== s)
 	{
-		var conf = confirm("This will discard all unsaved changes. Are you sure?")
+		let conf = confirm("This will discard all unsaved changes. Are you sure?")
 
 		if(conf) 
 		{
@@ -1832,7 +1794,7 @@ function save_sheet()
 		return
 	}
 
-	var s = stringify_sheet()
+	let s = stringify_sheet()
 
 	if(s.trim().replace(/@!#/g, '').length < 1)
 	{
@@ -1884,13 +1846,12 @@ function on_save_response(response, svd)
 
 	else
 	{
-		var uparams = make_uparams(response)
+		let uparams = make_uparams(response)
 
 		edit_url(uparams)
 
-		var s = ""
-
-		var url = site_root + uparams
+		let s = ""
+		let url = site_root + uparams
 
 		s += url + "<br><br>"
 
@@ -1921,17 +1882,14 @@ function add_to_saved(url, svd)
 		saved = []
 	}
 
-	var split = svd.split('@!#')
+	let split = svd.split('@!#')
+	let num_lines = split.length
+	let n = Math.min(5,split.length)
+	let sample = ''
 
-	var num_lines = split.length
-
-	var n = Math.min(5,split.length)
-
-	var sample = ''
-
-	for(var i=0; i<n; i++)
+	for(let i=0; i<n; i++)
 	{
-		var line = split[i].substring(0, 100).trim()
+		let line = split[i].substring(0, 100).trim()
 
 		if(line === '')
 		{
@@ -1942,13 +1900,12 @@ function add_to_saved(url, svd)
 	}
 
 	saved.items.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample, options.fraction])
-
 	update_saved()
 }
 
 function copy_to_clipboard(s)
 {
-	var textareaEl = document.createElement('textarea')
+	let textareaEl = document.createElement('textarea')
 	document.body.appendChild(textareaEl)
 	textareaEl.value = s
 	textareaEl.select()
@@ -1979,7 +1936,7 @@ function edit_url(s)
 
 function stringify_sheet()
 {
-	var s = ""
+	let s = ""
 
 	$('.input').each(function()
 	{
@@ -1988,7 +1945,6 @@ function stringify_sheet()
 	})
 
 	s = s.substring(0, s.length - 3)
-
 	s = s.replace(/\\/g, '\\\\')
 
 	return s
@@ -1996,7 +1952,7 @@ function stringify_sheet()
 
 function create_about()
 {
-	var s = ""
+	let s = ""
 
 	s += "<b>Merkoba Calculator</b><br>"
 	s += "Version " + app_version + "<br><br>"
@@ -2005,7 +1961,7 @@ function create_about()
 	s += "Calculations are done by the <a href='http://mathjs.org/docs/index.html' target=_blank>math.js</a> library, with high precision settings enabled.<br><br>"
 	s += "Calculations are done automatically in real time using topological sorting.<br><br>"
 	s += "Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>"
-	s += "You can save a sheet for future use or sharing.<br><br>"
+	// s += "You can save a sheet for future use or sharing.<br><br>"
 	s += "There are 12 programmable buttons that can be set to execute certain commands in order.<br><br>"
 	s += "Note: Formatting and rounding are only applied to the displayed results, not to internal calculations."
 
@@ -2062,11 +2018,11 @@ function load_saved_content()
 {
 	check_params()
 
-	var splits = saved_content.split('@!#')
+	let splits = saved_content.split('@!#')
 
-	for(var i=0; i<splits.length; i++)
+	for(let i=0; i<splits.length; i++)
 	{	
-		var value = splits[i]
+		let value = splits[i]
 
 		add_line(value)
 	}
@@ -2088,14 +2044,16 @@ function adjust_volumes()
 
 function add_ans(next=false)
 {
+	let variable
+
 	if(next)
 	{
-		var variable = $(focused.input).parent().next('.line').find('.input').data('variable')
+		variable = $(focused.input).parent().next('.line').find('.input').data('variable')
 	}
 
 	else
 	{
-		var variable = $(focused.input).parent().prev('.line').find('.input').data('variable')
+		variable = $(focused.input).parent().prev('.line').find('.input').data('variable')
 	}
 
 	if(variable !== undefined)
@@ -2106,14 +2064,16 @@ function add_ans(next=false)
 
 function add_result(next=false)
 {
+	let result
+
 	if(next)
 	{
-		var result = $(focused.input).parent().next('.line').find('.result')[0]
+		result = $(focused.input).parent().next('.line').find('.result')[0]
 	}
 
 	else
 	{
-		var result = $(focused.input).parent().prev('.line').find('.result')[0]
+		result = $(focused.input).parent().prev('.line').find('.result')[0]
 	}	
 
 	if(result !== undefined)
@@ -2124,14 +2084,16 @@ function add_result(next=false)
 
 function add_input(next=false)
 {
+	let value
+
 	if(next)
 	{
-		var value = $(focused.input).parent().next('.line').find('.input').val()
+		value = $(focused.input).parent().next('.line').find('.input').val()
 	}	
 
 	else
 	{
-		var value = $(focused.input).parent().prev('.line').find('.input').val()
+		value = $(focused.input).parent().prev('.line').find('.input').val()
 	}	
 
 	if(value !== undefined && value !== '')
@@ -2142,20 +2104,19 @@ function add_input(next=false)
 
 function show_more()
 {
-	var s = ""
+	let s = ""
 
-	s += "<span class='linky2' id='more_saved'>Saved</span><br><br>"
+	// s += "<span class='linky2' id='more_saved'>Saved</span><br><br>"
 	
 	s += "<span class='linky2' id='more_data'>Data</span><br><br>"
-
 	s += "<span class='linky2' id='more_about'>About</span>"
 
 	show_modal("", s)
 
-	$('#more_saved').click(function()
-	{
-		show_saved()
-	})
+	// $('#more_saved').click(function()
+	// {
+	// 	show_saved()
+	// })
 
 	$('#more_data').click(function()
 	{
@@ -2170,14 +2131,11 @@ function show_more()
 
 function show_options()
 {
-	var s = ""
+	let s = ""
 
 	s += "<div id='options_container'>"
-
 	s += "<div class='options_item'>"
-
 	s += "Add Commas"
-
 	s += "<div class='vseparator2'></div>"
 
 	if(options.commas)
@@ -2191,13 +2149,9 @@ function show_options()
 	}
 
 	s += "</div>"
-
 	s += "<div class='vseparator'></div>"
-
 	s += "<div class='options_item'>"
-	
 	s += "Mixed Fractions"
-
 	s += "<div class='vseparator2'></div>"
 
 	if(options.mixed)
@@ -2211,13 +2165,9 @@ function show_options()
 	}
 
 	s += "</div>"
-
 	s += "<div class='vseparator'></div>"
-
 	s += "<div class='options_item'>"
-
 	s += "Round Results"
-
 	s += "<div class='vseparator2'></div>"
 
 	if(options.round)
@@ -2231,15 +2181,10 @@ function show_options()
 	}
 
 	s += "</div>"
-
 	s += "<div class='vseparator'></div>"
-
 	s += "<div class='options_item'>"
-
 	s += "Round Places"
-
 	s += "<div class='vseparator2'></div>"
-
 	s += "<select id='sel_round_places'>"
 
 	for(let i=0; i<31; i++)
@@ -2248,15 +2193,10 @@ function show_options()
 	}
 
 	s += "</select>"
-
 	s += "</div>"	
-
 	s += "<div class='vseparator'></div>"
-
 	s += "<div class='options_item'>"
-
 	s += "Enable Sound"
-
 	s += "<div class='vseparator2'></div>"
 
 	if(options.sound)
@@ -2270,15 +2210,10 @@ function show_options()
 	}
 
 	s += "</div>"
-
 	s += "<div class='vseparator'></div>"	
-
 	s += "<div class='options_item'>"
-
 	s += "Color Theme"
-
 	s += "<div class='vseparator2'></div>"
-
 	s += "<select id='sel_theme'>"
 
 	for(let i=0; i<themes.length; i++)
@@ -2287,9 +2222,7 @@ function show_options()
 	}
 
 	s += "</select>"
-
 	s += "</div>"
-
 	s += "</div>"
 
 	show_modal("Options", s)
@@ -2368,7 +2301,7 @@ function get_options()
 {
 	options = JSON.parse(localStorage.getItem(ls_options))
 
-	var mod = false
+	let mod = false
 
 	if(options === null)
 	{
@@ -2443,7 +2376,7 @@ function get_saved()
 {
 	saved = JSON.parse(localStorage.getItem(ls_saved))
 
-	var mod = false
+	let mod = false
 
 	if(saved === null)
 	{
@@ -2478,7 +2411,7 @@ function get_programs()
 {
 	programs = JSON.parse(localStorage.getItem(ls_programs))
 
-	var mod = false
+	let mod = false
 
 	if(programs === null)
 	{
@@ -2498,7 +2431,7 @@ function get_programs()
 		mod = true
 	}
 
-	for(var i=0; i<12; i++)
+	for(let i=0; i<12; i++)
 	{
 		if(programs.items[i] === undefined)
 		{
@@ -2581,17 +2514,15 @@ function show_saved(j=0)
 
 	else
 	{
-		var s = ""
-		
-		var n = Math.min(20 + j, saved.items.length)
+		let s = ""
+		let n = Math.min(20 + j, saved.items.length)
 
-		for(var i=j; i<n; i++)
+		for(let i=j; i<n; i++)
 		{
 			s += "<a class='saved_item ancher1' target=_blank href='" + saved.items[i][1] + "' title='" + saved.items[i][3] + "'>"
-			
 			s += saved.items[i][0]
 
-			var num_lines = saved.items[i][2]
+			let num_lines = saved.items[i][2]
 			
 			s += "<br>" + num_lines
 
@@ -2657,10 +2588,8 @@ function show_saved(j=0)
 
 		$('#svd_load_more').click(function()
 		{
-			var j = $(this).data('j')
-
+			let j = $(this).data('j')
 			$(this).remove()
-
 			show_saved(j)
 		})
 	}
@@ -2742,17 +2671,19 @@ function reset_programs(data=false)
 
 function fill_sheet(x=false)
 {
+	let n
+
 	if(x)
 	{
-		var n = x
+		n = x
 	}
 
 	else
 	{
-		var n = get_max_line_length() - $('.line').length
+		n = get_max_line_length() - $('.line').length
 	}
 
-	for(var i=0; i<n; i++)
+	for(let i=0; i<n; i++)
 	{
 		add_line()
 	}
@@ -2762,7 +2693,7 @@ function test1(x=false)
 {
 	fill_sheet(x)
 
-	var s = "+3*45-56/43^4+acosh(8.9)"
+	let s = "+3*45-56/43^4+acosh(8.9)"
 
 	$('.input').each(function()
 	{
@@ -2794,7 +2725,7 @@ function get_max_line_length()
 
 function undefine_variables()
 {
-	for(var varName in linevars) 
+	for(let varName in linevars) 
 	{
 		linevars[varName] = undefined
 	}
@@ -2802,7 +2733,7 @@ function undefine_variables()
 
 function get_result_text(el)
 {
-	var s = ""
+	let s = ""
 
 	if($(el).find('sup').length > 0)
 	{
@@ -2843,8 +2774,8 @@ function toggle_fraction()
 
 function copy_input_down()
 {
-	var og_var = $(focused.input).data('variable')
-	var og_val = focused.input.value
+	let og_var = $(focused.input).data('variable')
+	let og_val = focused.input.value
 
 	focus_next_or_add()
 
@@ -2856,8 +2787,8 @@ function copy_input_down()
 
 function copy_result_down()
 {
-	var og_var = $(focused.input).data('variable')
-	var og_result = get_result_text($(focused.input).parent().find('.result')[0])
+	let og_var = $(focused.input).data('variable')
+	let og_result = get_result_text($(focused.input).parent().find('.result')[0])
 
 	focus_next_or_add()
 
@@ -2869,7 +2800,7 @@ function copy_result_down()
 
 function expand_value(input)
 {
-	var val = input.value
+	let val = input.value
 
 	if(val.trim() === '')
 	{
@@ -2886,13 +2817,12 @@ function expand_value(input)
 		return
 	}
 
-	var vr = $(input).data('variable')
-
-	var n = 0
+	let vr = $(input).data('variable')
+	let n = 0
 
 	while(true)
 	{
-		var og_val = val
+		let og_val = val
 
 		val = val.replace(/\$[a-z]+/g, function(match)
 		{
@@ -2901,7 +2831,7 @@ function expand_value(input)
 				return match
 			}
 
-			var v = $('#' + match.substring(1)).val()
+			let v = $('#' + match.substring(1)).val()
 
 			if(v !== undefined && v.trim() !== '')
 			{
@@ -2950,7 +2880,7 @@ function expand_value(input)
 
 function format_input(input)
 {
-	var val = input.value
+	let val = input.value
 
 	if(val.trim() === '')
 	{
@@ -3001,25 +2931,21 @@ function exec_insert(input, s)
 {
 	if(!document.execCommand('insertText', false, s))
 	{
-		var ss = input.selectionStart
-		var se = input.selectionEnd
-		var value = input.value
-		var sel = value.substring(ss, se)
-
-		var ns = value.substring(0, ss) + s + value.substring(se, value.length)
+		let ss = input.selectionStart
+		let se = input.selectionEnd
+		let value = input.value
+		let ns = value.substring(0, ss) + s + value.substring(se, value.length)
 
 		input.value = ns
-
 		input.setSelectionRange(ss + s.length, ss + s.length)
-		
 		update_results()
 	}
 }
 
 function erase_character()
 {
-	var ss = focused.input.selectionStart
-	var se = focused.input.selectionEnd
+	let ss = focused.input.selectionStart
+	let se = focused.input.selectionEnd
 
 	if(ss === se)
 	{
@@ -3049,20 +2975,19 @@ function redo_change()
 
 function remove_ranges()
 {
-	var ss = focused.input.selectionEnd
+	let ss = focused.input.selectionEnd
 	focused.input.setSelectionRange(ss, ss)
 }
 
 function place_infobar()
 {
-	var w = $('#buttons').width()
-
+	let w = $('#buttons').width()
 	$('#infobar').css('width', w + 'px')
 }
 
 function update_infobar()
 {
-	var s = ""
+	let s = ""
 
 	s += "<span id='ib_fraction_toggle' class='ib_item'>"
 
@@ -3088,22 +3013,24 @@ function update_infobar()
 
 function apply_theme(theme)
 {
-	$('head').append("<link onload='set_modal_theme()' rel='stylesheet' href='/static/app/themes/" + theme + ".css?v=" + app_version + "'>")
+	$('head').append("<link onload='set_modal_theme()' rel='stylesheet' href='themes/" + theme + ".css?v=" + app_version + "'>")
 }
 
 function apply_mode()
 {
+	let mode
+
 	if(options.fraction)
 	{
-		var mode = "fraction"
+		mode = "fraction"
 	}
 
 	else
 	{
-		var mode = "normal"
+		mode = "normal"
 	}
 
-	$('head').append("<link rel='stylesheet' href='/static/app/modes/" + mode + ".css?v=" + app_version + "'>")
+	$('head').append("<link rel='stylesheet' href='modes/" + mode + ".css?v=" + app_version + "'>")
 }
 
 function capitalize_string(text) 
@@ -3123,48 +3050,32 @@ function move_caret_to_start(input)
 
 function show_program_editor(key)
 {
-	var s = ""
+	let s = ""
 
 	s += "<input maxlength='5' id='prog_key_name' class='prog_input prog_key_input'><br><br><br>"
-
 	s += "<div id='prog_p_label' class='prog_label'>Primary Action Title</b2></div>"
 	s += "<input type='text' id='prog_p_title' class='prog_input prog_input_smaller'></input>"
-
 	s += "<br><br><br>"
-
 	s += "<div class='prog_label'>Primary Action Commands</div>"
 	s += "<input type='text' id='prog_p_commands' class='prog_input'></input>"
 	s += "<div id='prog_p_commands_error' class='error_message'></div>"
-
 	s += "<br><br><br>"
-
 	s += "<div class='prog_label'>Require Double Click</div>"
 	s += "<input type='checkbox' id='prog_p_dbl'>"
-
 	s += "<br><br><br><br>"
-
 	s += "<div id='prog_s_label' class='prog_label'>Secondary Action Title</div>"
 	s += "<input type='text' id='prog_s_title' class='prog_input prog_input_smaller'></input>"
-
 	s += "<br><br><br>"
-
 	s += "<div class='prog_label'>Secondary Action Commands</div>"
 	s += "<input type='text' id='prog_s_commands' class='prog_input'></input>"
 	s += "<div id='prog_s_commands_error' class='error_message'></div>"
-
 	s += "<br><br><br>"
-
 	s += "<div class='prog_label'>Require Double Click</div>"
 	s += "<input type='checkbox' id='prog_s_dbl'>"
-	
 	s += "<br><br><br>"
-
 	s += "<span id='prog_save' class='linky2'>Save</span>"
-
 	s += "<br><br><br><div class='prog_label'>Swap With</div>"
-
 	s += "<select id='sel_prog_swap'>"
-
 	s += "<option value='--'></option>"
 
 	for(let i=0; i<programs.items.length; i++)
@@ -3223,7 +3134,7 @@ function show_program_editor(key)
 
 	show_modal("Program Editor", s)	
 
-	var prog = programs.items[key]
+	let prog = programs.items[key]
 
 	if(prog !== undefined)
 	{
@@ -3256,7 +3167,7 @@ function show_program_editor(key)
 
 	$('.prog_input').keyup(function(e)
 	{
-		var code = e.keyCode
+		let code = e.keyCode
 
 		if(code === 13)
 		{
@@ -3269,7 +3180,7 @@ function prog_swap(index1, index2)
 {
 	if(index2 !== '--' && index1 !== index2)
 	{
-		var temp = programs.items[index1]
+		let temp = programs.items[index1]
 
 		programs.items[index1] = programs.items[index2]
 		programs.items[index2] = temp
@@ -3294,15 +3205,15 @@ function prog_move(oldKey, newKey)
 
 function save_program(key, name)
 {
-	var prog_key_name = $('#prog_key_name')[0].value.trim().replace(/\s+/g, '')
+	let prog_key_name = $('#prog_key_name')[0].value.trim().replace(/\s+/g, '')
 
-	var p_title = $('#prog_p_title')[0].value.trim().replace(/\s+/g, ' ')
-	var p_commands = $('#prog_p_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '')
-	var p_dbl = $('#prog_p_dbl').prop('checked')
+	let p_title = $('#prog_p_title')[0].value.trim().replace(/\s+/g, ' ')
+	let p_commands = $('#prog_p_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '')
+	let p_dbl = $('#prog_p_dbl').prop('checked')
 
-	var s_title = $('#prog_s_title')[0].value.trim().replace(/\s+/g, ' ')
-	var s_commands = $('#prog_s_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '')
-	var s_dbl = $('#prog_s_dbl').prop('checked')
+	let s_title = $('#prog_s_title')[0].value.trim().replace(/\s+/g, ' ')
+	let s_commands = $('#prog_s_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '')
+	let s_dbl = $('#prog_s_dbl').prop('checked')
 
 	if(prog_key_name === '')
 	{
@@ -3339,9 +3250,8 @@ function save_program(key, name)
 
 function check_program(p_commands, s_commands)
 {
-	var ok = true
-
-	var response = execute_program(p_commands, false)
+	let ok = true
+	let response = execute_program(p_commands, false)
 	
 	if(response[0] !== 'ok')
 	{
@@ -3385,30 +3295,30 @@ function check_program(p_commands, s_commands)
 
 function focus_command_error(input, response)
 {
-	var indices = []
+	let indices = []
+	let str = input.value
+	let index
 
-	var str = input.value
-
-	for(var i=0; i<str.length;i++) 
+	for(let i=0; i<str.length;i++) 
 	{
 		if (str[i] === ";") indices.push(i)
 	}
 
 	if(indices.length === 0)
 	{
-		var index = 0
+		index = 0
 	}
 
 	else
 	{
 		if(response[2] === indices.length)
 		{
-			var index = input.value.length - response[1].length
+			index = input.value.length - response[1].length
 		}
 
 		else
 		{
-			var index = indices[response[2]] - response[1].length	
+			index = indices[response[2]] - response[1].length	
 		}
 	}
 
@@ -3427,11 +3337,11 @@ function execute_program(cmds, run=true)
 		return ["ok"]
 	}
 
-	var split = cmds.split(';')
+	let split = cmds.split(';')
 
 	for(let i=0; i<split.length; i++)
 	{
-		var command = split[i].trim().replace(/\s+/g, ' ')
+		let command = split[i].trim().replace(/\s+/g, ' ')
 
 		if(command.length === 0)
 		{
@@ -3440,7 +3350,7 @@ function execute_program(cmds, run=true)
 
 		if(command.indexOf(' ') !== -1)
 		{
-			var splt = command.split(' ')
+			let splt = command.split(' ')
 
 			if(splt[0].toLowerCase() === 'insert')
 			{
@@ -3660,11 +3570,9 @@ function go_to_last_input()
 
 function show_execution_error(command)
 {
-	var s = ""
-
+	let s = ""
 	s += 'An error happened while executing "' + command + '".<br><br>'
 	s += 'It is not a valid command.'
-
 	show_modal("Info", s)
 }
 
@@ -3736,7 +3644,7 @@ function move_in_array(array, old_index, new_index)
 
 	if(new_index >= array.length) 
 	{
-		var k = new_index - array.length
+		let k = new_index - array.length
 
 		while((k--) + 1) 
 		{
@@ -3751,7 +3659,7 @@ function on_object_modified(item)
 {
 	try
 	{
-		var parsed = JSON.parse(item.value)
+		let parsed = JSON.parse(item.value)
 
 		if(parsed.version !== item.ls_name)
 		{
@@ -3815,22 +3723,22 @@ function init_msg_and_stor()
 					reset_object(item.ls_name)
 				}
 			},
-			{
-				name: "Saved Data",
-				ls_name: ls_saved,
-				on_copied: function(item)
-				{
-					play('pup')
-				},
-				on_save: function(item)
-				{
-					on_object_modified(item)
-				},
-				on_reset: function(item)
-				{
-					reset_object(item.ls_name)
-				}
-			},
+			// {
+			// 	name: "Saved Data",
+			// 	ls_name: ls_saved,
+			// 	on_copied: function(item)
+			// 	{
+			// 		play('pup')
+			// 	},
+			// 	on_save: function(item)
+			// 	{
+			// 		on_object_modified(item)
+			// 	},
+			// 	on_reset: function(item)
+			// 	{
+			// 		reset_object(item.ls_name)
+			// 	}
+			// },
 			{
 				name: "Programs Data",
 				ls_name: ls_programs,
@@ -3903,13 +3811,13 @@ function update_modal_scrollbar()
 
 function set_modal_theme(a=true)
 {
-	var background_color = $("body").css("background-color")
-	var background_color_2 = colorlib.get_lighter_or_darker(background_color, 0.07)
-	var font_color = colorlib.get_lighter_or_darker(background_color, 0.8)
-	var overlay_color = colorlib.rgb_to_rgba(font_color, 0.8)
-	var scrollbar_color = colorlib.get_lighter_or_darker(background_color, 0.4)
+	let background_color = $("body").css("background-color")
+	let background_color_2 = colorlib.get_lighter_or_darker(background_color, 0.07)
+	let font_color = colorlib.get_lighter_or_darker(background_color, 0.8)
+	let overlay_color = colorlib.rgb_to_rgba(font_color, 0.8)
+	let scrollbar_color = colorlib.get_lighter_or_darker(background_color, 0.4)
 
-	var css = `
+	let css = `
 	<style class='appended_style'>
 
 	.Msg-overlay
