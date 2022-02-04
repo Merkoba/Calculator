@@ -100,7 +100,6 @@ function key_detection() {
 		}
 	})
 
-	
 	document.addEventListener("keyup", function (e) {
 		if (msg.is_open()) {
 			return
@@ -1489,12 +1488,14 @@ function add_ans(next = false) {
 	let variable
 
 	if (next) {
-		let input = focused.input.parentNode.nextElementSibling.querySelector(".input")
+		let line = focused.input.parentNode.nextElementSibling
+		if (!line) { return }
+		let input = line.querySelector(".input")
 		variable = DOM.dataset(input, "variable")
-	}
-
-	else {
-		let input = focused.input.parentNode.previousElementSibling.querySelector(".input")
+	} else {
+		let line = focused.input.parentNode.previousElementSibling
+		if (!line) { return }
+		let input = line.querySelector(".input")
 		variable = DOM.dataset(input, "variable")
 	}
 
@@ -2262,11 +2263,15 @@ function show_program_editor(key) {
 		prog_move(key, parseInt(this.value))
 	})
 
-	DOM.el(".prog_input").addEventListener("keyup", function (e) {
-		if (e.key === "Enter") {
-			save_program(key, prog.name)
-		}
-	})
+	let els = DOM.els(".prog_input")
+
+	for (let el of els) {
+		el.addEventListener("keyup", function (e) {
+			if (e.key === "Enter") {
+				save_program(key, prog.name)
+			}
+		})
+	}
 }
 
 function prog_swap(index1, index2) {
@@ -2293,15 +2298,15 @@ function prog_move(oldKey, newKey) {
 }
 
 function save_program(key, name) {
-	let prog_key_name = DOM.el("#prog_key_name")[0].value.trim().replace(/\s+/g, "")
+	let prog_key_name = DOM.el("#prog_key_name").value.trim().replace(/\s+/g, "")
 
 	let p_title = DOM.el("#prog_p_title").value.trim().replace(/\s+/g, " ")
 	let p_commands = DOM.el("#prog_p_commands").value.replace(/\s*;[;\s]*/g, "; ").replace(/\s+/g, " ").replace(/^;+/, "").trim().replace(/;$/, "")
-	let p_dbl = DOM.el("#prog_p_dbl").prop("checked")
+	let p_dbl = DOM.el("#prog_p_dbl").checked
 
 	let s_title = DOM.el("#prog_s_title").value.trim().replace(/\s+/g, " ")
 	let s_commands = DOM.el("#prog_s_commands").value.replace(/\s*;[;\s]*/g, "; ").replace(/\s+/g, " ").replace(/^;+/, "").trim().replace(/;$/, "")
-	let s_dbl = DOM.el("#prog_s_dbl").prop("checked")
+	let s_dbl = DOM.el("#prog_s_dbl").checked
 
 	if (prog_key_name === "") {
 		prog_key_name = name
