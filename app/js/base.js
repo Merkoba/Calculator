@@ -1878,7 +1878,7 @@ function fill_sheet(x = false) {
 	}
 
 	else {
-		n = get_max_line_length() - $(".line").length
+		n = get_max_line_length() - DOM.els(".line").length
 	}
 
 	for (let i = 0; i < n; i++) {
@@ -1909,20 +1909,20 @@ function undefine_variables() {
 function get_result_text(el) {
 	let s = ""
 
-	if ($(el).find("sup").length > 0) {
-		if ($(el).find(".mwhole").length > 0) {
-			s += $(el).find(".mwhole").text() + " "
+	if (Array.from(el.querySelectorAll("sup")).length > 0) {
+		if (Array.from(el.querySelectorAll(".mwhole")).length > 0) {
+			s += el.querySelector(".mwhole").textContent + " "
 		}
 
-		s += $(el).find("sup").text()
+		s += el.querySelector("sup").textContent
 
 		s += "/"
 
-		s += $(el).find("sub").text()
+		s += el.querySelector("sub").textContent
 	}
 
 	else {
-		s += $(el).text().replace(/,/g, "")
+		s += el.textContent.replace(/,/g, "")
 	}
 
 	return s
@@ -1989,7 +1989,7 @@ function expand_value(input) {
 				return match
 			}
 
-			let v = $("#" + match.substring(1)).val()
+			let v = DOM.el("#" + match.substring(1)).value
 
 			if (v !== undefined && v.trim() !== "") {
 				return `(${v})`
@@ -2053,9 +2053,9 @@ function format_input(input) {
 }
 
 function format_all() {
-	$(".input").each(function () {
-		format_input(this)
-	})
+	for (let input of DOM.els(".input")) {
+		format_input(input)
+	}
 }
 
 function insert_text(input, s) {
@@ -2102,8 +2102,8 @@ function remove_ranges() {
 }
 
 function place_infobar() {
-	let w = $("#buttons").width()
-	$("#infobar").css("width", w + "px")
+	let w = DOM.el("#buttons").offsetWidth
+	DOM.el("#infobar").style.width = `${w}px`
 }
 
 function update_infobar() {
@@ -2121,15 +2121,19 @@ function update_infobar() {
 
 	s += "</span>"
 
-	$("#infobar").html(s)
+	DOM.el("#infobar").innerHTML = s
 
-	$("#ib_fraction_toggle").click(function () {
+	DOM.el("#ib_fraction_toggle").addEventListener("click", function () {
 		toggle_fraction()
 	})
 }
 
 function apply_theme(theme) {
-	$("head").append("<link onload='set_modal_theme()' rel='stylesheet' href='themes/" + theme + ".css?v=" + app_version + "'>")
+	let stylesheet = document.createElement("link")
+	stylesheet.onload = function () { set_modal_theme() }
+	stylesheet.rel = "stylesheet"
+	stylesheet.href = "themes/" + theme + ".css?v=" + app_version
+	DOM.el("head").appendChild(stylesheet)
 }
 
 function apply_mode() {
@@ -2143,7 +2147,10 @@ function apply_mode() {
 		mode = "normal"
 	}
 
-	$("head").append("<link rel='stylesheet' href='modes/" + mode + ".css?v=" + app_version + "'>")
+	let stylesheet = document.createElement("link")
+	stylesheet.rel = "stylesheet"
+	stylesheet.href = "modes/" + mode + ".css?v=" + app_version
+	DOM.el("head").appendChild(stylesheet)
 }
 
 function capitalize_string(text) {
@@ -2294,23 +2301,23 @@ function prog_move(oldKey, newKey) {
 }
 
 function save_program(key, name) {
-	let prog_key_name = $("#prog_key_name")[0].value.trim().replace(/\s+/g, "")
+	let prog_key_name = DOM.el("#prog_key_name")[0].value.trim().replace(/\s+/g, "")
 
-	let p_title = $("#prog_p_title")[0].value.trim().replace(/\s+/g, " ")
-	let p_commands = $("#prog_p_commands")[0].value.replace(/\s*;[;\s]*/g, "; ").replace(/\s+/g, " ").replace(/^;+/, "").trim().replace(/;$/, "")
-	let p_dbl = $("#prog_p_dbl").prop("checked")
+	let p_title = DOM.el("#prog_p_title").value.trim().replace(/\s+/g, " ")
+	let p_commands = DOM.el("#prog_p_commands").value.replace(/\s*;[;\s]*/g, "; ").replace(/\s+/g, " ").replace(/^;+/, "").trim().replace(/;$/, "")
+	let p_dbl = DOM.el("#prog_p_dbl").prop("checked")
 
-	let s_title = $("#prog_s_title")[0].value.trim().replace(/\s+/g, " ")
-	let s_commands = $("#prog_s_commands")[0].value.replace(/\s*;[;\s]*/g, "; ").replace(/\s+/g, " ").replace(/^;+/, "").trim().replace(/;$/, "")
-	let s_dbl = $("#prog_s_dbl").prop("checked")
+	let s_title = DOM.el("#prog_s_title").value.trim().replace(/\s+/g, " ")
+	let s_commands = DOM.el("#prog_s_commands").value.replace(/\s*;[;\s]*/g, "; ").replace(/\s+/g, " ").replace(/^;+/, "").trim().replace(/;$/, "")
+	let s_dbl = DOM.el("#prog_s_dbl").prop("checked")
 
 	if (prog_key_name === "") {
 		prog_key_name = name
-		$("#prog_key_name")[0].value = name
+		DOM.el("#prog_key_name").value = name
 	}
 
-	$("#prog_p_commands")[0].value = p_commands
-	$("#prog_s_commands")[0].value = s_commands
+	DOM.el("#prog_p_commands").value = p_commands
+	DOM.el("#prog_s_commands").value = s_commands
 
 	if (check_program(p_commands, s_commands)) {
 		msg.close()
@@ -2339,28 +2346,35 @@ function check_program(p_commands, s_commands) {
 	let response = execute_program(p_commands, false)
 
 	if (response[0] !== "ok") {
-		$("#prog_p_commands_error").text('"' + response[1] + '" is not a valid command.').css("display", "block")
+		DOM.el("#prog_p_commands_error").textContent = '"' + response[1] + '" is not a valid command.'
+		DOM.el("#prog_p_commands_error").style.display = "block"
 
-		focus_command_error($("#prog_p_commands")[0], response)
+		focus_command_error(DOM.el("#prog_p_commands"), response)
 
-		$("#Msg-content-default").scrollTop($("#prog_p_label").offset().top - $("#Msg-content-default").offset().top + $("#Msg-content-default").scrollTop() - 10)
+		DOM.el("#Msg-content-default").scrollTop = 
+			DOM.el("#prog_p_label").getBoundingClientRect().top - 
+			DOM.el("#Msg-content-default").getBoundingClientRect().top + 
+			(DOM.el("#Msg-content-default").scrollTop - 10)
 
 		ok = false
 	}
 
 	else {
-		$("#prog_p_commands_error").css("display", "none")
+		DOM.el("#prog_p_commands_error").style.display = "none"
 	}
 
 	response = execute_program(s_commands, false)
 
 	if (response[0] !== "ok") {
-		$("#prog_s_commands_error").text('"' + response[1] + '" is not a valid command.').css('display', 'block')
+		DOM.el("#prog_s_commands_error").textContent = '"' + response[1] + '" is not a valid command.'
+		DOM.el("#prog_s_commands_error").style.display = "block"
 
 		if (ok) {
 			focus_command_error($("#prog_s_commands")[0], response)
-
-			$("#Msg-content-default").scrollTop($("#prog_s_label").offset().top - $("#Msg-content-default").offset().top + $("#Msg-content-default").scrollTop() - 10)
+			DOM.el("#Msg-content-default").scrollTop = 
+				DOM.el("#prog_s_label").getBoundingClientRect().top - 
+				DOM.el("#Msg-content-default").getBoundingClientRect().top + 
+				(DOM.el("#Msg-content-default").scrollTop - 10)
 		}
 
 		ok = false
