@@ -703,7 +703,7 @@ function hide_plus() {
 
 function get_result(input) {
 	let result = input.parentNode.querySelector(".result")
-	$(result).html("")
+	result.innerHTML = ""
 
 	try {
 		let val = input.value
@@ -1173,9 +1173,9 @@ function do_update_results() {
 				let letter = v.substring(1)
 
 				if (sorted.indexOf(v) !== -1) {
-					get_result($("#" + letter)[0])
+					get_result(DOM.el("#" + letter))
 				} else {
-					show_result($("#" + letter)[0], "Not Acyclical")
+					show_result(DOM.el("#" + letter), "Not Acyclical")
 				}
 			}
 
@@ -1195,10 +1195,10 @@ function do_update_results() {
 
 function check_line_visibility() {
 	let it = focused.input.parentNode.getBoundingClientRect().top
-	let ct = $("#lines_container").offset().top
+	let ct = DOM.el("#lines_container").getBoundingClientRect().top
 
 	if (it < ct) {
-		$("#lines_container").scrollTop($("#lines_container").scrollTop() - (ct - it))
+		DOM.el("#lines_container").scrollTop = DOM.el("#lines_container").scrollTop - (ct - it)
 	}
 
 	let ib = it + focused.input.parentNode.offsetHeight
@@ -1238,7 +1238,7 @@ function move_line_up() {
 	}
 
 	let inp = focused.input
-	let ninp = $(inp).parent().prev(".line").find(".input")[0]
+	let ninp = inp.parentNode.previousElementSibling().querySelector(".input")
 
 	let val = inp.value
 	let nval = ninp.value
@@ -1252,11 +1252,11 @@ function move_line_up() {
 	let re = new RegExp("\\$" + v.substring(1), "g")
 	let re2 = new RegExp("\\$" + nv.substring(1), "g")
 
-	$(".input").each(function () {
-		let vl = this.value.replace(re, cnv)
+	for (let input of DOM.els(".input")) {
+		let vl = input.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
-		this.value = vl.replace(/@!#/g, "")
-	})
+		input.value = vl.replace(/@!#/g, "")
+	}
 
 	val = inp.value
 	nval = ninp.value
@@ -1369,9 +1369,9 @@ let resize_timer = (function () {
 
 function play(what) {
 	if (options.sound) {
-		$("#" + what)[0].pause()
-		$("#" + what)[0].currentTime = 0
-		$("#" + what)[0].play()
+		DOM.el("#" + what).pause()
+		DOM.el("#" + what).currentTime = 0
+		DOM.el("#" + what).play()
 	}
 }
 
@@ -1381,19 +1381,18 @@ function refresh_page() {
 
 function new_sheet() {
 	remove_all_lines()
-	edit_url("")
 }
 
 function title_click_events() {
-	$("#lnk_new").click(function () {
+	DOM.el("#lnk_new").addEventListener("click", function () {
 		new_sheet()
 	})
 
-	$("#lnk_options").click(function () {
+	DOM.el("#lnk_options").addEventListener("click", function () {
 		show_options()
 	})
 
-	$("#lnk_about").click(function () {
+	DOM.el("#lnk_about").addEventListener("click", function () {
 		show_about()
 	})
 }
@@ -1415,17 +1414,13 @@ function get_url_param(param) {
 	return new URLSearchParams(window.location.search).get(param)
 }
 
-function edit_url(s) {
-	window.history.pushState({ "pageTitle": "title", "content": "etc" }, "", "/" + s)
-}
-
 function stringify_sheet() {
 	let s = ""
 
-	$(".input").each(function () {
-		s += this.value
+	for (let input of DOM.els(".input")) {
+		s += input.value
 		s += "@!#"
-	})
+	}
 
 	s = s.substring(0, s.length - 3)
 	s = s.replace(/\\/g, "\\\\")
@@ -1493,9 +1488,9 @@ function get_site_root() {
 }
 
 function adjust_volumes() {
-	$("#nope")[0].volume = 0.4
-	$("#pup")[0].volume = 0.6
-	$("#done")[0].volume = 0.7
+	DOM.el("#nope").volume = 0.4
+	DOM.el("#pup").volume = 0.6
+	DOM.el("#done").volume = 0.7
 }
 
 function add_ans(next = false) {
@@ -1635,48 +1630,52 @@ function show_options() {
 
 	show_modal("Options", s)
 
-	$("#sel_round_places").find("option").each(function () {
-		if (this.value == options.round_places) {
-			$(this).prop("selected", true)
+	let els = Array.from(DOM.el("#sel_round_places").querySelectorAll("option"))
+	
+	for (let el of els) {
+		if (el.value == options.round_places) {
+			el.selected = true
 		}
-	})
+	}
 
-	$("#sel_theme").find("option").each(function () {
-		if (this.value == options.theme) {
-			$(this).prop("selected", true)
+	els = Array.from(DOM.el("#sel_theme").querySelectorAll("option"))
+	
+	for (let el of els) {
+		if (el.value == options.theme) {
+			el.selected = true
 		}
-	})
+	}
 
-	$("#chk_commas").change(function () {
-		options.commas = $(this).prop("checked")
+	DOM.el("#chk_commas").addEventListener("change", function () {
+		options.commas = this.checked
 		update_results()
 		update_options()
 	})
 
-	$("#chk_round").change(function () {
-		options.round = $(this).prop("checked")
+	DOM.el("#chk_round").addEventListener("change", function () {
+		options.round = this.checked
 		update_results()
 		update_options()
 	})
 
-	$("#sel_round_places").change(function () {
+	DOM.el("#sel_round_places").addEventListener("change", function () {
 		options.round_places = parseInt(this.value)
 		update_results()
 		update_options()
 	})
 
-	$("#chk_mixed").change(function () {
-		options.mixed = $(this).prop("checked")
+	DOM.el("#chk_mixed").addEventListener("change", function () {
+		options.mixed = this.checked
 		update_results()
 		update_options()
 	})
 
-	$("#chk_sound").change(function () {
-		options.sound = $(this).prop("checked")
+	DOM.el("#chk_sound").addEventListener("change", function () {
+		options.sound = this.checked
 		update_options()
 	})
 
-	$("#sel_theme").change(function () {
+	DOM.el("#sel_theme").addEventListener("change", function () {
 		options.theme = this.value
 		apply_theme(options.theme)
 		update_options()
@@ -1955,7 +1954,7 @@ function copy_input_down() {
 
 function copy_result_down() {
 	let og_var = DOM.dataset(input, "variable")
-	let og_result = get_result_text(focused.input.parent().find(".result")[0])
+	let og_result = get_result_text(focused.input.parentNode.querySelector(".result"))
 
 	focus_next_or_add()
 
