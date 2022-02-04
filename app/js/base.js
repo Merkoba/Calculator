@@ -445,7 +445,7 @@ function add_line_after() {
 function remove_line() {
 	let index = DOM.index(focused.input)
 
-	if ($(".line").length === 1) {
+	if (DOM.els(".line").length === 1) {
 		clear_input(focused.input)
 	} else if (index === DOM.els(".line").length - 1) {
 		remove_last_line()
@@ -456,14 +456,12 @@ function remove_line() {
 
 function remove_all_lines() {
 	undefine_variables()
-
-	$("#lines").html("")
-
+	DOM.el("#lines").innerHTML = ""
 	add_line()
 }
 
 function move_lines_up() {
-	let line_length = $(".line").length
+	let line_length = DOM.els(".line").length
 
 	if (line_length === 1) {
 		play("nope")
@@ -486,8 +484,8 @@ function move_lines_up() {
 	}
 
 	for (let i = 0; i < line_length; i++) {
-		let ln = $(".line").get(i)
-		let inp = $(ln).find(".input")[0]
+		let ln = DOM.els(".line")[i]
+		let inp = ln.querySelector(".input")
 		let val = inp.value
 
 		if (val.trim() === "") {
@@ -516,8 +514,8 @@ function move_lines_up() {
 	}
 
 	for (let i = index + 1; i < line_length; i++) {
-		let inp = $($(".line").get(i)).find(".input")[0]
-		let ninp = $(inp).parent().prev(".line").find(".input")[0]
+		let inp = DOM.els(".line")[i].querySelector(".input")
+		let ninp = inp.parentNode.previousElementSibling.querySelector(".input")
 
 		ninp.value = inp.value
 		inp.value = ""
@@ -528,7 +526,7 @@ function move_lines_up() {
 }
 
 function move_lines_down(alt = false) {
-	let line_length = $(".line").length
+	let line_length = DOM.els(".line").length
 
 	if (line_length === get_max_line_length()) {
 		play("nope")
@@ -545,8 +543,8 @@ function move_lines_down(alt = false) {
 	let index = DOM.index(line)
 
 	for (let i = 0; i < line_length; i++) {
-		let ln = $(".line").get(i)
-		let inp = $(ln).find(".input")[0]
+		let ln = DOM.els(".line")[i]
+		let inp = ln.querySelector(".input")
 		let val = inp.value
 
 		if (val.trim() === "") {
@@ -576,11 +574,11 @@ function move_lines_down(alt = false) {
 
 	add_line()
 
-	line_length = $(".line").length
+	line_length = DOM.els(".line").length
 
 	for (let i = line_length - 1; i > index; i--) {
-		let inp = $($(".line").get(i)).find(".input")[0]
-		let ninp = $(inp).parent().prev(".line").find(".input")[0]
+		let inp = DOM.els(".line")[i].querySelector(".input")
+		let ninp = inp.parentNode.previousElementSibling.querySelector(".input")
 
 		inp.value = ninp.value
 	}
@@ -679,24 +677,20 @@ function get_var_index(v) {
 }
 
 function remove_last_line() {
-	if ($(".line").length === 1) {
+	if (DOM.els(".line").length === 1) {
 		clear_input(focused.input)
 		return
 	}
 
-	let line = $(".line").last()[0]
-	let input = $(".input").last()[0]
+	let line = get_last_line()
+	let input = get_last_input()
 
 	if (input === focused.input) {
-		$(line).prev(".line").find(".input").focus()
+		line.previousElementSibling.querySelector(".input").focus()
 	}
 
 	line.remove()
 	update_results()
-}
-
-function hide_plus() {
-	$("#plus").css("display", "none")
 }
 
 function get_result(input) {
@@ -1270,7 +1264,7 @@ function move_line_up() {
 function move_line_down() {
 	let index = DOM.index(focused.input)
 
-	if (index === ($(".line").length - 1)) {
+	if (index === (DOM.els(".line").length - 1)) {
 		play("nope")
 		return
 	}
@@ -1308,14 +1302,14 @@ function move_line_down() {
 }
 
 function cycle_inputs(direction) {
-	if ($(".input").length === 1) {
+	if (DOM.els(".input").length === 1) {
 		return
 	}
 
 	let index = DOM.index(focused.input)
 
 	if (direction === "down") {
-		if (index === ($(".input").length - 1)) {
+		if (index === (DOM.els(".input").length - 1)) {
 			go_to_first_input()
 		}
 
@@ -2368,7 +2362,7 @@ function check_program(p_commands, s_commands) {
 		DOM.el("#prog_s_commands_error").style.display = "block"
 
 		if (ok) {
-			focus_command_error($("#prog_s_commands")[0], response)
+			focus_command_error(DOM.el("#prog_s_commands"), response)
 			DOM.el("#Msg-content-default").scrollTop = 
 				DOM.el("#prog_s_label").getBoundingClientRect().top - 
 				DOM.el("#Msg-content-default").getBoundingClientRect().top + 
@@ -2379,7 +2373,7 @@ function check_program(p_commands, s_commands) {
 	}
 
 	else {
-		$("#prog_s_commands_error").css("display", "none")
+		DOM.el("#prog_s_commands_error").style.display = "none"
 	}
 
 	return ok
@@ -2627,9 +2621,9 @@ function comment(input) {
 }
 
 function comment_all() {
-	$(".input").each(function () {
-		comment(this)
-	})
+	for (let input of DOM.els(".input")) {
+		comment(input)
+	}
 }
 
 function uncomment(input) {
@@ -2639,9 +2633,9 @@ function uncomment(input) {
 }
 
 function uncomment_all() {
-	$(".input").each(function () {
-		uncomment(this)
-	})
+	for (let input of DOM.els(".input")) {
+		uncomment(input)
+	}
 }
 
 function toggle_comment(input) {
