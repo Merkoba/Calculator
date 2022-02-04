@@ -1,11 +1,9 @@
-let math_normal = math.create(
-{
+let math_normal = math.create({
 	number: 'BigNumber',
 	precision: 64
 })
 
-let math_fraction = math.create(
-{
+let math_fraction = math.create({
 	number: 'Fraction'
 })
 
@@ -59,8 +57,6 @@ let commands = [
 	'go down',
 	'move line up',
 	'move line down',
-	'undo',
-	'redo',
 	'format',
 	'format all',
 	'expand',
@@ -80,8 +76,7 @@ let focused = {
 	input: null
 }
 
-function init()
-{
+function init() {
 	init_msg_and_stor()
 	get_local_storage()
 	apply_theme(options.theme)
@@ -98,161 +93,128 @@ function init()
 	adjust_volumes()
 	start_main_scrollbar()
 
-	if(saved_content === '')
-	{
+	if (saved_content === '') {
 		add_line()
 	}
 
-	else
-	{
+	else {
 		load_saved_content()
 	}
 }
 
-function key_detection()
-{
-	$(document).keyup(function(e)
-	{
+function key_detection() {
+	$(document).keyup(function (e) {
 		let code = e.keyCode
 
-		if(code === 27)
-		{
-			if(focused.input.value === '')
-			{
+		if (code === 27) {
+			if (focused.input.value === '') {
 				remove_line()
 			}
 
-			else
-			{
+			else {
 				clear_input(focused.input)
 			}
 		}
 	})
 
-	$(document).keydown(function(e)
-	{
-		if(msg.is_open())
-		{
+	$(document).keydown(function (e) {
+		if (msg.is_open()) {
 			return
 		}
 
 		let code = e.keyCode
 
-		if(code === 13)
-		{
-			if(e.shiftKey && e.ctrlKey)
-			{
+		if (code === 13) {
+			if (e.shiftKey && e.ctrlKey) {
 				expand_value(focused.input)
 			}
 
-			else if(e.shiftKey)
-			{
+			else if (e.shiftKey) {
 				press($(focused.input).data('variable'))
 			}
 
-			else if(e.ctrlKey)
-			{
+			else if (e.ctrlKey) {
 				copy_input_down()
 			}
 
-			else
-			{
+			else {
 				focus_next_or_add()
 			}
 
 		}
 
-		else if(code === 8)
-		{
-			if(e.shiftKey)
-			{
+		else if (code === 8) {
+			if (e.shiftKey) {
 				clear_input(focused.input)
 				e.preventDefault()
 			}
-		}			
+		}
 
-		else if(code === 9)
-		{
-			if(e.shiftKey)
-			{
+		else if (code === 9) {
+			if (e.shiftKey) {
 				cycle_inputs('up')
 			}
 
-			else
-			{
+			else {
 				cycle_inputs('down')
 			}
 
 			e.preventDefault()
 		}
 
-		else if(code === 38)
-		{
-			if(e.shiftKey)
-			{
+		else if (code === 38) {
+			if (e.shiftKey) {
 				move_line_up()
 			}
 
-			else
-			{
+			else {
 				line_up()
 			}
 
 			e.preventDefault()
 		}
 
-		else if(code === 40)
-		{
-			if(e.shiftKey)
-			{
+		else if (code === 40) {
+			if (e.shiftKey) {
 				move_line_down()
 			}
 
-			else
-			{
+			else {
 				line_down()
 			}
 
 			e.preventDefault()
 		}
 
-		else if(code === 32)
-		{
-			if(e.shiftKey && e.ctrlKey)
-			{
+		else if (code === 32) {
+			if (e.shiftKey && e.ctrlKey) {
 				format_input(focused.input)
 			}
 
-			else if(e.shiftKey)
-			{
+			else if (e.shiftKey) {
 				add_ans()
 				e.preventDefault()
 			}
 
-			else if(e.ctrlKey)
-			{
+			else if (e.ctrlKey) {
 				add_input()
 				e.preventDefault()
 			}
 		}
 
-		else if(code === 191)
-		{
-			if(e.shiftKey && e.ctrlKey)
-			{
+		else if (code === 191) {
+			if (e.shiftKey && e.ctrlKey) {
 				toggle_comment(focused.input)
 			}
 		}
 
-		if(!e.ctrlKey)
-		{
+		if (!e.ctrlKey) {
 			focus_if_isnt(focused.input)
 		}
 	})
 }
 
-function draw_buttons()
-{
+function draw_buttons() {
 	place_button(1, 'Right Click: 0.1 &nbsp;|&nbsp; Middle Click: 1/1')
 	place_button(2, 'Right Click: 0.2 &nbsp;|&nbsp; Middle Click: 1/2')
 	place_button(3, 'Right Click: 0.3 &nbsp;|&nbsp; Middle Click: 1/3')
@@ -295,64 +257,53 @@ function draw_buttons()
 	place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs')
 	place_button_wider('Erase', 'Right Click: Undo &nbsp;|&nbsp; Middle Click: Redo')
 
-	$('.button').not('.programmable').each(function()
-	{
+	$('.button').not('.programmable').each(function () {
 		let dblclickers = ["Remove Line", "Clear"]
 
-		if(dblclickers.indexOf($(this).text()) !== -1)
-		{
-			this.addEventListener('mouseup', function(event) 
-			{
-				if(event.which === 1)
-				{
-					if(event.detail % 2 === 0)
-					{
+		if (dblclickers.indexOf($(this).text()) !== -1) {
+			this.addEventListener('mouseup', function (event) {
+				if (event.which === 1) {
+					if (event.detail % 2 === 0) {
 						press($(this).text())
 					}
 
-					else
-					{
+					else {
 						focus_input(focused.input)
 					}
 				}
-			}, false)					
+			}, false)
 		}
 
-		else
-		{
-			$(this).click(function()
-			{
+		else {
+			$(this).click(function () {
 				press($(this).text())
 			})
 		}
 
-		$(this).on('auxclick', function(e)
-		{
+		$(this).on('auxclick', function (e) {
 			press($(this).text(), e.which)
 		})
 
-		tippy(this, 
-		{
-			delay: [1200, 100],
-			animation: 'scale',
-			hideOnClick: true,
-			duration: 100,
-			arrow: true,
-			performance: true,
-			size: 'regular',
-			arrowSize: 'small'
-		})
+		tippy(this,
+			{
+				delay: [1200, 100],
+				animation: 'scale',
+				hideOnClick: true,
+				duration: 100,
+				arrow: true,
+				performance: true,
+				size: 'regular',
+				arrowSize: 'small'
+			})
 
 		disable_context_menu(this)
-	})	
+	})
 }
 
-function draw_prog_buttons()
-{
+function draw_prog_buttons() {
 	$('#prog_buttons').html('')
 
-	for(let i=0; i<12; i++)
-	{
+	for (let i = 0; i < 12; i++) {
 		let s = ''
 		let prog = programs.items[i]
 		let pt1 = ''
@@ -360,22 +311,18 @@ function draw_prog_buttons()
 		let t1 = 'Primary'
 		let t2 = 'Secondary'
 
-		if(prog.primary.title !== '')
-		{
+		if (prog.primary.title !== '') {
 			t1 = prog.primary.title
 
-			if(prog.primary.doubleclick)
-			{
+			if (prog.primary.doubleclick) {
 				pt1 = "Double "
 			}
 		}
 
-		if(prog.secondary.title !== '')
-		{
+		if (prog.secondary.title !== '') {
 			t2 = prog.secondary.title
 
-			if(prog.secondary.doubleclick)
-			{
+			if (prog.secondary.doubleclick) {
 				pt2 = "Double "
 			}
 		}
@@ -387,107 +334,90 @@ function draw_prog_buttons()
 		place_button_programmable(prog.name, s)
 	}
 
-	$('.button.programmable').each(function(i)
-	{
-		this.addEventListener('mouseup', function(event) 
-		{
+	$('.button.programmable').each(function (i) {
+		this.addEventListener('mouseup', function (event) {
 			prog_press(i, event)
-		}, false)	
-		
-		tippy(this, 
-		{
-			delay: [1200, 100],
-			animation: 'scale',
-			hideOnClick: true,
-			duration: 100,
-			arrow: true,
-			performance: true,
-			size: 'regular',
-			arrowSize: 'small'
-		})
+		}, false)
+
+		tippy(this,
+			{
+				delay: [1200, 100],
+				animation: 'scale',
+				hideOnClick: true,
+				duration: 100,
+				arrow: true,
+				performance: true,
+				size: 'regular',
+				arrowSize: 'small'
+			})
 
 		disable_context_menu(this)
-	})				
-}		
+	})
+}
 
-function place_button(s, title='')
-{
+function place_button(s, title = '') {
 	$('#buttons').append(`<button title="${title}" class='button'>${s}</button>`)
 }
 
-function place_button_wider(s, title='')
-{
+function place_button_wider(s, title = '') {
 	$('#buttons').append(`<button title="${title}" class='button wider'>${s}</button>`)
 }
 
-function place_prog_buttons_area()
-{
+function place_prog_buttons_area() {
 	$('#buttons').append("<span id='prog_buttons'></span>")
 }
 
-function place_button_programmable(s, title='')
-{
+function place_button_programmable(s, title = '') {
 	$('#prog_buttons').append(`<button title="${title}" class='button programmable'>${s}</button>`)
 }
 
-function buttons_br()
-{
+function buttons_br() {
 	$('#buttons').append('<br>')
 }
 
-function buttons_space()
-{
+function buttons_space() {
 	let s = "<span class='buttons_space'></span>"
 	$('#buttons').append(s)
 }
 
-function focus_next_or_add()
-{
+function focus_next_or_add() {
 	let nextAll = $(focused.input).parent().nextAll('.line')
 	let found_line = false
 
-	$(nextAll).each(function()
-	{
+	$(nextAll).each(function () {
 		let inp = $(this).find('.input')[0]
 
-		if(inp.value === '')
-		{
+		if (inp.value === '') {
 			focus_input(inp)
 			found_line = true
 			return false
 		}
 	})
 
-	if(!found_line)
-	{
+	if (!found_line) {
 		add_line()
 	}
 }
 
-function add_line(value=false)
-{
+function add_line(value = false) {
 	let num_lines = $('.line').length
 	let letter
 
-	if(num_lines === get_max_line_length())
-	{
+	if (num_lines === get_max_line_length()) {
 		play('nope')
 		return
 	}
 
-	if(num_lines === 0)
-	{
+	if (num_lines === 0) {
 		letter = 'a'
 	}
 
-	else
-	{
+	else {
 		let last_var = $('.input').last().data('variable')
 		letter = increase_var(last_var).substring(1)
 	}
 
-	if(!value)
-	{
+	if (!value) {
 		value = ''
 	}
 
@@ -502,113 +432,94 @@ function add_line(value=false)
 		</div>
 
 	</div>`
-	
+
 	$('#lines').append(s)
 
 	let input = $('.input').last()[0]
-	
+
 	focused.input = input
 
-	$('.variable').last().click(function()
-	{
+	$('.variable').last().click(function () {
 		press('$' + letter)
 	})
 
-	$(input).focus(function()
-	{
+	$(input).focus(function () {
 		focused.input = this
 		change_borders()
 		check_line_visibility()
 	})
 
-	$(input).on('input', function()
-	{
+	$(input).on('input', function () {
 		update_results()
 	})
 
-	$(input).keydown(function(e) 
-	{
+	$(input).keydown(function (e) {
 		let code = e.keyCode
 
-		if(code === 38 || code === 40)
-		{
+		if (code === 38 || code === 40) {
 			e.preventDefault()
 		}
 	})
 
-	$('.result').last().click(function()
-	{
+	$('.result').last().click(function () {
 		on_result_click(this)
 	})
 
-	$('.result').last()[0].addEventListener('mousedown', function(event) 
-	{
-		if(event.detail > 1) 
-		{
+	$('.result').last()[0].addEventListener('mousedown', function (event) {
+		if (event.detail > 1) {
 			event.preventDefault()
 		}
-	}, false)		
+	}, false)
 
 	$(input).data('variable', '$' + letter)
-	
+
 	focus_input(input)
 	move_caret_to_end(input)
 	update_main_scrollbar()
 }
 
-function add_line_before()
-{
+function add_line_before() {
 	move_lines_down()
 }
 
-function add_line_after()
-{
-	if($(focused.input).parent().index() === $('.line').length - 1)
-	{
+function add_line_after() {
+	if ($(focused.input).parent().index() === $('.line').length - 1) {
 		add_line()
 	}
 
-	else
-	{	
+	else {
 		move_lines_down(true)
 	}
 }
 
-function remove_line()
-{
-	if($('.line').length === 1)
-	{
+function remove_line() {
+	if ($('.line').length === 1) {
 		clear_input(focused.input)
 	}
 
-	else if($(focused.input).parent().index() === $('.line').length - 1)
-	{
+	else if ($(focused.input).parent().index() === $('.line').length - 1) {
 		remove_last_line()
 	}
 
-	else
-	{
+	else {
 		move_lines_up()
 	}
 
 	update_main_scrollbar()
 }
 
-function remove_all_lines()
-{
+function remove_all_lines() {
 	undefine_variables()
-	
+
 	$('#lines').html('')
-	
+
 	add_line()
 }
 
-function move_lines_up()
-{
+function move_lines_up() {
 	let line_length = $('.line').length
 
-	if(line_length === 1)
-	{
+	if (line_length === 1) {
 		play('nope')
 		return
 	}
@@ -618,10 +529,8 @@ function move_lines_up()
 	let v = $(input).data('variable')
 	let index = $(line).index()
 
-	if(index === (line_length - 1))
-	{
-		if(input === focused.input)
-		{
+	if (index === (line_length - 1)) {
+		if (input === focused.input) {
 			$(line).prev('.line').find('.input').focus()
 		}
 
@@ -632,33 +541,27 @@ function move_lines_up()
 		return
 	}
 
-	for(let i=0; i<line_length; i++)
-	{
+	for (let i = 0; i < line_length; i++) {
 		let ln = $('.line').get(i)
 		let inp = $(ln).find('.input')[0]
 		let val = inp.value
 
-		if(val.trim() === '')
-		{
+		if (val.trim() === '') {
 			continue
 		}
 
-		if(val.trim().startsWith('//'))
-		{
+		if (val.trim().startsWith('//')) {
 			continue
 		}
 
-		val = val.replace(/\$[a-z]+/g, function(match)
-		{
-			if(match === v)
-			{
+		val = val.replace(/\$[a-z]+/g, function (match) {
+			if (match === v) {
 				return ''
 			}
 
 			let ni = get_var_index(match)
 
-			if(ni > index && ni < line_length)
-			{
+			if (ni > index && ni < line_length) {
 				return decrease_var(match)
 			}
 
@@ -668,8 +571,7 @@ function move_lines_up()
 		inp.value = val
 	}
 
-	for(let i=index + 1; i<line_length; i++)
-	{
+	for (let i = index + 1; i < line_length; i++) {
 		let inp = $($('.line').get(i)).find('.input')[0]
 		let ninp = $(inp).parent().prev('.line').find('.input')[0]
 
@@ -681,18 +583,15 @@ function move_lines_up()
 	update_results()
 }
 
-function move_lines_down(alt=false)
-{
+function move_lines_down(alt = false) {
 	let line_length = $('.line').length
 
-	if(line_length === get_max_line_length())
-	{
+	if (line_length === get_max_line_length()) {
 		play('nope')
 		return
 	}
 
-	if(alt)
-	{
+	if (alt) {
 		focus_next()
 	}
 
@@ -701,33 +600,27 @@ function move_lines_down(alt=false)
 	let v = $(input).data('variable')
 	let index = $(line).index()
 
-	for(let i=0; i<line_length; i++)
-	{
+	for (let i = 0; i < line_length; i++) {
 		let ln = $('.line').get(i)
 		let inp = $(ln).find('.input')[0]
 		let val = inp.value
 
-		if(val.trim() === '')
-		{
+		if (val.trim() === '') {
 			continue
 		}
 
-		if(val.trim().startsWith('//'))
-		{
+		if (val.trim().startsWith('//')) {
 			continue
 		}
 
-		val = val.replace(/\$[a-z]+/g, function(match)
-		{
-			if(match === v)
-			{
+		val = val.replace(/\$[a-z]+/g, function (match) {
+			if (match === v) {
 				return ''
 			}
 
 			let ni = get_var_index(match)
 
-			if(ni > index && ni < line_length)
-			{
+			if (ni > index && ni < line_length) {
 				return increase_var(match)
 			}
 
@@ -741,8 +634,7 @@ function move_lines_down(alt=false)
 
 	line_length = $('.line').length
 
-	for(let i=line_length - 1; i>index; i--)
-	{
+	for (let i = line_length - 1; i > index; i--) {
 		let inp = $($('.line').get(i)).find('.input')[0]
 		let ninp = $(inp).parent().prev('.line').find('.input')[0]
 
@@ -756,39 +648,31 @@ function move_lines_down(alt=false)
 	update_results()
 }
 
-function decrease_var(v)
-{
+function decrease_var(v) {
 	let letter = v.substring(1)
 	let res = ''
 	let decrease_next = true
 
-	for(let i=letter.length - 1; i>=0; i--)
-	{
-		if(decrease_next)
-		{
-			if(letter[i] === letters[0])
-			{
-				if(i === 0)
-				{
+	for (let i = letter.length - 1; i >= 0; i--) {
+		if (decrease_next) {
+			if (letter[i] === letters[0]) {
+				if (i === 0) {
 					break
 				}
 
-				else
-				{
+				else {
 					res += letters[letters.length - 1]
 					decrease_next = true
 				}
 			}
 
-			else
-			{
+			else {
 				res += letters[letters.indexOf(letter[i]) - 1]
 				decrease_next = false
 			}
 		}
 
-		else
-		{
+		else {
 			res += letters[letters.indexOf(letter[i])]
 		}
 	}
@@ -796,36 +680,29 @@ function decrease_var(v)
 	return '$' + res.split('').reverse().join('')
 }
 
-function increase_var(v)
-{
+function increase_var(v) {
 	let letter = v.substring(1)
 	let res = ''
 	let increase_next = true
 
-	for(let i=letter.length - 1; i>=0; i--)
-	{
-		if(increase_next)
-		{
-			if(letter[i] === letters[letters.length - 1])
-			{
+	for (let i = letter.length - 1; i >= 0; i--) {
+		if (increase_next) {
+			if (letter[i] === letters[letters.length - 1]) {
 				res += letters[0]
 				increase_next = true
 
-				if(i == 0)
-				{
+				if (i == 0) {
 					res += 'a'
 				}
 			}
 
-			else
-			{
+			else {
 				res += letters[letters.indexOf(letter[i]) + 1]
 				increase_next = false
 			}
 		}
 
-		else
-		{
+		else {
 			res += letters[letters.indexOf(letter[i])]
 		}
 	}
@@ -833,24 +710,21 @@ function increase_var(v)
 	return '$' + res.split('').reverse().join('')
 }
 
-function get_var_index(v)
-{
+function get_var_index(v) {
 	let letter = v.substring(1)
 	let n = letter.length - 1
 	let index = 0
 
-	for(let i=0; i<letter.length; i++)
-	{
+	for (let i = 0; i < letter.length; i++) {
 		let t = letters.indexOf(letter[i]) + 1
 		let p = Math.pow(letters.length, n)
-		
+
 		t *= p
 
-		if(t === 0)
-		{
+		if (t === 0) {
 			t += letters.indexOf(letter[i])
 		}
-		
+
 		index += t
 
 		n -= 1
@@ -860,10 +734,8 @@ function get_var_index(v)
 	return index
 }
 
-function remove_last_line()
-{
-	if($('.line').length === 1)
-	{
+function remove_last_line() {
+	if ($('.line').length === 1) {
 		clear_input(focused.input)
 		return
 	}
@@ -871,8 +743,7 @@ function remove_last_line()
 	let line = $('.line').last()[0]
 	let input = $('.input').last()[0]
 
-	if(input === focused.input)
-	{
+	if (input === focused.input) {
 		$(line).prev('.line').find('.input').focus()
 	}
 
@@ -881,38 +752,31 @@ function remove_last_line()
 	update_main_scrollbar()
 }
 
-function hide_plus()
-{
+function hide_plus() {
 	$('#plus').css('display', 'none')
 }
 
-function get_result(input)
-{
+function get_result(input) {
 	let result = $(input).parent().find('.result')[0]
 	$(result).html('')
 
-	try
-	{
+	try {
 		let val = input.value
 
-		if(val.trim().startsWith('//'))
-		{
+		if (val.trim().startsWith('//')) {
 			show_comment(input)
 			return
 		}
 
-		if(val.trim().length === 0)
-		{
+		if (val.trim().length === 0) {
 			return
 		}
 
-		if(options.fraction)
-		{
+		if (options.fraction) {
 			result = math_fraction.eval(val + '*1', linevars)
 		}
 
-		else
-		{
+		else {
 			result = math_normal.eval(val + '*1', linevars)
 		}
 
@@ -920,184 +784,152 @@ function get_result(input)
 		show_result(input, format_result(result))
 	}
 
-	catch(err)
-	{
+	catch (err) {
 		show_error(input)
 	}
 }
 
-function show_error(input)
-{
+function show_error(input) {
 	show_result(input, 'Error')
 }
 
-function show_comment(input)
-{
+function show_comment(input) {
 	show_result(input, 'Comment')
 }
 
-function show_result(input, s)
-{
+function show_result(input, s) {
 	$(input).parent().find('.result').html(s)
 }
 
-function update_variable(input, val)
-{
+function update_variable(input, val) {
 	linevars[$(input).data('variable')] = val
 }
 
-function improper_to_mixed(n, d)
-{
+function improper_to_mixed(n, d) {
 	i = parseInt(n / d)
 	n -= i * d
 	return [i, n, d]
 }
 
-function format_result(n, f=false)
-{
-	if(options.fraction && !f)
-	{
+function format_result(n, f = false) {
+	if (options.fraction && !f) {
 		let split = math_fraction.format(n).split('/')
 
-		if(split.length === 2)
-		{
+		if (split.length === 2) {
 			let sup = split[0]
 			let sub = split[1]
 
 			let nsup = parseInt(sup)
 			let nsub = parseInt(sub)
 
-			if(options.mixed && nsup >= nsub)
-			{
+			if (options.mixed && nsup >= nsub) {
 				let mixed = improper_to_mixed(nsup, nsub)
 				let mwhole = mixed[0]
 
-				if(mixed[1] !== 0 && mixed[2] !== 0)
-				{
+				if (mixed[1] !== 0 && mixed[2] !== 0) {
 					sup = mixed[1]
 					sub = mixed[2]
 				}
 
-				else
-				{
+				else {
 					return format_result(mwhole, true)
 				}
-				
+
 				return `<span class='resolved'><span class='mwhole'>${mwhole}</span><span class='fraction'><sup>${sup}</sup><sub>${sub}</sub></span></span>`
 			}
 
-			else
-			{
+			else {
 				return `<span class='resolved'><span class='fraction'><sup>${sup}</sup><sub>${sub}</sub></span></span>`
 			}
 		}
 
-		else
-		{
+		else {
 			return format_result(n, true)
 		}
 	}
 
-	else
-	{
-		if(options.round)
-		{
+	else {
+		if (options.round) {
 			n = math_normal.round(n, options.round_places)
 		}
 
 		let ns = n.toString()
 		let whole, decimal
 
-		if(ns.indexOf('.') !== -1)
-		{
+		if (ns.indexOf('.') !== -1) {
 			let split = ns.split('.')
 			whole = split[0].toString() + '.'
 			decimal = split[1].toString()
 		}
 
-		else
-		{
+		else {
 			whole = n.toString()
 			decimal = ''
 		}
 
-		if(options.commas)
-		{
+		if (options.commas) {
 			whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 		}
-		
+
 		return `<span class='resolved'><span class='whole'>${whole}</span><span class='decimal'>${decimal}</span></span>`
 	}
 }
 
-function press(s, aux=false)
-{
-	if(s === "sin")
-	{
+function press(s, aux = false) {
+	if (s === "sin") {
 		s = "sin("
 	}
 
-	else if(s === "cos")
-	{
+	else if (s === "cos") {
 		s = "cos("
 	}
 
-	else if(s === "tan")
-	{
+	else if (s === "tan") {
 		s = "tan("
 	}
 
-	else if(s === "sqrt")
-	{
+	else if (s === "sqrt") {
 		s = "sqrt("
 	}
 
-	if(aux)
-	{
+	if (aux) {
 		s = check_aux(s, aux)
 
-		if(!s)
-		{
+		if (!s) {
 			focus_input(focused.input)
 			return
 		}
 	}
 
-	if(s === "Clear")
-	{
+	if (s === "Clear") {
 		clear_input(focused.input)
 		return
 	}
 
-	else if(s === "Erase")
-	{
+	else if (s === "Erase") {
 		erase_character()
 		return
 	}
 
-	else if(s === "New Line")
-	{
+	else if (s === "New Line") {
 		focus_next_or_add()
 		focus_input(focused.input)
 		return
 	}
 
-	else if(s === "Remove Line")
-	{
+	else if (s === "Remove Line") {
 		remove_line()
 		focus_input(focused.input)
 		return
 	}
 
-	else if(s === "Up")
-	{
+	else if (s === "Up") {
 		line_up()
 		focus_input(focused.input)
 		return
 	}
 
-	else if(s === "Down")
-	{
+	else if (s === "Down") {
 		line_down()
 		focus_input(focused.input)
 		return
@@ -1105,14 +937,12 @@ function press(s, aux=false)
 
 	let v = $(focused.input).data('variable')
 
-	if(s === v)
-	{
+	if (s === v) {
 		focus_next_or_add()
 
 		v = $(focused.input).data('variable')
-		
-		if(s === v)
-		{
+
+		if (s === v) {
 			return
 		}
 	}
@@ -1120,230 +950,168 @@ function press(s, aux=false)
 	insert_text(focused.input, s)
 }
 
-function blur_focus()
-{
+function blur_focus() {
 	focused.input.blur()
 	focused.input.focus()
 }
 
-function check_aux(s, aux)
-{
-	if(aux)
-	{
-		for(let i=1; i<10; i++)
-		{
-			if(s == i)
-			{
-				if(aux === 3)
-				{
+function check_aux(s, aux) {
+	if (aux) {
+		for (let i = 1; i < 10; i++) {
+			if (s == i) {
+				if (aux === 3) {
 					return "0." + i
 				}
 
-				else if(aux === 2)
-				{
+				else if (aux === 2) {
 					return "1/" + i
 				}
 			}
 		}
 
-		if(s == 0)
-		{
-			if(aux === 3)
-			{
+		if (s == 0) {
+			if (aux === 3) {
 				return "0."
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				return "000"
 			}
 		}
 
-		else if(s === "cos(")
-		{
-			if(aux === 3)
-			{
+		else if (s === "cos(") {
+			if (aux === 3) {
 				return "acos("
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				return "acosh("
 			}
 		}
 
-		else if(s === "tan(")
-		{
-			if(aux === 3)
-			{
+		else if (s === "tan(") {
+			if (aux === 3) {
 				return "atan("
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				return "atanh("
 			}
 		}
 
-		else if(s === "sin(")
-		{
-			if(aux === 3)
-			{
+		else if (s === "sin(") {
+			if (aux === 3) {
 				return "asin("
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				return "asinh("
 			}
 		}
 
-		else if(s === "^")
-		{
-			if(aux === 3)
-			{
+		else if (s === "^") {
+			if (aux === 3) {
 				return "^2"
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				return "^3"
 			}
 		}
 
-		else if(s === "sqrt(")
-		{
-			if(aux === 3)
-			{
+		else if (s === "sqrt(") {
+			if (aux === 3) {
 				return "cbrt("
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				return "nthRoot("
 			}
 		}
 
-		else if(s === "pi")
-		{
-			if(aux === 3)
-			{
+		else if (s === "pi") {
+			if (aux === 3) {
 				return "phi"
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				return "e"
 			}
 		}
 
-		else if(s === "/")
-		{
-			if(aux === 3)
-			{
+		else if (s === "/") {
+			if (aux === 3) {
 				toggle_comment(focused.input)
 				return false
 			}
-		}			
+		}
 
-		else if(s === "Up")
-		{
-			if(aux === 3)
-			{
+		else if (s === "Up") {
+			if (aux === 3) {
 				move_line_up()
 				return false
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				go_to_first_input()
 				return false
 			}
 		}
 
-		else if(s === "Down")
-		{
-			if(aux === 3)
-			{
+		else if (s === "Down") {
+			if (aux === 3) {
 				move_line_down()
 				return false
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				go_to_last_input()
 				return false
 			}
 		}
 
-		else if(s === "Remove Line")
-		{
-			if(aux === 3)
-			{
+		else if (s === "Remove Line") {
+			if (aux === 3) {
 				remove_last_line()
 				return false
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				remove_all_lines()
 				return false
 			}
 		}
 
-		else if(s === "New Line")
-		{
-			if(aux === 3)
-			{
+		else if (s === "New Line") {
+			if (aux === 3) {
 				add_line_after()
 				return false
 			}
 
-			else if(aux === 2)
-			{
+			else if (aux === 2) {
 				add_line_before()
 				return false
 			}
 		}
 
-		else if(s === "Clear")
-		{
-			if(aux === 3)
-			{
+		else if (s === "Clear") {
+			if (aux === 3) {
 				format_input(focused.input)
 				return false
 			}
 
-			if(aux === 2)
-			{
+			if (aux === 2) {
 				format_all()
 				return false
 			}
-		}
-
-		else if(s === "Erase")
-		{
-			if(aux === 3)
-			{
-				undo_change()
-				return false
-			}
-
-			else if(aux === 2)
-			{
-				redo_change()
-				return false
-			}				
 		}
 	}
 
 	return false
 }
 
-function prog_press(key, e)
-{
-	if(e.which === 2)
-	{
+function prog_press(key, e) {
+	if (e.which === 2) {
 		show_program_editor(key)
 		return
 	}
@@ -1352,14 +1120,10 @@ function prog_press(key, e)
 
 	let prog = programs.items[key]
 
-	if(prog !== undefined)
-	{
-		if(e.which === 1)
-		{
-			if(prog.primary.doubleclick)
-			{
-				if(e.detail % 2 !== 0)
-				{
+	if (prog !== undefined) {
+		if (e.which === 1) {
+			if (prog.primary.doubleclick) {
+				if (e.detail % 2 !== 0) {
 					return
 				}
 			}
@@ -1367,81 +1131,66 @@ function prog_press(key, e)
 			execute_program(prog.primary.commands)
 		}
 
-		if(e.which === 3)
-		{
-			if(prog.secondary.doubleclick)
-			{
-				if(e.detail % 2 !== 0)
-				{
+		if (e.which === 3) {
+			if (prog.secondary.doubleclick) {
+				if (e.detail % 2 !== 0) {
 					return
 				}
 			}
 
 			execute_program(prog.secondary.commands)
-		}	
+		}
 	}
 }
 
-function clear_input(input)
-{
-	if(input.value === '')
-	{
+function clear_input(input) {
+	if (input.value === '') {
 		return
 	}
 
 	replace_text(input, '')
 }
 
-let update_results = (function() 
-{
-	let timer 
-	return function() 
-	{
+let update_results = (function () {
+	let timer
+	return function () {
 		clearTimeout(timer)
-		timer = setTimeout(function() 
-		{
+		timer = setTimeout(function () {
 			do_update_results()
 		}, 10)
 	}
 })()
 
-function do_update_results()
-{
+function do_update_results() {
 	undefine_variables()
 	let variables = {}
 
-	$('.input').each(function()
-	{
+	$('.input').each(function () {
 		let v = $(this).data('variable')
 		variables[v] = {}
 		let vr = variables[v]
 		vr.edges = []
 	})
 
-	$('.input').each(function()
-	{
+	$('.input').each(function () {
 		let v = $(this).data('variable')
 		let val = this.value
 
-		if(val.trim() === '')
-		{
-			if(val.length > 0)
-			{
+		if (val.trim() === '') {
+			if (val.length > 0) {
 				this.value = ''
 			}
 
 			return true
 		}
 
-		if(val.trim().startsWith('//'))
-		{
+		if (val.trim().startsWith('//')) {
 			return true
 		}
 
 		let matches = val.match(/\$[a-z]+/g)
 
-		if(matches !== null)
-		{
+		if (matches !== null) {
 			variables[v].edges = matches
 		}
 	})
@@ -1449,120 +1198,99 @@ function do_update_results()
 	let sorted = []
 	let n = 0
 
-	while(Object.keys(variables).length)
-	{
+	while (Object.keys(variables).length) {
 		n += 1
 
 		let acyclic = false
 		let vars = Object.assign({}, variables)
 		let keys = Object.keys(vars)
 
-		for(let i=0; i<keys.length; i++)
-		{
+		for (let i = 0; i < keys.length; i++) {
 			let edges = vars[keys[i]].edges
 			let found = false
 
-			for(let el of edges)
-			{
-				if(vars[el] !== undefined)
-				{
+			for (let el of edges) {
+				if (vars[el] !== undefined) {
 					found = true
 					break
 				}
 			}
 
-			if(!found)
-			{
+			if (!found) {
 				acyclic = true
 				delete variables[keys[i]]
 				sorted.push(keys[i])
 			}
 		}
 
-		if(!acyclic)
-		{	
-			$('.input').each(function()
-			{
+		if (!acyclic) {
+			$('.input').each(function () {
 				let v = $(this).data('variable')
 				let letter = v.substring(1)
 
-				if(sorted.indexOf(v) !== -1)
-				{
+				if (sorted.indexOf(v) !== -1) {
 					get_result($('#' + letter)[0])
 				}
 
-				else
-				{
-					show_result($('#' + letter)[0], 'Not Acyclical')					
+				else {
+					show_result($('#' + letter)[0], 'Not Acyclical')
 				}
 			})
 
 			return
 		}
 
-		if(n > 10000)
-		{
+		if (n > 10000) {
 			return
 		}
 	}
 
-	for(let i=0; i<sorted.length; i++)
-	{
+	for (let i = 0; i < sorted.length; i++) {
 		let letter = sorted[i].substring(1)
 		get_result($('#' + letter)[0])
 	}
 }
 
-function check_line_visibility()
-{
+function check_line_visibility() {
 	let it = $(focused.input).parent()[0].getBoundingClientRect().top
 	let ct = $('#lines_container').offset().top
 
-	if(it < ct)
-	{
+	if (it < ct) {
 		$('#lines_container').scrollTop($('#lines_container').scrollTop() - (ct - it))
 	}
 
 	let ib = it + $(focused.input).parent().outerHeight()
 	let cb = ct + $('#lines_container').outerHeight()
 
-	if(ib > cb)
-	{
+	if (ib > cb) {
 		$('#lines_container').scrollTop($('#lines_container').scrollTop() + (ib - cb))
-	}		
+	}
 }
 
-function focus_input(input)
-{
+function focus_input(input) {
 	input.focus()
 }
 
-function focus_next()
-{
-	$(focused.input).parent().next('.line').find('.input').focus()	
+function focus_next() {
+	$(focused.input).parent().next('.line').find('.input').focus()
 }
 
-function focus_prev()
-{
-	$(focused.input).parent().prev('.line').find('.input').focus()	
+function focus_prev() {
+	$(focused.input).parent().prev('.line').find('.input').focus()
 }
 
-function line_up()
-{
+function line_up() {
 	focus_prev()
 }
 
-function line_down()
-{
-	focus_next()	
+function line_down() {
+	focus_next()
 }
 
-function move_line_up()
-{
+function move_line_up() {
 	let index = $(focused.input).parent().index()
 
-	if(index === 0)
-	{
+	if (index === 0) {
 		play('nope')
 		return
 	}
@@ -1582,8 +1310,7 @@ function move_line_up()
 	let re = new RegExp("\\$" + v.substring(1), 'g')
 	let re2 = new RegExp("\\$" + nv.substring(1), 'g')
 
-	$('.input').each(function()
-	{
+	$('.input').each(function () {
 		let vl = this.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
 		this.value = vl.replace(/@!#/g, '')
@@ -1593,19 +1320,17 @@ function move_line_up()
 	nval = ninp.value
 
 	inp.value = nval
-	ninp.value =  val
+	ninp.value = val
 
 	focus_if_isnt(ninp)
 
 	update_results()
 }
 
-function move_line_down()
-{
+function move_line_down() {
 	let index = $(focused.input).parent().index()
 
-	if(index === ($('.line').length - 1))
-	{
+	if (index === ($('.line').length - 1)) {
 		play('nope')
 		return
 	}
@@ -1625,185 +1350,150 @@ function move_line_down()
 	let re = new RegExp("\\$" + v.substring(1), 'g')
 	let re2 = new RegExp("\\$" + nv.substring(1), 'g')
 
-	$('.input').each(function()
-	{
+	$('.input').each(function () {
 		let vl = this.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
-		this.value = vl.replace(/@!#/g, '')		
+		this.value = vl.replace(/@!#/g, '')
 	})
 
 	val = inp.value
 	nval = ninp.value
 
 	inp.value = nval
-	ninp.value =  val
+	ninp.value = val
 
 	focus_if_isnt(ninp)
 
 	update_results()
 }
 
-function cycle_inputs(direction)
-{
-	if($('.input').length === 1)
-	{
+function cycle_inputs(direction) {
+	if ($('.input').length === 1) {
 		return
 	}
 
 	let index = $(focused.input).parent().index()
 
-	if(direction === 'down')
-	{
-		if(index === ($('.input').length - 1))
-		{
+	if (direction === 'down') {
+		if (index === ($('.input').length - 1)) {
 			focus_input($('.input').first()[0])
 		}
 
-		else
-		{
+		else {
 			focus_next()
 		}
 	}
 
-	else
-	{
-		if(index === 0)
-		{
+	else {
+		if (index === 0) {
 			focus_input($('.input').last()[0])
 		}
 
-		else
-		{
+		else {
 			focus_prev()
 		}
 	}
 }
 
-function change_borders()
-{
-	$('.input').each(function()
-	{
+function change_borders() {
+	$('.input').each(function () {
 		$(this).removeClass("input_focus")
 	})
 
 	$(focused.input).addClass("input_focus")
 }
 
-function place_lines_container()
-{
+function place_lines_container() {
 	let h = $(window).height() - $('#app_top').outerHeight()
 	$('#lines_container').css('height', h + 'px')
 }
 
-function resize_events()
-{
-	$(window).resize(function()
-	{
+function resize_events() {
+	$(window).resize(function () {
 		resize_timer()
 	})
 }
 
-let resize_timer = (function() 
-{
-	let timer 
-	return function() 
-	{
+let resize_timer = (function () {
+	let timer
+	return function () {
 		clearTimeout(timer)
-		timer = setTimeout(function() 
-		{
+		timer = setTimeout(function () {
 			place_infobar()
 			place_lines_container()
 		}, 350)
 	}
 })()
 
-function play(what)
-{
-	if(options.sound)
-	{
+function play(what) {
+	if (options.sound) {
 		$('#' + what)[0].pause()
 		$('#' + what)[0].currentTime = 0
 		$('#' + what)[0].play()
 	}
 }
 
-function refresh_page()
-{
+function refresh_page() {
 	document.location = site_root
 }
 
-function new_sheet()
-{
+function new_sheet() {
 	remove_all_lines()
-	edit_url('')		
+	edit_url('')
 }
 
-function check_new_sheet()
-{
+function check_new_sheet() {
 	let s = stringify_sheet()
 
-	if(s.trim().replace(/@!#/g, '').length < 1)
-	{
+	if (s.trim().replace(/@!#/g, '').length < 1) {
 		new_sheet()
 		return
 	}
 
-	if(saved_content !== s)
-	{
+	if (saved_content !== s) {
 		let conf = confirm("This will discard all unsaved changes. Are you sure?")
 
-		if(conf) 
-		{
+		if (conf) {
 			new_sheet()
 		}
 	}
 
-	else
-	{
+	else {
 		new_sheet()
-	}		
+	}
 }
 
-function title_click_events()
-{
-	$('#lnk_new').click(function()
-	{
+function title_click_events() {
+	$('#lnk_new').click(function () {
 		check_new_sheet()
-	})	
+	})
 
-	$('#lnk_save').click(function()
-	{
+	$('#lnk_save').click(function () {
 		save_sheet()
 	})
 
-	$('#lnk_options').click(function()
-	{
+	$('#lnk_options').click(function () {
 		show_options()
 	})
 
-	$('#lnk_more').click(function()
-	{
+	$('#lnk_more').click(function () {
 		show_more()
 	})
 }
 
-function save_sheet()
-{
-	if(!save_enabled)
-	{
+function save_sheet() {
+	if (!save_enabled) {
 		return
 	}
 
 	let s = stringify_sheet()
 
-	if(s.trim().replace(/@!#/g, '').length < 1)
-	{
+	if (s.trim().replace(/@!#/g, '').length < 1) {
 		show_modal("Info", "You can't save an empty sheet.")
 		return
 	}
 
-	else if(s.length > 50000)
-	{
+	else if (s.length > 50000) {
 		show_modal("Info", "Sheet is too big.")
 		return
 	}
@@ -1811,41 +1501,34 @@ function save_sheet()
 	save_enabled = false
 
 	$.post('/save_sheet/',
-	{
-		csrfmiddlewaretoken: csrf_token,
-		content: s
-	})
+		{
+			csrfmiddlewaretoken: csrf_token,
+			content: s
+		})
 
-	.done(function(data)
-	{
-		on_save_response(data.response, s)
-	})
+		.done(function (data) {
+			on_save_response(data.response, s)
+		})
 
-	.fail(function(data)
-	{
-		show_modal("Info", 'A network error occurred.')
-	})
+		.fail(function (data) {
+			show_modal("Info", 'A network error occurred.')
+		})
 
-	.always(function()
-	{
-		save_enabled = true
-	})
+		.always(function () {
+			save_enabled = true
+		})
 }
 
-function on_save_response(response, svd)
-{
-	if(response === 'empty')
-	{
+function on_save_response(response, svd) {
+	if (response === 'empty') {
 		show_modal("Info", "You can't save an empty sheet.")
 	}
 
-	else if(response === 'toobig')
-	{
+	else if (response === 'toobig') {
 		show_modal("Info", "Sheet is too big.")
 	}
 
-	else
-	{
+	else {
 		let uparams = make_uparams(response)
 
 		edit_url(uparams)
@@ -1857,13 +1540,11 @@ function on_save_response(response, svd)
 
 		s += "<span id='ctcb' class='linky2'>Copy To Clipboard</span>"
 
-		show_modal("Saved", s, function()
-		{
+		show_modal("Saved", s, function () {
 			play('done')
 		})
 
-		$('#ctcb').click(function()
-		{
+		$('#ctcb').click(function () {
 			copy_to_clipboard(url)
 			play('pup')
 			msg.close()
@@ -1875,24 +1556,20 @@ function on_save_response(response, svd)
 	}
 }
 
-function add_to_saved(url, svd)
-{
-	if(saved === undefined)
-	{
+function add_to_saved(url, svd) {
+	if (saved === undefined) {
 		saved = []
 	}
 
 	let split = svd.split('@!#')
 	let num_lines = split.length
-	let n = Math.min(5,split.length)
+	let n = Math.min(5, split.length)
 	let sample = ''
 
-	for(let i=0; i<n; i++)
-	{
+	for (let i = 0; i < n; i++) {
 		let line = split[i].substring(0, 100).trim()
 
-		if(line === '')
-		{
+		if (line === '') {
 			line = 'Empty'
 		}
 
@@ -1903,20 +1580,12 @@ function add_to_saved(url, svd)
 	update_saved()
 }
 
-function copy_to_clipboard(s)
-{
-	let textareaEl = document.createElement('textarea')
-	document.body.appendChild(textareaEl)
-	textareaEl.value = s
-	textareaEl.select()
-	document.execCommand('copy')
-	document.body.removeChild(textareaEl)
+function copy_to_clipboard(s) {
+	navigator.clipboard.writeText(s)
 }
 
-function make_uparams(s)
-{
-	if(options.fraction)
-	{
+function make_uparams(s) {
+	if (options.fraction) {
 		s += "?"
 		s += "frac"
 	}
@@ -1924,22 +1593,18 @@ function make_uparams(s)
 	return s
 }
 
-function get_url_param(param)
-{
+function get_url_param(param) {
 	return new URLSearchParams(window.location.search).get(param)
 }
 
-function edit_url(s)
-{
-	window.history.pushState({"pageTitle": "title", "content": "etc"}, "", '/' + s)
+function edit_url(s) {
+	window.history.pushState({ "pageTitle": "title", "content": "etc" }, "", '/' + s)
 }
 
-function stringify_sheet()
-{
+function stringify_sheet() {
 	let s = ""
 
-	$('.input').each(function()
-	{
+	$('.input').each(function () {
 		s += this.value
 		s += "@!#"
 	})
@@ -1950,8 +1615,7 @@ function stringify_sheet()
 	return s
 }
 
-function create_about()
-{
+function create_about() {
 	let s = ""
 
 	s += "<b>Merkoba Calculator</b><br>"
@@ -1985,43 +1649,34 @@ function create_about()
 	about = s
 }
 
-function show_about()
-{
-	if(about === undefined)
-	{
+function show_about() {
+	if (about === undefined) {
 		create_about()
 	}
 
 	show_modal("About", about)
 }
 
-function check_params()
-{
-	if(get_url_param('frac') === null)
-	{
-		if(options.fraction)
-		{
+function check_params() {
+	if (get_url_param('frac') === null) {
+		if (options.fraction) {
 			toggle_fraction()
 		}
 	}
 
-	else
-	{
-		if(!options.fraction)
-		{
+	else {
+		if (!options.fraction) {
 			toggle_fraction()
 		}
 	}
 }
 
-function load_saved_content()
-{
+function load_saved_content() {
 	check_params()
 
 	let splits = saved_content.split('@!#')
 
-	for(let i=0; i<splits.length; i++)
-	{	
+	for (let i = 0; i < splits.length; i++) {
 		let value = splits[i]
 
 		add_line(value)
@@ -2030,84 +1685,69 @@ function load_saved_content()
 	update_results()
 }
 
-function get_site_root()
-{
+function get_site_root() {
 	site_root = window.location.href.match(/^.*\//)[0]
 }
 
-function adjust_volumes()
-{
+function adjust_volumes() {
 	$('#nope')[0].volume = 0.4
 	$('#pup')[0].volume = 0.6
 	$('#done')[0].volume = 0.7
 }
 
-function add_ans(next=false)
-{
+function add_ans(next = false) {
 	let variable
 
-	if(next)
-	{
+	if (next) {
 		variable = $(focused.input).parent().next('.line').find('.input').data('variable')
 	}
 
-	else
-	{
+	else {
 		variable = $(focused.input).parent().prev('.line').find('.input').data('variable')
 	}
 
-	if(variable !== undefined)
-	{
+	if (variable !== undefined) {
 		press(variable)
 	}
 }
 
-function add_result(next=false)
-{
+function add_result(next = false) {
 	let result
 
-	if(next)
-	{
+	if (next) {
 		result = $(focused.input).parent().next('.line').find('.result')[0]
 	}
 
-	else
-	{
+	else {
 		result = $(focused.input).parent().prev('.line').find('.result')[0]
-	}	
+	}
 
-	if(result !== undefined)
-	{
+	if (result !== undefined) {
 		press(get_result_text(result))
 	}
 }
 
-function add_input(next=false)
-{
+function add_input(next = false) {
 	let value
 
-	if(next)
-	{
+	if (next) {
 		value = $(focused.input).parent().next('.line').find('.input').val()
-	}	
+	}
 
-	else
-	{
+	else {
 		value = $(focused.input).parent().prev('.line').find('.input').val()
-	}	
+	}
 
-	if(value !== undefined && value !== '')
-	{
+	if (value !== undefined && value !== '') {
 		press(value)
 	}
 }
 
-function show_more()
-{
+function show_more() {
 	let s = ""
 
 	// s += "<span class='linky2' id='more_saved'>Saved</span><br><br>"
-	
+
 	s += "<span class='linky2' id='more_data'>Data</span><br><br>"
 	s += "<span class='linky2' id='more_about'>About</span>"
 
@@ -2118,19 +1758,16 @@ function show_more()
 	// 	show_saved()
 	// })
 
-	$('#more_data').click(function()
-	{
+	$('#more_data').click(function () {
 		show_data_menu()
 	})
 
-	$('#more_about').click(function()
-	{
+	$('#more_about').click(function () {
 		show_about()
 	})
 }
 
-function show_options()
-{
+function show_options() {
 	let s = ""
 
 	s += "<div id='options_container'>"
@@ -2138,13 +1775,11 @@ function show_options()
 	s += "Add Commas"
 	s += "<div class='vseparator2'></div>"
 
-	if(options.commas)
-	{
+	if (options.commas) {
 		s += "<input id='chk_commas' type='checkbox' checked>"
 	}
 
-	else
-	{
+	else {
 		s += "<input id='chk_commas' type='checkbox'>"
 	}
 
@@ -2154,13 +1789,11 @@ function show_options()
 	s += "Mixed Fractions"
 	s += "<div class='vseparator2'></div>"
 
-	if(options.mixed)
-	{
+	if (options.mixed) {
 		s += "<input id='chk_mixed' type='checkbox' checked>"
 	}
 
-	else
-	{
+	else {
 		s += "<input id='chk_mixed' type='checkbox'>"
 	}
 
@@ -2170,13 +1803,11 @@ function show_options()
 	s += "Round Results"
 	s += "<div class='vseparator2'></div>"
 
-	if(options.round)
-	{
+	if (options.round) {
 		s += "<input id='chk_round' type='checkbox' checked>"
 	}
 
-	else
-	{
+	else {
 		s += "<input id='chk_round' type='checkbox'>"
 	}
 
@@ -2187,37 +1818,33 @@ function show_options()
 	s += "<div class='vseparator2'></div>"
 	s += "<select id='sel_round_places'>"
 
-	for(let i=0; i<31; i++)
-	{
+	for (let i = 0; i < 31; i++) {
 		s += "<option value='" + i + "'>" + i + "</option>"
 	}
 
 	s += "</select>"
-	s += "</div>"	
+	s += "</div>"
 	s += "<div class='vseparator'></div>"
 	s += "<div class='options_item'>"
 	s += "Enable Sound"
 	s += "<div class='vseparator2'></div>"
 
-	if(options.sound)
-	{
+	if (options.sound) {
 		s += "<input id='chk_sound' type='checkbox' checked>"
 	}
 
-	else
-	{
+	else {
 		s += "<input id='chk_sound' type='checkbox'>"
 	}
 
 	s += "</div>"
-	s += "<div class='vseparator'></div>"	
+	s += "<div class='vseparator'></div>"
 	s += "<div class='options_item'>"
 	s += "Color Theme"
 	s += "<div class='vseparator2'></div>"
 	s += "<select id='sel_theme'>"
 
-	for(let i=0; i<themes.length; i++)
-	{
+	for (let i = 0; i < themes.length; i++) {
 		s += "<option value='" + themes[i] + "'>" + capitalize_string(themes[i]) + "</option>"
 	}
 
@@ -2227,367 +1854,305 @@ function show_options()
 
 	show_modal("Options", s)
 
-	$('#sel_round_places').find('option').each(function()
-	{
-		if(this.value == options.round_places)
-		{
+	$('#sel_round_places').find('option').each(function () {
+		if (this.value == options.round_places) {
 			$(this).prop('selected', true)
 		}
 	})
 
-	$('#sel_theme').find('option').each(function()
-	{
-		if(this.value == options.theme)
-		{
+	$('#sel_theme').find('option').each(function () {
+		if (this.value == options.theme) {
 			$(this).prop('selected', true)
 		}
 	})
 
-	$('#chk_commas').change(function()
-	{
+	$('#chk_commas').change(function () {
 		options.commas = $(this).prop('checked')
 		update_results()
 		update_options()
 	})
-	
-	$('#chk_round').change(function()
-	{
+
+	$('#chk_round').change(function () {
 		options.round = $(this).prop('checked')
 		update_results()
 		update_options()
-	})	
+	})
 
-	$('#sel_round_places').change(function()
-	{
+	$('#sel_round_places').change(function () {
 		options.round_places = parseInt(this.value)
 		update_results()
 		update_options()
 	})
 
-	$('#chk_mixed').change(function()
-	{
+	$('#chk_mixed').change(function () {
 		options.mixed = $(this).prop('checked')
 		update_results()
 		update_options()
-	})		
+	})
 
-	$('#chk_sound').change(function()
-	{
+	$('#chk_sound').change(function () {
 		options.sound = $(this).prop('checked')
 		update_options()
 	})
 
-	$('#sel_theme').change(function()
-	{
+	$('#sel_theme').change(function () {
 		options.theme = this.value
 		apply_theme(options.theme)
 		update_options()
 	})
 }
 
-function get_local_storage()
-{
+function get_local_storage() {
 	get_options()
 	get_saved()
 	get_programs()
 }
 
-function update_options()
-{
+function update_options() {
 	localStorage.setItem(ls_options, JSON.stringify(options))
 }
 
-function get_options()
-{
+function get_options() {
 	options = JSON.parse(localStorage.getItem(ls_options))
 
 	let mod = false
 
-	if(options === null)
-	{
+	if (options === null) {
 		options = {}
 		mod = true
 	}
 
-	if(options.version === undefined)
-	{
+	if (options.version === undefined) {
 		options.version = ls_options
 		mod = true
 	}
 
-	if(options.sound === undefined)
-	{
+	if (options.sound === undefined) {
 		options.sound = true
 		mod = true
 	}
 
-	if(options.commas === undefined)
-	{
+	if (options.commas === undefined) {
 		options.commas = true
 		mod = true
 	}
 
-	if(options.round === undefined)
-	{
+	if (options.round === undefined) {
 		options.round = true
 		mod = true
 	}
 
-	if(options.round_places === undefined)
-	{
+	if (options.round_places === undefined) {
 		options.round_places = 10
 		mod = true
 	}
 
-	if(options.fraction === undefined)
-	{
+	if (options.fraction === undefined) {
 		options.fraction = false
 		mod = true
 	}
 
-	if(options.mixed === undefined)
-	{
+	if (options.mixed === undefined) {
 		options.mixed = false
 		mod = true
 	}
 
-	if(options.theme === undefined)
-	{
+	if (options.theme === undefined) {
 		options.theme = 'carbon'
 		mod = true
 	}
 
-	else
-	{
-		if(themes.indexOf(options.theme) === -1)
-		{
+	else {
+		if (themes.indexOf(options.theme) === -1) {
 			options.theme = 'carbon'
 			mod = true
 		}
 	}
 
-	if(mod)
-	{
+	if (mod) {
 		update_options()
 	}
 }
 
-function get_saved()
-{
+function get_saved() {
 	saved = JSON.parse(localStorage.getItem(ls_saved))
 
 	let mod = false
 
-	if(saved === null)
-	{
+	if (saved === null) {
 		saved = {}
 		mod = true
 	}
 
-	if(saved.version === undefined)
-	{
+	if (saved.version === undefined) {
 		saved.version = ls_saved
 		mod = true
 	}
 
-	if(saved.items === undefined)
-	{
+	if (saved.items === undefined) {
 		saved.items = []
 		mod = true
 	}
 
-	if(mod)
-	{
+	if (mod) {
 		update_saved()
 	}
 }
 
-function update_saved()
-{
+function update_saved() {
 	localStorage.setItem(ls_saved, JSON.stringify(saved))
 }
 
-function get_programs()
-{
+function get_programs() {
 	programs = JSON.parse(localStorage.getItem(ls_programs))
 
 	let mod = false
 
-	if(programs === null)
-	{
+	if (programs === null) {
 		programs = {}
 		mod = true
 	}
 
-	if(programs.version === undefined)
-	{
+	if (programs.version === undefined) {
 		programs.version = ls_programs
 		mod = true
 	}
 
-	if(programs.items === undefined)
-	{
+	if (programs.items === undefined) {
 		programs.items = []
 		mod = true
 	}
 
-	for(let i=0; i<12; i++)
-	{
-		if(programs.items[i] === undefined)
-		{
+	for (let i = 0; i < 12; i++) {
+		if (programs.items[i] === undefined) {
 			programs.items[i] = {}
 			mod = true
 		}
 
-		if(programs.items[i].name === undefined)
-		{
+		if (programs.items[i].name === undefined) {
 			programs.items[i].name = 'F' + (i + 1)
 			mod = true
 		}
 
-		if(programs.items[i].primary === undefined)
-		{
+		if (programs.items[i].primary === undefined) {
 			programs.items[i].primary = {}
-			mod = true	
+			mod = true
 		}
 
-		if(programs.items[i].primary.title === undefined)
-		{
+		if (programs.items[i].primary.title === undefined) {
 			programs.items[i].primary.title = ''
 			mod = true
 		}
 
-		if(programs.items[i].primary.commands === undefined)
-		{
+		if (programs.items[i].primary.commands === undefined) {
 			programs.items[i].primary.commands = ''
 			mod = true
 		}
 
-		if(programs.items[i].primary.doubleclick === undefined)
-		{
+		if (programs.items[i].primary.doubleclick === undefined) {
 			programs.items[i].primary.doubleclick = false
 			mod = true
 		}
 
-		if(programs.items[i].secondary === undefined)
-		{
+		if (programs.items[i].secondary === undefined) {
 			programs.items[i].secondary = {}
-			mod = true	
+			mod = true
 		}
 
-		if(programs.items[i].secondary.title === undefined)
-		{
+		if (programs.items[i].secondary.title === undefined) {
 			programs.items[i].secondary.title = ''
 		}
 
-		if(programs.items[i].secondary.commands === undefined)
-		{
+		if (programs.items[i].secondary.commands === undefined) {
 			programs.items[i].secondary.commands = ''
 			mod = true
 		}
 
-		if(programs.items[i].secondary.doubleclick === undefined)
-		{
+		if (programs.items[i].secondary.doubleclick === undefined) {
 			programs.items[i].secondary.doubleclick = false
 			mod = true
 		}
 	}
 
-	if(mod)
-	{
+	if (mod) {
 		update_programs()
-	}		
+	}
 }
 
-function update_programs()
-{
+function update_programs() {
 	localStorage.setItem(ls_programs, JSON.stringify(programs))
 }
 
-function show_saved(j=0)
-{
-	if(saved.items.length === 0)
-	{
+function show_saved(j = 0) {
+	if (saved.items.length === 0) {
 		show_modal("Info", 'Nothing saved yet.')
 		return
 	}
 
-	else
-	{
+	else {
 		let s = ""
 		let n = Math.min(20 + j, saved.items.length)
 
-		for(let i=j; i<n; i++)
-		{
+		for (let i = j; i < n; i++) {
 			s += "<a class='saved_item ancher1' target=_blank href='" + saved.items[i][1] + "' title='" + saved.items[i][3] + "'>"
 			s += saved.items[i][0]
 
 			let num_lines = saved.items[i][2]
-			
+
 			s += "<br>" + num_lines
 
-			if(num_lines === 1)
-			{
+			if (num_lines === 1) {
 				s += " Line"
 			}
 
-			else
-			{
+			else {
 				s += " Lines"
 			}
 
-			if(saved.items[i][4])
-			{
+			if (saved.items[i][4]) {
 				s += " - Fraction"
 			}
 
-			else
-			{
+			else {
 				s += " - Normal"
 			}
 
 			s += "</a>"
 
-			if(i < n - 1)
-			{
+			if (i < n - 1) {
 				s += "<br><br><br>"
 			}
 		}
 
-		if(n < saved.items.length)
-		{
+		if (n < saved.items.length) {
 			s += "<br><br><div id='svd_load_more' class='linky2' data-j=" + n + ">Load More</div>"
 		}
 
-		if(j > 0)
-		{
+		if (j > 0) {
 			$('#Msg-content-default').append(s)
 			update_modal_scrollbar()
 		}
 
-		else
-		{
+		else {
 			show_modal("Save History", s)
 		}
 
-		$('.saved_item').each(function()
-		{
-			tippy(this, 
-			{
-				delay: [100, 100],
-				animation: 'scale',
-				hideOnClick: true,
-				duration: 100,
-				arrow: true,
-				performance: true,
-				size: 'regular',
-				arrowSize: 'small',
-				zIndex: 60000000
-			})
-		})	
+		$('.saved_item').each(function () {
+			tippy(this,
+				{
+					delay: [100, 100],
+					animation: 'scale',
+					hideOnClick: true,
+					duration: 100,
+					arrow: true,
+					performance: true,
+					size: 'regular',
+					arrowSize: 'small',
+					zIndex: 60000000
+				})
+		})
 
-		$('#svd_load_more').click(function()
-		{
+		$('#svd_load_more').click(function () {
 			let j = $(this).data('j')
 			$(this).remove()
 			show_saved(j)
@@ -2595,38 +2160,30 @@ function show_saved(j=0)
 	}
 }
 
-function show_data_menu()
-{
+function show_data_menu() {
 	stor.menu()
 }
 
-function reset_object(ls_name, data=false)
-{
-	if(ls_name === ls_options)
-	{
+function reset_object(ls_name, data = false) {
+	if (ls_name === ls_options) {
 		reset_options(data)
 	}
 
-	else if(ls_name === ls_saved)
-	{
+	else if (ls_name === ls_saved) {
 		reset_saved(data)
 	}
 
-	else if(ls_name === ls_programs)
-	{
+	else if (ls_name === ls_programs) {
 		reset_programs(data)
 	}
 }
 
-function reset_options(data=false)
-{
-	if(data)
-	{
+function reset_options(data = false) {
+	if (data) {
 		localStorage.setItem(ls_options, data)
 	}
 
-	else
-	{
+	else {
 		localStorage.removeItem(ls_options)
 	}
 
@@ -2637,15 +2194,12 @@ function reset_options(data=false)
 	apply_mode()
 }
 
-function reset_saved(data=false)
-{
-	if(data)
-	{
+function reset_saved(data = false) {
+	if (data) {
 		localStorage.setItem(ls_saved, data)
 	}
 
-	else
-	{
+	else {
 		localStorage.removeItem(ls_saved)
 	}
 
@@ -2653,15 +2207,12 @@ function reset_saved(data=false)
 	saved_content = ''
 }
 
-function reset_programs(data=false)
-{
-	if(data)
-	{
+function reset_programs(data = false) {
+	if (data) {
 		localStorage.setItem(ls_programs, data)
 	}
 
-	else
-	{
+	else {
 		localStorage.removeItem(ls_programs)
 	}
 
@@ -2669,34 +2220,28 @@ function reset_programs(data=false)
 	draw_prog_buttons()
 }
 
-function fill_sheet(x=false)
-{
+function fill_sheet(x = false) {
 	let n
 
-	if(x)
-	{
+	if (x) {
 		n = x
 	}
 
-	else
-	{
+	else {
 		n = get_max_line_length() - $('.line').length
 	}
 
-	for(let i=0; i<n; i++)
-	{
+	for (let i = 0; i < n; i++) {
 		add_line()
 	}
 }
 
-function test1(x=false)
-{
+function test1(x = false) {
 	fill_sheet(x)
 
 	let s = "+3*45-56/43^4+acosh(8.9)"
 
-	$('.input').each(function()
-	{
+	$('.input').each(function () {
 		this.value = this.value + s
 
 		$(this).parent().next('.line').find('.input').val($(this).data('variable'))
@@ -2705,40 +2250,31 @@ function test1(x=false)
 	update_results()
 }
 
-function disable_context_menu(el)
-{
+function disable_context_menu(el) {
 	el.addEventListener('contextmenu', event => event.preventDefault())
 }
 
-function focus_if_isnt(input)
-{
-	if(input !== document.activeElement)
-	{
+function focus_if_isnt(input) {
+	if (input !== document.activeElement) {
 		focus_input(input)
 	}
 }
 
-function get_max_line_length()
-{
+function get_max_line_length() {
 	return get_var_index('$zz') + 1
 }
 
-function undefine_variables()
-{
-	for(let varName in linevars) 
-	{
+function undefine_variables() {
+	for (let varName in linevars) {
 		linevars[varName] = undefined
 	}
 }
 
-function get_result_text(el)
-{
+function get_result_text(el) {
 	let s = ""
 
-	if($(el).find('sup').length > 0)
-	{
-		if($(el).find('.mwhole').length > 0)
-		{
+	if ($(el).find('sup').length > 0) {
+		if ($(el).find('.mwhole').length > 0) {
 			s += $(el).find('.mwhole').text() + ' '
 		}
 
@@ -2749,22 +2285,19 @@ function get_result_text(el)
 		s += $(el).find('sub').text()
 	}
 
-	else
-	{
+	else {
 		s += $(el).text().replace(/,/g, '')
 	}
 
-	return s		
+	return s
 }
 
-function on_result_click(el)
-{
+function on_result_click(el) {
 	copy_to_clipboard(get_result_text(el))
 	play('pup')
 }
 
-function toggle_fraction()
-{
+function toggle_fraction() {
 	options.fraction = !options.fraction
 	update_results()
 	apply_mode()
@@ -2772,105 +2305,87 @@ function toggle_fraction()
 	update_options()
 }
 
-function copy_input_down()
-{
+function copy_input_down() {
 	let og_var = $(focused.input).data('variable')
 	let og_val = focused.input.value
 
 	focus_next_or_add()
 
-	if(og_var !== $(focused.input).data('variable'))
-	{
+	if (og_var !== $(focused.input).data('variable')) {
 		replace_text(focused.input, og_val)
 	}
 }
 
-function copy_result_down()
-{
+function copy_result_down() {
 	let og_var = $(focused.input).data('variable')
 	let og_result = get_result_text($(focused.input).parent().find('.result')[0])
 
 	focus_next_or_add()
 
-	if(og_var !== $(focused.input).data('variable'))
-	{
+	if (og_var !== $(focused.input).data('variable')) {
 		replace_text(focused.input, og_result)
 	}
 }
 
-function expand_value(input)
-{
+function expand_value(input) {
 	let val = input.value
 
-	if(val.trim() === '')
-	{
+	if (val.trim() === '') {
 		return
 	}
 
-	if(val.trim().startsWith('//'))
-	{
+	if (val.trim().startsWith('//')) {
 		return
 	}
 
-	if(val.indexOf('$') === -1)
-	{
+	if (val.indexOf('$') === -1) {
 		return
 	}
 
 	let vr = $(input).data('variable')
 	let n = 0
 
-	while(true)
-	{
+	while (true) {
 		let og_val = val
 
-		val = val.replace(/\$[a-z]+/g, function(match)
-		{
-			if(match === vr)
-			{
+		val = val.replace(/\$[a-z]+/g, function (match) {
+			if (match === vr) {
 				return match
 			}
 
 			let v = $('#' + match.substring(1)).val()
 
-			if(v !== undefined && v.trim() !== '')
-			{
+			if (v !== undefined && v.trim() !== '') {
 				return "(" + v + ")"
 			}
 
-			else
-			{
+			else {
 				return match
 			}
 
 		})
 
-		if(og_val === val)
-		{
+		if (og_val === val) {
 			break
 		}
 
 		n += 1
 
-		if(n > 10000)
-		{
+		if (n > 10000) {
 			break
 		}
 	}
 
-	if(val.indexOf('$') !== -1)
-	{
+	if (val.indexOf('$') !== -1) {
 		play('nope')
 		return
 	}
 
-	try
-	{
-		val = math_normal.parse(val).toString({parenthesis: 'auto', implicit: 'show'})
+	try {
+		val = math_normal.parse(val).toString({ parenthesis: 'auto', implicit: 'show' })
 	}
 
-	catch(err)
-	{
+	catch (err) {
 		play('nope')
 		return
 	}
@@ -2878,27 +2393,22 @@ function expand_value(input)
 	replace_text(input, val)
 }
 
-function format_input(input)
-{
+function format_input(input) {
 	let val = input.value
 
-	if(val.trim() === '')
-	{
+	if (val.trim() === '') {
 		return
 	}
 
-	if(val.trim().startsWith('//'))
-	{
+	if (val.trim().startsWith('//')) {
 		return
 	}
 
-	try
-	{
-		val = math_normal.parse(val).toString({parenthesis: 'auto', implicit: 'show'})
+	try {
+		val = math_normal.parse(val).toString({ parenthesis: 'auto', implicit: 'show' })
 	}
 
-	catch(err)
-	{
+	catch (err) {
 		play('nope')
 		return
 	}
@@ -2906,98 +2416,70 @@ function format_input(input)
 	replace_text(input, val)
 }
 
-function format_all()
-{
-	$('.input').each(function()
-	{
+function format_all() {
+	$('.input').each(function () {
 		format_input(this)
 	})
 }
 
-function insert_text(input, s)
-{
+function insert_text(input, s) {
+	let ss = input.selectionStart
+	let se = input.selectionEnd
+	let value = input.value
+	let new_value = value.substring(0, ss) + s + value.substring(se, value.length)
+	focused.input.value = new_value
+	focused.input.selectionStart = ss + s.length
+	focused.input.selectionEnd = ss + s.length
 	focus_if_isnt(input)
-	exec_insert(input, s)
+	update_results()
 }
 
-function replace_text(input, s)
-{
+function replace_text(input, s) {
+	input.value = s
 	focus_if_isnt(input)
-	input.select()
-	exec_insert(input, s)
+	update_results()
 }
 
-function exec_insert(input, s)
-{
-	if(!document.execCommand('insertText', false, s))
-	{
-		let ss = input.selectionStart
-		let se = input.selectionEnd
-		let value = input.value
-		let ns = value.substring(0, ss) + s + value.substring(se, value.length)
-
-		input.value = ns
-		input.setSelectionRange(ss + s.length, ss + s.length)
-		update_results()
-	}
-}
-
-function erase_character()
-{
+function erase_character() {
 	let ss = focused.input.selectionStart
 	let se = focused.input.selectionEnd
+	let value = focused.input.value
 
-	if(ss === se)
-	{
-		if(ss === 0)
-		{
+	if (ss === se) {
+		if (ss === 0) {
 			focus_input(focused.input)
 			return
 		}
 
-		focused.input.setSelectionRange(ss - 1, ss)
+		let new_value = value.substring(0, ss - 1) + value.substring(se, value.length)
+		focused.input.value = new_value
+		focused.input.selectionStart = ss - 1
+		focused.input.selectionEnd = ss - 1
+		focus_if_isnt(focused.input)
+		update_results()
 	}
-
-	insert_text(focused.input, '')		
 }
 
-function undo_change()
-{
-	document.execCommand('undo', false, null)
-	remove_ranges()
-}
-
-function redo_change()
-{
-	document.execCommand('redo', false, null)
-	remove_ranges()		
-}
-
-function remove_ranges()
-{
+function remove_ranges() {
 	let ss = focused.input.selectionEnd
 	focused.input.setSelectionRange(ss, ss)
 }
 
-function place_infobar()
-{
+function place_infobar() {
 	let w = $('#buttons').width()
 	$('#infobar').css('width', w + 'px')
 }
 
-function update_infobar()
-{
+function update_infobar() {
 	let s = ""
 
 	s += "<span id='ib_fraction_toggle' class='ib_item'>"
 
-	if(options.fraction)
-	{
+	if (options.fraction) {
 		s += "Fraction Mode"
 	}
 
-	else
-	{
+	else {
 		s += "Normal Mode"
 	}
 
@@ -3005,51 +2487,42 @@ function update_infobar()
 
 	$('#infobar').html(s)
 
-	$('#ib_fraction_toggle').click(function()
-	{
+	$('#ib_fraction_toggle').click(function () {
 		toggle_fraction()
 	})
 }
 
-function apply_theme(theme)
-{
+function apply_theme(theme) {
 	$('head').append("<link onload='set_modal_theme()' rel='stylesheet' href='themes/" + theme + ".css?v=" + app_version + "'>")
 }
 
-function apply_mode()
-{
+function apply_mode() {
 	let mode
 
-	if(options.fraction)
-	{
+	if (options.fraction) {
 		mode = "fraction"
 	}
 
-	else
-	{
+	else {
 		mode = "normal"
 	}
 
 	$('head').append("<link rel='stylesheet' href='modes/" + mode + ".css?v=" + app_version + "'>")
 }
 
-function capitalize_string(text) 
-{
+function capitalize_string(text) {
 	return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
 }
 
-function move_caret_to_end(input)
-{
+function move_caret_to_end(input) {
 	input.setSelectionRange(input.value.length, input.value.length)
 }
 
-function move_caret_to_start(input)
-{
+function move_caret_to_start(input) {
 	input.setSelectionRange(0, 0)
 }
 
-function show_program_editor(key)
-{
+function show_program_editor(key) {
 	let s = ""
 
 	s += "<input maxlength='5' id='prog_key_name' class='prog_input prog_key_input'><br><br><br>"
@@ -3078,15 +2551,12 @@ function show_program_editor(key)
 	s += "<select id='sel_prog_swap'>"
 	s += "<option value='--'></option>"
 
-	for(let i=0; i<programs.items.length; i++)
-	{
-		if(i === key)
-		{
+	for (let i = 0; i < programs.items.length; i++) {
+		if (i === key) {
 			s += "<option value='" + i + "' disabled>" + programs.items[i].name + "</option>"
 		}
 
-		else
-		{
+		else {
 			s += "<option value='" + i + "'>" + programs.items[i].name + "</option>"
 		}
 	}
@@ -3099,27 +2569,23 @@ function show_program_editor(key)
 
 	s += "<option value='--'></option>"
 
-	for(let i=0; i<programs.items.length; i++)
-	{
-		if(i === key)
-		{
+	for (let i = 0; i < programs.items.length; i++) {
+		if (i === key) {
 			s += "<option value='" + i + "' disabled>" + programs.items[i].name + "</option>"
 		}
 
-		else
-		{
+		else {
 			s += "<option value='" + i + "'>" + programs.items[i].name + "</option>"
-		} 
-	}		
+		}
+	}
 
-	s += "</select>"	
+	s += "</select>"
 
 	s += "<br><br><br>"
 
 	s += "<div class='prog_label underline'>Available Commands</div>"
 
-	for(let i=0; i<commands.length; i++)
-	{
+	for (let i = 0; i < commands.length; i++) {
 		s += commands[i] + "<br>"
 	}
 
@@ -3132,12 +2598,11 @@ function show_program_editor(key)
 	s += "go up; erase; format<br>"
 	s += "insert 1; add line after; prev variable; insert + 2"
 
-	show_modal("Program Editor", s)	
+	show_modal("Program Editor", s)
 
 	let prog = programs.items[key]
 
-	if(prog !== undefined)
-	{
+	if (prog !== undefined) {
 		$('#prog_key_name')[0].value = prog.name
 
 		$('#prog_p_title')[0].value = prog.primary.title
@@ -3150,61 +2615,51 @@ function show_program_editor(key)
 		$('#prog_s_dbl').prop('checked', prog.secondary.doubleclick)
 	}
 
-	$('#prog_save').click(function()
-	{
+	$('#prog_save').click(function () {
 		save_program(key, prog.name)
 	})
 
-	$('#sel_prog_swap').change(function()
-	{
+	$('#sel_prog_swap').change(function () {
 		prog_swap(key, parseInt(this.value))
-	})	
+	})
 
-	$('#sel_prog_move').change(function()
-	{
+	$('#sel_prog_move').change(function () {
 		prog_move(key, parseInt(this.value))
 	})
 
-	$('.prog_input').keyup(function(e)
-	{
+	$('.prog_input').keyup(function (e) {
 		let code = e.keyCode
 
-		if(code === 13)
-		{
+		if (code === 13) {
 			save_program(key, prog.name)
 		}
 	})
 }
 
-function prog_swap(index1, index2)
-{
-	if(index2 !== '--' && index1 !== index2)
-	{
+function prog_swap(index1, index2) {
+	if (index2 !== '--' && index1 !== index2) {
 		let temp = programs.items[index1]
 
 		programs.items[index1] = programs.items[index2]
 		programs.items[index2] = temp
 
-		msg.close()			
+		msg.close()
 		draw_prog_buttons()
 		update_programs()
 	}
 }
 
-function prog_move(oldKey, newKey)
-{
-	if(newKey !== '--' && oldKey !== newKey)
-	{
+function prog_move(oldKey, newKey) {
+	if (newKey !== '--' && oldKey !== newKey) {
 		move_in_array(programs.items, oldKey, newKey)
 
 		msg.close()
 		draw_prog_buttons()
 		update_programs()
-	}		
+	}
 }
 
-function save_program(key, name)
-{
+function save_program(key, name) {
 	let prog_key_name = $('#prog_key_name')[0].value.trim().replace(/\s+/g, '')
 
 	let p_title = $('#prog_p_title')[0].value.trim().replace(/\s+/g, ' ')
@@ -3215,8 +2670,7 @@ function save_program(key, name)
 	let s_commands = $('#prog_s_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '')
 	let s_dbl = $('#prog_s_dbl').prop('checked')
 
-	if(prog_key_name === '')
-	{
+	if (prog_key_name === '') {
 		prog_key_name = name
 		$('#prog_key_name')[0].value = name
 	}
@@ -3224,8 +2678,7 @@ function save_program(key, name)
 	$('#prog_p_commands')[0].value = p_commands
 	$('#prog_s_commands')[0].value = s_commands
 
-	if(check_program(p_commands, s_commands))
-	{
+	if (check_program(p_commands, s_commands)) {
 		msg.close()
 
 		programs.items[key].name = prog_key_name
@@ -3242,120 +2695,99 @@ function save_program(key, name)
 		update_programs()
 	}
 
-	else
-	{
+	else {
 		play('nope')
 	}
 }
 
-function check_program(p_commands, s_commands)
-{
+function check_program(p_commands, s_commands) {
 	let ok = true
 	let response = execute_program(p_commands, false)
-	
-	if(response[0] !== 'ok')
-	{
+
+	if (response[0] !== 'ok') {
 		$('#prog_p_commands_error').text('"' + response[1] + '" is not a valid command.').css('display', 'block')
 
 		focus_command_error($('#prog_p_commands')[0], response)
 
 		$('#Msg-content-default').scrollTop($('#prog_p_label').offset().top - $('#Msg-content-default').offset().top + $('#Msg-content-default').scrollTop() - 10)
-		
+
 		ok = false
 	}
 
-	else
-	{
+	else {
 		$('#prog_p_commands_error').css('display', 'none')
 	}
 
 	response = execute_program(s_commands, false)
 
-	if(response[0] !== 'ok')
-	{
+	if (response[0] !== 'ok') {
 		$('#prog_s_commands_error').text('"' + response[1] + '" is not a valid command.').css('display', 'block')
 
-		if(ok)
-		{
+		if (ok) {
 			focus_command_error($('#prog_s_commands')[0], response)
 
 			$('#Msg-content-default').scrollTop($('#prog_s_label').offset().top - $('#Msg-content-default').offset().top + $('#Msg-content-default').scrollTop() - 10)
 		}
-		
+
 		ok = false
 	}
 
-	else
-	{
+	else {
 		$('#prog_s_commands_error').css('display', 'none')
 	}
 
 	return ok
 }
 
-function focus_command_error(input, response)
-{
+function focus_command_error(input, response) {
 	let indices = []
 	let str = input.value
 	let index
 
-	for(let i=0; i<str.length;i++) 
-	{
+	for (let i = 0; i < str.length; i++) {
 		if (str[i] === ";") indices.push(i)
 	}
 
-	if(indices.length === 0)
-	{
+	if (indices.length === 0) {
 		index = 0
 	}
 
-	else
-	{
-		if(response[2] === indices.length)
-		{
+	else {
+		if (response[2] === indices.length) {
 			index = input.value.length - response[1].length
 		}
 
-		else
-		{
-			index = indices[response[2]] - response[1].length	
+		else {
+			index = indices[response[2]] - response[1].length
 		}
 	}
 
-	if(index !== undefined)
-	{
+	if (index !== undefined) {
 		input.setSelectionRange(index, index)
 	}
 
-	input.focus()		
-}	
+	input.focus()
+}
 
-function execute_program(cmds, run=true)
-{
-	if(cmds.length === 0)
-	{
+function execute_program(cmds, run = true) {
+	if (cmds.length === 0) {
 		return ["ok"]
 	}
 
 	let split = cmds.split(';')
 
-	for(let i=0; i<split.length; i++)
-	{
+	for (let i = 0; i < split.length; i++) {
 		let command = split[i].trim().replace(/\s+/g, ' ')
 
-		if(command.length === 0)
-		{
+		if (command.length === 0) {
 			continue
 		}
 
-		if(command.indexOf(' ') !== -1)
-		{
+		if (command.indexOf(' ') !== -1) {
 			let splt = command.split(' ')
 
-			if(splt[0].toLowerCase() === 'insert')
-			{
-				if(run)
-				{
+			if (splt[0].toLowerCase() === 'insert') {
+				if (run) {
 					insert_text(focused.input, splt.slice(1).join(" "))
 				}
 
@@ -3363,18 +2795,14 @@ function execute_program(cmds, run=true)
 			}
 		}
 
-		if(commands.indexOf(command.toLowerCase()) !== -1)
-		{
-			if(run)
-			{
+		if (commands.indexOf(command.toLowerCase()) !== -1) {
+			if (run) {
 				execute_command(command.toLowerCase())
 			}
 		}
 
-		else
-		{
-			if(run)
-			{
+		else {
+			if (run) {
 				show_execution_error(command)
 			}
 
@@ -3385,284 +2813,217 @@ function execute_program(cmds, run=true)
 	return ["ok"]
 }
 
-function execute_command(command)
-{
-	if(command === "clear")
-	{
+function execute_command(command) {
+	if (command === "clear") {
 		clear_input(focused.input)
 	}
 
-	else if(command === "erase")
-	{
+	else if (command === "erase") {
 		erase_character()
 	}
 
-	else if(command === "add line")
-	{
+	else if (command === "add line") {
 		add_line()
 	}
 
-	else if(command === "add line before")
-	{
+	else if (command === "add line before") {
 		add_line_before()
 	}
 
-	else if(command === "add line after")
-	{
+	else if (command === "add line after") {
 		add_line_after()
 	}
 
-	else if(command === "go to first line")
-	{
+	else if (command === "go to first line") {
 		go_to_first_input()
 	}
 
-	else if(command === "go to last line")
-	{
+	else if (command === "go to last line") {
 		go_to_last_input()
 	}
 
-	else if(command === "go to next empty line")
-	{
+	else if (command === "go to next empty line") {
 		focus_next_or_add()
 	}
 
-	else if(command === "remove line")
-	{
+	else if (command === "remove line") {
 		remove_line()
 	}
 
-	else if(command === "remove last line")
-	{
+	else if (command === "remove last line") {
 		remove_last_line()
 	}
 
-	else if(command === "remove all lines")
-	{
+	else if (command === "remove all lines") {
 		remove_all_lines()
 	}
 
-	else if(command === "prev variable")
-	{
+	else if (command === "prev variable") {
 		add_ans()
 	}
 
-	else if(command === "prev input")
-	{
+	else if (command === "prev input") {
 		add_input()
 	}
 
-	else if(command === "next variable")
-	{
+	else if (command === "next variable") {
 		add_ans(true)
 	}
 
-	else if(command === "next input")
-	{
+	else if (command === "next input") {
 		add_input(true)
 	}
 
-	else if(command === "go up")
-	{
+	else if (command === "go up") {
 		line_up()
 	}
 
-	else if(command === "go down")
-	{
+	else if (command === "go down") {
 		line_down()
 	}
 
-	else if(command === "move line up")
-	{
+	else if (command === "move line up") {
 		move_line_up()
 	}
 
-	else if(command === "move line down")
-	{
+	else if (command === "move line down") {
 		move_line_down()
 	}
 
-	else if(command === "undo")
-	{
-		undo_change()
-	}
-
-	else if(command === "redo")
-	{
-		redo_change()
-	}
-
-	else if(command === "format")
-	{
+	else if (command === "format") {
 		format_input(focused.input)
 	}
 
-	else if(command === "format all")
-	{
+	else if (command === "format all") {
 		format_all()
 	}
 
-	else if(command === "expand")
-	{
+	else if (command === "expand") {
 		expand_value(focused.input)
 	}
 
-	else if(command === "move caret to end")
-	{
+	else if (command === "move caret to end") {
 		move_caret_to_end(focused.input)
 	}
 
-	else if(command === "move caret to start")
-	{
+	else if (command === "move caret to start") {
 		move_caret_to_start(focused.input)
 	}
 
-	else if(command === "comment")
-	{
+	else if (command === "comment") {
 		comment(focused.input)
 	}
 
-	else if(command === "comment all")
-	{
+	else if (command === "comment all") {
 		comment_all()
 	}
 
-	else if(command === "uncomment")
-	{
+	else if (command === "uncomment") {
 		uncomment(focused.input)
 	}
 
-	else if(command === "uncomment all")
-	{
+	else if (command === "uncomment all") {
 		uncomment_all()
 	}
 
-	else if(command === "toggle comment")
-	{
+	else if (command === "toggle comment") {
 		toggle_comment(focused.input)
 	}
 
-	else if(command === "play done")
-	{
+	else if (command === "play done") {
 		play('done')
 	}
 
-	else if(command === "play pup")
-	{
+	else if (command === "play pup") {
 		play('pup')
 	}
 
-	else if(command === "play nope")
-	{
+	else if (command === "play nope") {
 		play('nope')
 	}
 }
 
-function go_to_first_input()
-{
+function go_to_first_input() {
 	focus_input($('.input').first()[0])
 }
 
-function go_to_last_input()
-{
+function go_to_last_input() {
 	focus_input($('.input').last()[0])
 }
 
-function show_execution_error(command)
-{
+function show_execution_error(command) {
 	let s = ""
 	s += 'An error happened while executing "' + command + '".<br><br>'
 	s += 'It is not a valid command.'
 	show_modal("Info", s)
 }
 
-function comment(input)
-{
-	if(!input.value.trim().startsWith('//'))
-	{
+function comment(input) {
+	if (!input.value.trim().startsWith('//')) {
 		replace_text(input, '// ' + input.value.trim())
 	}
 }
 
-function comment_all()
-{
-	$('.input').each(function()
-	{
+function comment_all() {
+	$('.input').each(function () {
 		comment(this)
 	})
 }
 
-function uncomment(input)
-{
-	if(input.value.trim().startsWith('//'))
-	{
+function uncomment(input) {
+	if (input.value.trim().startsWith('//')) {
 		replace_text(input, input.value.replace('//', '').trim())
 	}
 }
 
-function uncomment_all()
-{
-	$('.input').each(function()
-	{
+function uncomment_all() {
+	$('.input').each(function () {
 		uncomment(this)
 	})
 }
 
-function toggle_comment(input)
-{
-	if(!input.value.trim().startsWith('//'))
-	{
+function toggle_comment(input) {
+	if (!input.value.trim().startsWith('//')) {
 		replace_text(input, '// ' + input.value.trim())
 	}
 
-	else
-	{
+	else {
 		replace_text(input, input.value.replace('//', '').trim())
 	}
 }
 
-function rename_key(obj, old_name, new_name) 
-{
-	if (obj.hasOwnProperty(old_name)) 
-	{
+function rename_key(obj, old_name, new_name) {
+	if (obj.hasOwnProperty(old_name)) {
 		obj[new_name] = obj[old_name]
 		delete obj[old_name]
 	}
 }
 
-function move_in_array(array, old_index, new_index)
-{
-	while(old_index < 0) 
-	{
+function move_in_array(array, old_index, new_index) {
+	while (old_index < 0) {
 		old_index += array.length
 	}
 
-	while(new_index < 0) 
-	{
+	while (new_index < 0) {
 		new_index += array.length
 	}
 
-	if(new_index >= array.length) 
-	{
+	if (new_index >= array.length) {
 		let k = new_index - array.length
 
-		while((k--) + 1) 
-		{
+		while ((k--) + 1) {
 			array.push(undefined)
 		}
 	}
 
-	array.splice(new_index, 0, array.splice(old_index, 1)[0])		
+	array.splice(new_index, 0, array.splice(old_index, 1)[0])
 }
 
-function on_object_modified(item)
-{
-	try
-	{
+function on_object_modified(item) {
+	try {
 		let parsed = JSON.parse(item.value)
 
-		if(parsed.version !== item.ls_name)
-		{
+		if (parsed.version !== item.ls_name) {
 			play('nope')
 			alert("You're attempting to save an incompatible version.")
 			return
@@ -3672,145 +3033,126 @@ function on_object_modified(item)
 		play('done')
 	}
 
-	catch(err)
-	{
+	catch (err) {
 		play('nope')
 		alert('There was an error parsing the JSON.\n\n' + err)
-	}		
+	}
 }
 
-function init_msg_and_stor()
-{
+function init_msg_and_stor() {
 	msg = Msg.factory(
-	{
-		id: "default",
-		lock: false,
-		clear_editables: true,
-		window_x: "inner_right",
-		close_effect: "none",
-		show_effect: "none",
-		enable_titlebar: true,
-		center_titlebar: true,
-		titlebar_class: "!custom_titlebar !unselectable",
-		window_inner_x_class: "!titlebar_inner_x",	
-		after_show: function()
 		{
-			update_modal_scrollbar()
-		},
-		after_set: function()
-		{
-			update_modal_scrollbar()
-		}
-	})
+			id: "default",
+			lock: false,
+			clear_editables: true,
+			window_x: "inner_right",
+			close_effect: "none",
+			show_effect: "none",
+			enable_titlebar: true,
+			center_titlebar: true,
+			titlebar_class: "!custom_titlebar !unselectable",
+			window_inner_x_class: "!titlebar_inner_x",
+			after_show: function () {
+				update_modal_scrollbar()
+			},
+			after_set: function () {
+				update_modal_scrollbar()
+			}
+		})
 
 	stor = StorageUI(
-	{
-		items:
-		[
-			{
-				name: "Options Data",
-				ls_name: ls_options,
-				on_copied: function(item)
-				{
-					play('pup')
-				},
-				on_save: function(item)
-				{
-					on_object_modified(item)
-				},
-				on_reset: function(item)
-				{
-					reset_object(item.ls_name)
-				}
-			},
-			// {
-			// 	name: "Saved Data",
-			// 	ls_name: ls_saved,
-			// 	on_copied: function(item)
-			// 	{
-			// 		play('pup')
-			// 	},
-			// 	on_save: function(item)
-			// 	{
-			// 		on_object_modified(item)
-			// 	},
-			// 	on_reset: function(item)
-			// 	{
-			// 		reset_object(item.ls_name)
-			// 	}
-			// },
-			{
-				name: "Programs Data",
-				ls_name: ls_programs,
-				on_copied: function(item)
-				{
-					play('pup')
-				},
-				on_save: function(item)
-				{
-					on_object_modified(item)
-				},
-				on_reset: function(item)
-				{
-					reset_object(item.ls_name)
-				}
-			}
-		],
-		msg: msg,
-		after_reset: function(list)
 		{
-			if(list.length > 0)
-			{
-				play('done')
+			items:
+				[
+					{
+						name: "Options Data",
+						ls_name: ls_options,
+						on_copied: function (item) {
+							play('pup')
+						},
+						on_save: function (item) {
+							on_object_modified(item)
+						},
+						on_reset: function (item) {
+							reset_object(item.ls_name)
+						}
+					},
+					// {
+					// 	name: "Saved Data",
+					// 	ls_name: ls_saved,
+					// 	on_copied: function(item)
+					// 	{
+					// 		play('pup')
+					// 	},
+					// 	on_save: function(item)
+					// 	{
+					// 		on_object_modified(item)
+					// 	},
+					// 	on_reset: function(item)
+					// 	{
+					// 		reset_object(item.ls_name)
+					// 	}
+					// },
+					{
+						name: "Programs Data",
+						ls_name: ls_programs,
+						on_copied: function (item) {
+							play('pup')
+						},
+						on_save: function (item) {
+							on_object_modified(item)
+						},
+						on_reset: function (item) {
+							reset_object(item.ls_name)
+						}
+					}
+				],
+			msg: msg,
+			after_reset: function (list) {
+				if (list.length > 0) {
+					play('done')
+				}
 			}
-		}
-	})
+		})
 
 	msg.create()
 
 	$(`#Msg-content-container-default`).niceScroll
-	({
-		zindex: 9999999,
-		autohidemode: false,
-		cursorcolor: "#AFAFAF",
-		cursorborder: "0px solid white",
-		cursorwidth: "7px"	
-	})
+		({
+			zindex: 9999999,
+			autohidemode: false,
+			cursorcolor: "#AFAFAF",
+			cursorborder: "0px solid white",
+			cursorwidth: "7px"
+		})
 }
 
-function show_modal(title, html, callback=function(){})
-{
+function show_modal(title, html, callback = function () { }) {
 	msg.show([title, html], callback)
 }
 
-function start_main_scrollbar()
-{
+function start_main_scrollbar() {
 	main_scrollbar = new PerfectScrollbar("#lines_container",
-	{
-		minScrollbarLength: 50,
-		suppressScrollX: true,
-		scrollingThreshold: 3000
-	})
+		{
+			minScrollbarLength: 50,
+			suppressScrollX: true,
+			scrollingThreshold: 3000
+		})
 }
 
-function update_main_scrollbar()
-{
-	if(main_scrollbar !== undefined)
-	{
-		if(main_scrollbar.element !== null)
-		{
+function update_main_scrollbar() {
+	if (main_scrollbar !== undefined) {
+		if (main_scrollbar.element !== null) {
 			main_scrollbar.update()
 		}
 	}
 }
 
-function update_modal_scrollbar()
-{
-	$(`#Msg-content-container-default`).getNiceScroll().resize()		
+function update_modal_scrollbar() {
+	$(`#Msg-content-container-default`).getNiceScroll().resize()
 }
 
-function set_modal_theme(a=true)
-{
+function set_modal_theme(a = true) {
 	let background_color = $("body").css("background-color")
 	let background_color_2 = colorlib.get_lighter_or_darker(background_color, 0.07)
 	let font_color = colorlib.get_lighter_or_darker(background_color, 0.8)
@@ -3820,61 +3162,51 @@ function set_modal_theme(a=true)
 	let css = `
 	<style class='appended_style'>
 
-	.Msg-overlay
-	{
+	.Msg-overlay {
 		background-color: ${overlay_color} !important;
 		color: ${background_color} !important;
 	}
 
-	.Msg-window
-	{
+	.Msg-window {
 		background-color: ${background_color} !important;
 		color: ${font_color} !important;
 	}
 
-	.Msg-window-inner-x:hover
-	{
+	.Msg-window-inner-x:hover {
 		background-color: ${background_color_2} !important;
 	}	
 
-	.custom_titlebar
-	{
+	.custom_titlebar {
 		background-color: ${background_color_2} !important;
 		color: ${font_color} !important;
 	}
 
-	.titlebar_inner_x
-	{
+	.titlebar_inner_x {
 		background-color: ${background_color_2} !important;
 	}
 
-	.titlebar_inner_x:hover
-	{
+	.titlebar_inner_x:hover {
 		background-color: ${background_color} !important;
 	}
 
-	.custom_popup
-	{
+	.custom_popup {
 		border: 1px solid ${font_color} !important;
 	}	
 
-	.nicescroll-cursors
-	{
+	.nicescroll-cursors {
 		background-color: ${scrollbar_color} !important;
 	}
 
-	.linky, .linky2, .linky3, a:visited, a:hover, a:link
-	{
+	.linky, .linky2, .linky3, a:visited, a:hover, a:link {
 		color: ${font_color} !important;
 	}
 
 	</style>
 	`
 
-	$(".appended_style").each(function()
-	{
+	$(".appended_style").each(function () {
 		$(this).remove()
 	})
 
-	$("head").append(css)	
+	$("head").append(css)
 }
