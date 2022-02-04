@@ -366,7 +366,7 @@ function add_line(value = false) {
 	}
 
 	else {
-		let last_var = DOM.dataset(DOM.els(".input").slice(-1)[0], "variable")
+		let last_var = DOM.dataset(get_last_input(), "variable")
 		letter = increase_var(last_var).substring(1)
 	}
 
@@ -386,7 +386,7 @@ function add_line(value = false) {
 	
 	DOM.el("#lines").appendChild(el)
 
-	let input = DOM.els(".input").slice(-1)[0]
+	let input = get_last_input()
 
 	focused.input = input
 
@@ -431,7 +431,9 @@ function add_line_before() {
 }
 
 function add_line_after() {
-	if (focused.input.parent().index() === $(".line").length - 1) {
+	let index = DOM.index(focused.input)
+
+	if (index === DOM.els(".line").length - 1) {
 		add_line()
 	}
 
@@ -441,15 +443,13 @@ function add_line_after() {
 }
 
 function remove_line() {
+	let index = DOM.index(focused.input)
+
 	if ($(".line").length === 1) {
 		clear_input(focused.input)
-	}
-
-	else if (focused.input.parent().index() === $(".line").length - 1) {
+	} else if (index === DOM.els(".line").length - 1) {
 		remove_last_line()
-	}
-
-	else {
+	} else {
 		move_lines_up()
 	}
 }
@@ -473,17 +473,15 @@ function move_lines_up() {
 	let input = focused.input
 	let line = input.parentNode
 	let v = DOM.dataset(input, "variable")
-	let index = $(line).index()
+	let index = DOM.index(line)
 
 	if (index === (line_length - 1)) {
 		if (input === focused.input) {
-			$(line).prev(".line").find(".input").focus()
+			line.previousElementSibling.querySelector(".input").focus()
 		}
 
-		$(line).remove()
-
+		line.remove()
 		update_results()
-
 		return
 	}
 
@@ -525,7 +523,7 @@ function move_lines_up() {
 		inp.value = ""
 	}
 
-	$(".line").last().remove()
+	get_last_line().remove()
 	update_results()
 }
 
@@ -544,7 +542,7 @@ function move_lines_down(alt = false) {
 	let input = focused.input
 	let line = input.parentNode
 	let v = DOM.dataset(input, "variable")
-	let index = $(line).index()
+	let index = DOM.index(line)
 
 	for (let i = 0; i < line_length; i++) {
 		let ln = $(".line").get(i)
@@ -693,7 +691,7 @@ function remove_last_line() {
 		$(line).prev(".line").find(".input").focus()
 	}
 
-	$(line).remove()
+	line.remove()
 	update_results()
 }
 
@@ -1230,7 +1228,7 @@ function line_down() {
 }
 
 function move_line_up() {
-	let index = focused.input.parent().index()
+	let index = DOM.index(focused.input)
 
 	if (index === 0) {
 		play("nope")
@@ -1238,7 +1236,7 @@ function move_line_up() {
 	}
 
 	let inp = focused.input
-	let ninp = inp.parentNode.previousElementSibling().querySelector(".input")
+	let ninp = inp.parentNode.previousElementSibling.querySelector(".input")
 
 	let val = inp.value
 	let nval = ninp.value
@@ -1270,7 +1268,7 @@ function move_line_up() {
 }
 
 function move_line_down() {
-	let index = focused.input.parent().index()
+	let index = DOM.index(focused.input)
 
 	if (index === ($(".line").length - 1)) {
 		play("nope")
@@ -1278,7 +1276,7 @@ function move_line_down() {
 	}
 
 	let inp = focused.input
-	let ninp = inp.parentNode.nextElementSibling().querySelector(".input")
+	let ninp = inp.parentNode.nextElementSibling.querySelector(".input")
 
 	let val = inp.value
 	let nval = ninp.value
@@ -1314,11 +1312,11 @@ function cycle_inputs(direction) {
 		return
 	}
 
-	let index = focused.input.parent().index()
+	let index = DOM.index(focused.input)
 
 	if (direction === "down") {
 		if (index === ($(".input").length - 1)) {
-			focus_input($(".input").first()[0])
+			go_to_first_input()
 		}
 
 		else {
@@ -1328,7 +1326,7 @@ function cycle_inputs(direction) {
 
 	else {
 		if (index === 0) {
-			focus_input($(".input").last()[0])
+			go_to_last_input()
 		}
 
 		else {
@@ -1942,23 +1940,23 @@ function toggle_fraction() {
 }
 
 function copy_input_down() {
-	let og_var = DOM.dataset(input, "variable")
+	let og_var = DOM.dataset(focused.input, "variable")
 	let og_val = focused.input.value
 
 	focus_next_or_add()
 
-	if (og_var !== DOM.dataset(input, "variable")) {
+	if (og_var !== DOM.dataset(focused.input, "variable")) {
 		replace_text(focused.input, og_val)
 	}
 }
 
 function copy_result_down() {
-	let og_var = DOM.dataset(input, "variable")
+	let og_var = DOM.dataset(focused.input, "variable")
 	let og_result = get_result_text(focused.input.parentNode.querySelector(".result"))
 
 	focus_next_or_add()
 
-	if (og_var !== DOM.dataset(input, "variable")) {
+	if (og_var !== DOM.dataset(focused.input, "variable")) {
 		replace_text(focused.input, og_result)
 	}
 }
@@ -2591,12 +2589,28 @@ function execute_command(command) {
 	}
 }
 
+function get_first_line() {
+	return DOM.els(".line")[0]
+}
+
+function get_last_line() {
+	return DOM.els(".line").slice(-1)[0]
+}
+
+function get_first_input() {
+	return DOM.els(".input")[0]
+}
+
+function get_last_input() {
+	return DOM.els(".input").slice(-1)[0]
+}
+
 function go_to_first_input() {
-	focus_input($(".input").first()[0])
+	focus_input(get_first_input())
 }
 
 function go_to_last_input() {
-	focus_input($(".input").last()[0])
+	focus_input(get_last_input())
 }
 
 function show_execution_error(command) {
@@ -2709,14 +2723,15 @@ function show_modal(title, html, callback = function () { }) {
 }
 
 function set_modal_theme(a = true) {
-	let background_color = $("body").css("background-color")
+	let background_color = window.getComputedStyle(document.body, null).getPropertyValue("background-color")
 	let background_color_2 = colorlib.get_lighter_or_darker(background_color, 0.07)
 	let font_color = colorlib.get_lighter_or_darker(background_color, 0.8)
 	let overlay_color = colorlib.rgb_to_rgba(font_color, 0.8)
 
-	let css = `
-	<style class='appended_style'>
+	let el = document.createElement("style")
+	el.classList.add("appended_style")
 
+	el.innerHTML = `
 	.Msg-overlay {
 		background-color: ${overlay_color} !important;
 		color: ${background_color} !important;
@@ -2755,9 +2770,9 @@ function set_modal_theme(a = true) {
 	</style>
 	`
 
-	$(".appended_style").each(function () {
-		$(this).remove()
-	})
+	for (let item of DOM.els(".appended_style")) {
+		item.remove()
+	}
 
-	$("head").append(css)
+	DOM.el("head").append(el)
 }

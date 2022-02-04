@@ -78,3 +78,8 @@ DOM.next_all = function* (e, selector) {
     }
   }
 }
+
+// Get item index
+DOM.index = function (el) {
+  return Array.from(el.parentNode.children).indexOf(el)
+}
