@@ -169,16 +169,16 @@ function key_detection() {
 }
 
 function draw_buttons() {
-	place_button(1, "Right Click: 0.1 &nbsp;|&nbsp; Middle Click: 1/1")
-	place_button(2, "Right Click: 0.2 &nbsp;|&nbsp; Middle Click: 1/2")
-	place_button(3, "Right Click: 0.3 &nbsp;|&nbsp; Middle Click: 1/3")
-	place_button(4, "Right Click: 0.4 &nbsp;|&nbsp; Middle Click: 1/4")
-	place_button(5, "Right Click: 0.5 &nbsp;|&nbsp; Middle Click: 1/5")
-	place_button(6, "Right Click: 0.6 &nbsp;|&nbsp; Middle Click: 1/6")
-	place_button(7, "Right Click: 0.7 &nbsp;|&nbsp; Middle Click: 1/7")
-	place_button(8, "Right Click: 0.8 &nbsp;|&nbsp; Middle Click: 1/8")
-	place_button(9, "Right Click: 0.9 &nbsp;|&nbsp; Middle Click: 1/9")
-	place_button(0, "Right Click: 0. &nbsp;|&nbsp; Middle Click: 000")
+	place_button(1, "Right Click: 0.1 | Middle Click: 1/1")
+	place_button(2, "Right Click: 0.2 | Middle Click: 1/2")
+	place_button(3, "Right Click: 0.3 | Middle Click: 1/3")
+	place_button(4, "Right Click: 0.4 | Middle Click: 1/4")
+	place_button(5, "Right Click: 0.5 | Middle Click: 1/5")
+	place_button(6, "Right Click: 0.6 | Middle Click: 1/6")
+	place_button(7, "Right Click: 0.7 | Middle Click: 1/7")
+	place_button(8, "Right Click: 0.8 | Middle Click: 1/8")
+	place_button(9, "Right Click: 0.9 | Middle Click: 1/9")
+	place_button(0, "Right Click: 0. | Middle Click: 000")
 
 	place_button(".")
 	place_button(",")
@@ -191,12 +191,12 @@ function draw_buttons() {
 	place_button("/", "Right Click: Toggle Comment")
 	place_button("(")
 	place_button(")")
-	place_button("^", "Right Click: ^2 &nbsp;|&nbsp; Middle Click: ^3")
-	place_button("sqrt", "Right Click: Cube Root &nbsp;|&nbsp; Middle Click: nth Root")
-	place_button("sin", "Right Click: asin &nbsp;|&nbsp; Middle Click: asinh")
-	place_button("cos", "Right Click: acos &nbsp;|&nbsp; Middle Click: acosh")
-	place_button("tan", "Right Click: atan &nbsp;|&nbsp; Middle Click: atanh")
-	place_button("pi", "Right Click: phi &nbsp;|&nbsp; Middle Click: e")
+	place_button("^", "Right Click: ^2 | Middle Click: ^3")
+	place_button("sqrt", "Right Click: Cube Root | Middle Click: nth Root")
+	place_button("sin", "Right Click: asin | Middle Click: asinh")
+	place_button("cos", "Right Click: acos | Middle Click: acosh")
+	place_button("tan", "Right Click: atan | Middle Click: atanh")
+	place_button("pi", "Right Click: phi | Middle Click: e")
 
 	buttons_br()
 
@@ -204,12 +204,12 @@ function draw_buttons() {
 
 	buttons_br()
 
-	place_button_wider("Up", "Right Click: Move Line Up &nbsp;|&nbsp; Middle Click: Go To First Line")
-	place_button_wider("Down", "Right Click: Move Line Down &nbsp;|&nbsp; Middle Click: Go To Last Line")
-	place_button_wider("New Line", "Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before")
-	place_button_wider("Remove Line", "Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line &nbsp;|&nbsp; Middle Click: Remove All Lines")
-	place_button_wider("Clear", "Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs")
-	place_button_wider("Erase", "Right Click: Undo &nbsp;|&nbsp; Middle Click: Redo")
+	place_button_wider("Up", "Right Click: Move Line Up | Middle Click: Go To First Line")
+	place_button_wider("Down", "Right Click: Move Line Down | Middle Click: Go To Last Line")
+	place_button_wider("New Line", "Right Click: Add Line After | Middle Click: Add Line Before")
+	place_button_wider("Remove Line", "Requires Double Click | Right Click: Remove Last Line | Middle Click: Remove All Lines")
+	place_button_wider("Clear", "Requires Double Click | Right Click: Format Input | Middle Click: Format All Inputs")
+	place_button_wider("Erase", "")
 
 	for (let btn of DOM.els(".button")) {
 		if (btn.classList.contains("programmable")) {
@@ -1205,11 +1205,17 @@ function focus_input(input) {
 }
 
 function focus_next() {
-	focused.input.parentNode.nextElementSibling.querySelector(".input").focus()
+	let line = focused.input.parentNode.nextElementSibling
+	if (line) {
+		line.querySelector(".input").focus()
+	}
 }
 
 function focus_prev() {
-	focused.input.parentNode.previousElementSibling.querySelector(".input").focus()
+	let line = focused.input.parentNode.previousElementSibling
+	if (line) {
+		line.querySelector(".input").focus()
+	}
 }
 
 function line_up() {
