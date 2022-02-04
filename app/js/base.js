@@ -1,75 +1,70 @@
 let math_normal = math.create({
-	number: 'BigNumber',
+	number: "BigNumber",
 	precision: 64
 })
 
 let math_fraction = math.create({
-	number: 'Fraction'
+	number: "Fraction"
 })
 
 let letters = "abcdefghijklmnopqrstuvwxyz"
 let linevars = {}
 let about
 let site_root
-let save_enabled = true
 let options
-let saved
 let programs
-let ls_options = 'options_v4'
-let ls_saved = 'saved_v4'
-let ls_programs = 'programs_v4'
+let ls_options = "options_v4"
+let ls_programs = "programs_v4"
 let msg
-let stor
-let main_scrollbar
 let colorlib = ColorLib()
 
 let themes = [
-	'lake',
-	'leaf',
-	'bulb',
-	'wine',
-	'bubble',
-	'vapor',
-	'clouds',
-	'paper',
-	'cobalt',
-	'carbon'
+	"lake",
+	"leaf",
+	"bulb",
+	"wine",
+	"bubble",
+	"vapor",
+	"clouds",
+	"paper",
+	"cobalt",
+	"carbon"
 ]
 
 let commands = [
-	'insert x',
-	'clear',
-	'erase',
-	'add line',
-	'add line before',
-	'add line after',
-	'go to next empty line',
-	'go to first line',
-	'go to last line',
-	'remove line',
-	'remove last line',
-	'remove all lines',
-	'prev variable',
-	'prev input',
-	'next variable',
-	'next input',
-	'go up',
-	'go down',
-	'move line up',
-	'move line down',
-	'format',
-	'format all',
-	'expand',
-	'move caret to end',
-	'move caret to start',
-	'comment',
-	'comment all',
-	'uncomment',
-	'uncomment all',
-	'toggle comment',
-	'play done',
-	'play pup',
-	'play nope'
+	"insert x",
+	"clear",
+	"erase",
+	"add line",
+	"add line before",
+	"add line after",
+	"go to next empty line",
+	"go to first line",
+	"go to last line",
+	"remove line",
+	"remove last line",
+	"remove all lines",
+	"prev variable",
+	"prev input",
+	"next variable",
+	"next input",
+	"go up",
+	"go down",
+	"move line up",
+	"move line down",
+	"format",
+	"format all",
+	"expand",
+	"move caret to end",
+	"move caret to start",
+	"comment",
+	"comment all",
+	"uncomment",
+	"uncomment all",
+	"toggle comment",
+	"play done",
+	"play pup",
+	"play nope"
 ]
 
 let focused = {
@@ -77,7 +72,7 @@ let focused = {
 }
 
 function init() {
-	init_msg_and_stor()
+	init_msg()
 	get_local_storage()
 	apply_theme(options.theme)
 	apply_mode()
@@ -91,118 +86,78 @@ function init() {
 	title_click_events()
 	get_site_root()
 	adjust_volumes()
-	start_main_scrollbar()
-
-	if (saved_content === '') {
-		add_line()
-	}
-
-	else {
-		load_saved_content()
-	}
+	add_line()
 }
 
 function key_detection() {
-	$(document).keyup(function (e) {
-		let code = e.keyCode
-
-		if (code === 27) {
-			if (focused.input.value === '') {
+	document.addEventListener("keyup", function (e) {
+		if (e.key === "Escape") {
+			if (focused.input.value === "") {
 				remove_line()
-			}
-
-			else {
+			} else {
 				clear_input(focused.input)
 			}
 		}
 	})
 
-	$(document).keydown(function (e) {
+	
+	document.addEventListener("keyup", function (e) {
 		if (msg.is_open()) {
 			return
 		}
 
-		let code = e.keyCode
-
-		if (code === 13) {
+		if (e.key === "Enter") {
 			if (e.shiftKey && e.ctrlKey) {
 				expand_value(focused.input)
-			}
-
-			else if (e.shiftKey) {
-				press($(focused.input).data('variable'))
-			}
-
-			else if (e.ctrlKey) {
+			} else if (e.shiftKey) {
+				press(DOM.dataset(focused.input, "variable"))
+			} else if (e.ctrlKey) {
 				copy_input_down()
-			}
-
-			else {
+			} else {
 				focus_next_or_add()
 			}
-
-		}
-
-		else if (code === 8) {
+		} else if (e.key === "Backspace") {
 			if (e.shiftKey) {
 				clear_input(focused.input)
 				e.preventDefault()
 			}
-		}
-
-		else if (code === 9) {
+		} else if (e.key === "Tab") {
 			if (e.shiftKey) {
-				cycle_inputs('up')
-			}
-
-			else {
-				cycle_inputs('down')
+				cycle_inputs("up")
+			} else {
+				cycle_inputs("down")
 			}
 
 			e.preventDefault()
 		}
 
-		else if (code === 38) {
+		else if (e.key === "ArrowUp") {
 			if (e.shiftKey) {
 				move_line_up()
-			}
-
-			else {
+			} else {
 				line_up()
 			}
 
 			e.preventDefault()
-		}
-
-		else if (code === 40) {
+		} else if (e.key === "ArrowDown") {
 			if (e.shiftKey) {
 				move_line_down()
-			}
-
-			else {
+			} else {
 				line_down()
 			}
 
 			e.preventDefault()
-		}
-
-		else if (code === 32) {
+		} else if (e.key === " ") {
 			if (e.shiftKey && e.ctrlKey) {
 				format_input(focused.input)
-			}
-
-			else if (e.shiftKey) {
+			} else if (e.shiftKey) {
 				add_ans()
 				e.preventDefault()
-			}
-
-			else if (e.ctrlKey) {
+			} else if (e.ctrlKey) {
 				add_input()
 				e.preventDefault()
 			}
-		}
-
-		else if (code === 191) {
+		} else if (e.key === "/") {
 			if (e.shiftKey && e.ctrlKey) {
 				toggle_comment(focused.input)
 			}
@@ -215,34 +170,34 @@ function key_detection() {
 }
 
 function draw_buttons() {
-	place_button(1, 'Right Click: 0.1 &nbsp;|&nbsp; Middle Click: 1/1')
-	place_button(2, 'Right Click: 0.2 &nbsp;|&nbsp; Middle Click: 1/2')
-	place_button(3, 'Right Click: 0.3 &nbsp;|&nbsp; Middle Click: 1/3')
-	place_button(4, 'Right Click: 0.4 &nbsp;|&nbsp; Middle Click: 1/4')
-	place_button(5, 'Right Click: 0.5 &nbsp;|&nbsp; Middle Click: 1/5')
-	place_button(6, 'Right Click: 0.6 &nbsp;|&nbsp; Middle Click: 1/6')
-	place_button(7, 'Right Click: 0.7 &nbsp;|&nbsp; Middle Click: 1/7')
-	place_button(8, 'Right Click: 0.8 &nbsp;|&nbsp; Middle Click: 1/8')
-	place_button(9, 'Right Click: 0.9 &nbsp;|&nbsp; Middle Click: 1/9')
-	place_button(0, 'Right Click: 0. &nbsp;|&nbsp; Middle Click: 000')
+	place_button(1, "Right Click: 0.1 &nbsp;|&nbsp; Middle Click: 1/1")
+	place_button(2, "Right Click: 0.2 &nbsp;|&nbsp; Middle Click: 1/2")
+	place_button(3, "Right Click: 0.3 &nbsp;|&nbsp; Middle Click: 1/3")
+	place_button(4, "Right Click: 0.4 &nbsp;|&nbsp; Middle Click: 1/4")
+	place_button(5, "Right Click: 0.5 &nbsp;|&nbsp; Middle Click: 1/5")
+	place_button(6, "Right Click: 0.6 &nbsp;|&nbsp; Middle Click: 1/6")
+	place_button(7, "Right Click: 0.7 &nbsp;|&nbsp; Middle Click: 1/7")
+	place_button(8, "Right Click: 0.8 &nbsp;|&nbsp; Middle Click: 1/8")
+	place_button(9, "Right Click: 0.9 &nbsp;|&nbsp; Middle Click: 1/9")
+	place_button(0, "Right Click: 0. &nbsp;|&nbsp; Middle Click: 000")
 
-	place_button('.')
-	place_button(',')
+	place_button(".")
+	place_button(",")
 
 	buttons_br()
 
-	place_button('+')
-	place_button('-')
-	place_button('*')
-	place_button('/', 'Right Click: Toggle Comment')
-	place_button('(')
-	place_button(')')
-	place_button('^', 'Right Click: ^2 &nbsp;|&nbsp; Middle Click: ^3')
-	place_button('sqrt', 'Right Click: Cube Root &nbsp;|&nbsp; Middle Click: nth Root')
-	place_button('sin', 'Right Click: asin &nbsp;|&nbsp; Middle Click: asinh')
-	place_button('cos', 'Right Click: acos &nbsp;|&nbsp; Middle Click: acosh')
-	place_button('tan', 'Right Click: atan &nbsp;|&nbsp; Middle Click: atanh')
-	place_button('pi', 'Right Click: phi &nbsp;|&nbsp; Middle Click: e')
+	place_button("+")
+	place_button("-")
+	place_button("*")
+	place_button("/", "Right Click: Toggle Comment")
+	place_button("(")
+	place_button(")")
+	place_button("^", "Right Click: ^2 &nbsp;|&nbsp; Middle Click: ^3")
+	place_button("sqrt", "Right Click: Cube Root &nbsp;|&nbsp; Middle Click: nth Root")
+	place_button("sin", "Right Click: asin &nbsp;|&nbsp; Middle Click: asinh")
+	place_button("cos", "Right Click: acos &nbsp;|&nbsp; Middle Click: acosh")
+	place_button("tan", "Right Click: atan &nbsp;|&nbsp; Middle Click: atanh")
+	place_button("pi", "Right Click: phi &nbsp;|&nbsp; Middle Click: e")
 
 	buttons_br()
 
@@ -250,68 +205,56 @@ function draw_buttons() {
 
 	buttons_br()
 
-	place_button_wider('Up', 'Right Click: Move Line Up &nbsp;|&nbsp; Middle Click: Go To First Line')
-	place_button_wider('Down', 'Right Click: Move Line Down &nbsp;|&nbsp; Middle Click: Go To Last Line')
-	place_button_wider('New Line', 'Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before')
-	place_button_wider('Remove Line', 'Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line &nbsp;|&nbsp; Middle Click: Remove All Lines')
-	place_button_wider('Clear', 'Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs')
-	place_button_wider('Erase', 'Right Click: Undo &nbsp;|&nbsp; Middle Click: Redo')
+	place_button_wider("Up", "Right Click: Move Line Up &nbsp;|&nbsp; Middle Click: Go To First Line")
+	place_button_wider("Down", "Right Click: Move Line Down &nbsp;|&nbsp; Middle Click: Go To Last Line")
+	place_button_wider("New Line", "Right Click: Add Line After &nbsp;|&nbsp; Middle Click: Add Line Before")
+	place_button_wider("Remove Line", "Requires Double Click &nbsp;|&nbsp; Right Click: Remove Last Line &nbsp;|&nbsp; Middle Click: Remove All Lines")
+	place_button_wider("Clear", "Requires Double Click &nbsp;|&nbsp; Right Click: Format Input &nbsp;|&nbsp; Middle Click: Format All Inputs")
+	place_button_wider("Erase", "Right Click: Undo &nbsp;|&nbsp; Middle Click: Redo")
 
-	$('.button').not('.programmable').each(function () {
+	for (let btn of DOM.els(".button")) {
+		if (btn.classList.contains("programmable")) {
+			continue
+		}
+
 		let dblclickers = ["Remove Line", "Clear"]
 
-		if (dblclickers.indexOf($(this).text()) !== -1) {
-			this.addEventListener('mouseup', function (event) {
-				if (event.which === 1) {
-					if (event.detail % 2 === 0) {
-						press($(this).text())
-					}
-
-					else {
+		if (dblclickers.indexOf(btn.textContent) !== -1) {
+			btn.addEventListener("mouseup", function (e) {
+				if (e.which === 1) {
+					if (e.detail % 2 === 0) {
+						press(this.textContent)
+					} else {
 						focus_input(focused.input)
 					}
 				}
 			}, false)
-		}
-
-		else {
-			$(this).click(function () {
-				press($(this).text())
+		} else {
+			btn.addEventListener("click", function () {
+				press(this.textContent)
 			})
 		}
 
-		$(this).on('auxclick', function (e) {
-			press($(this).text(), e.which)
+		btn.addEventListener("auxclick", function (e) {
+			press(this.textContent, e.which)
 		})
 
-		tippy(this,
-			{
-				delay: [1200, 100],
-				animation: 'scale',
-				hideOnClick: true,
-				duration: 100,
-				arrow: true,
-				performance: true,
-				size: 'regular',
-				arrowSize: 'small'
-			})
-
-		disable_context_menu(this)
-	})
+		disable_context_menu(btn)		
+	}
 }
 
 function draw_prog_buttons() {
-	$('#prog_buttons').html('')
+	DOM.el("#prog_buttons").innerHTML = ""
 
 	for (let i = 0; i < 12; i++) {
-		let s = ''
+		let s = ""
 		let prog = programs.items[i]
-		let pt1 = ''
-		let pt2 = ''
-		let t1 = 'Primary'
-		let t2 = 'Secondary'
+		let pt1 = ""
+		let pt2 = ""
+		let t1 = "Primary"
+		let t2 = "Secondary"
 
-		if (prog.primary.title !== '') {
+		if (prog.primary.title !== "") {
 			t1 = prog.primary.title
 
 			if (prog.primary.doubleclick) {
@@ -319,7 +262,7 @@ function draw_prog_buttons() {
 			}
 		}
 
-		if (prog.secondary.title !== '') {
+		if (prog.secondary.title !== "") {
 			t2 = prog.secondary.title
 
 			if (prog.secondary.doubleclick) {
@@ -329,70 +272,80 @@ function draw_prog_buttons() {
 
 		s += pt1 + "Click: " + t1 + " &nbsp;|&nbsp; "
 		s += pt2 + "Right Click: " + t2 + " &nbsp;|&nbsp; "
-		s += 'Middle Click: Program'
+		s += "Middle Click: Program"
 
 		place_button_programmable(prog.name, s)
 	}
 
-	$('.button.programmable').each(function (i) {
-		this.addEventListener('mouseup', function (event) {
+	let progbuttons = DOM.els(".button.programmable")
+
+	for (let i = 0; i < progbuttons.length; i++) {
+		let btn = progbuttons[i]
+
+		btn.addEventListener("mouseup", function (event) {
 			prog_press(i, event)
 		}, false)
 
-		tippy(this,
-			{
-				delay: [1200, 100],
-				animation: 'scale',
-				hideOnClick: true,
-				duration: 100,
-				arrow: true,
-				performance: true,
-				size: 'regular',
-				arrowSize: 'small'
-			})
-
-		disable_context_menu(this)
-	})
+		disable_context_menu(btn)
+	}
 }
 
-function place_button(s, title = '') {
-	$('#buttons').append(`<button title="${title}" class='button'>${s}</button>`)
+function place_button(s, title = "") {
+	let el = document.createElement("button")
+	el.title = title
+	el.classList.add("button")
+	el.textContent = s
+	DOM.el("#buttons").appendChild(el)
 }
 
-function place_button_wider(s, title = '') {
-	$('#buttons').append(`<button title="${title}" class='button wider'>${s}</button>`)
+function place_button_wider(s, title = "") {
+	let el = document.createElement("button")
+	el.title = title
+	el.classList.add("button")
+	el.classList.add("wider")
+	el.textContent = s
+	DOM.el("#buttons").appendChild(el)
 }
 
 function place_prog_buttons_area() {
-	$('#buttons').append("<span id='prog_buttons'></span>")
+	let el = document.createElement("span")
+	el.id = "prog_buttons"
+	DOM.el("#buttons").appendChild(el)
 }
 
-function place_button_programmable(s, title = '') {
-	$('#prog_buttons').append(`<button title="${title}" class='button programmable'>${s}</button>`)
+function place_button_programmable(s, title = "") {
+	let el = document.createElement("button")
+	el.title = title
+	el.classList.add("button")
+	el.classList.add("programmable")
+	el.textContent = s
+	DOM.el("#prog_buttons").appendChild(el)
 }
 
 function buttons_br() {
-	$('#buttons').append('<br>')
+	let el = document.createElement("br")
+	DOM.el("#buttons").appendChild(el)
 }
 
 function buttons_space() {
-	let s = "<span class='buttons_space'></span>"
-	$('#buttons').append(s)
+	let el = document.createElement("span")
+	el.classList.add(buttons_space)
+	DOM.el("#buttons").appendChild(el)
 }
 
 function focus_next_or_add() {
-	let nextAll = $(focused.input).parent().nextAll('.line')
+	let next_all = DOM.next_all(focused.input.parentNode, ".line")
 	let found_line = false
 
-	$(nextAll).each(function () {
-		let inp = $(this).find('.input')[0]
+	for (let item of next_all) {
+		let inp = item.querySelector(".input")
 
-		if (inp.value === '') {
+		if (inp.value === "") {
 			focus_input(inp)
 			found_line = true
 			return false
 		}
-	})
+	}
 
 	if (!found_line) {
 		add_line()
@@ -400,82 +353,77 @@ function focus_next_or_add() {
 }
 
 function add_line(value = false) {
-	let num_lines = $('.line').length
+	let num_lines = DOM.els(".line").length
 	let letter
 
 	if (num_lines === get_max_line_length()) {
-		play('nope')
+		play("nope")
 		return
 	}
 
 	if (num_lines === 0) {
-		letter = 'a'
+		letter = "a"
 	}
 
 	else {
-		let last_var = $('.input').last().data('variable')
+		let last_var = DOM.dataset(DOM.els(".input").slice(-1)[0], "variable")
 		letter = increase_var(last_var).substring(1)
 	}
 
 	if (!value) {
-		value = ''
+		value = ""
 	}
 
-	let s = `
-	<div class='line'>
+	let el = DOM.div("line")
 
-		<button class='button variable'>$${letter}</button>
-		<input type='text' class='input' id='${letter}' value='${value}'>
+	el.innerHTML = `
+		<button class="button variable">$${letter}</button>
+		<input type="text" class="input" id="${letter}" value="${value}">
 		
-		<div class='result_container'>
-			<span class='result'></span>
-		</div>
+		<div class="result_container">
+			<span class="result"></span>
+		</div>`
+	
+	DOM.el("#lines").appendChild(el)
 
-	</div>`
-
-	$('#lines').append(s)
-
-	let input = $('.input').last()[0]
+	let input = DOM.els(".input").slice(-1)[0]
 
 	focused.input = input
 
-	$('.variable').last().click(function () {
-		press('$' + letter)
+	DOM.els(".variable").slice(-1)[0].addEventListener("click", function () {
+		press("$" + letter)
 	})
 
-	$(input).focus(function () {
+	input.addEventListener("focus", function () {
 		focused.input = this
 		change_borders()
 		check_line_visibility()
 	})
 
-	$(input).on('input', function () {
+	input.addEventListener("input", function () {
 		update_results()
 	})
 
-	$(input).keydown(function (e) {
-		let code = e.keyCode
-
-		if (code === 38 || code === 40) {
+	input.addEventListener("keydown", function (e) {
+		if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 			e.preventDefault()
 		}
 	})
 
-	$('.result').last().click(function () {
+	DOM.els(".result").slice(-1)[0].addEventListener("click", function () {
 		on_result_click(this)
 	})
 
-	$('.result').last()[0].addEventListener('mousedown', function (event) {
-		if (event.detail > 1) {
-			event.preventDefault()
+	DOM.els(".result").slice(-1)[0].addEventListener("mousedown", function (e) {
+		if (e.detail > 1) {
+			e.preventDefault()
 		}
-	}, false)
+	})
 
-	$(input).data('variable', '$' + letter)
+	DOM.dataset(input, "variable", "$" + letter)
 
 	focus_input(input)
 	move_caret_to_end(input)
-	update_main_scrollbar()
 }
 
 function add_line_before() {
@@ -483,7 +431,7 @@ function add_line_before() {
 }
 
 function add_line_after() {
-	if ($(focused.input).parent().index() === $('.line').length - 1) {
+	if (focused.input.parent().index() === $(".line").length - 1) {
 		add_line()
 	}
 
@@ -493,45 +441,43 @@ function add_line_after() {
 }
 
 function remove_line() {
-	if ($('.line').length === 1) {
+	if ($(".line").length === 1) {
 		clear_input(focused.input)
 	}
 
-	else if ($(focused.input).parent().index() === $('.line').length - 1) {
+	else if (focused.input.parent().index() === $(".line").length - 1) {
 		remove_last_line()
 	}
 
 	else {
 		move_lines_up()
 	}
-
-	update_main_scrollbar()
 }
 
 function remove_all_lines() {
 	undefine_variables()
 
-	$('#lines').html('')
+	$("#lines").html("")
 
 	add_line()
 }
 
 function move_lines_up() {
-	let line_length = $('.line').length
+	let line_length = $(".line").length
 
 	if (line_length === 1) {
-		play('nope')
+		play("nope")
 		return
 	}
 
 	let input = focused.input
-	let line = $(input).parent()[0]
-	let v = $(input).data('variable')
+	let line = input.parentNode
+	let v = DOM.dataset(input, "variable")
 	let index = $(line).index()
 
 	if (index === (line_length - 1)) {
 		if (input === focused.input) {
-			$(line).prev('.line').find('.input').focus()
+			$(line).prev(".line").find(".input").focus()
 		}
 
 		$(line).remove()
@@ -542,21 +488,21 @@ function move_lines_up() {
 	}
 
 	for (let i = 0; i < line_length; i++) {
-		let ln = $('.line').get(i)
-		let inp = $(ln).find('.input')[0]
+		let ln = $(".line").get(i)
+		let inp = $(ln).find(".input")[0]
 		let val = inp.value
 
-		if (val.trim() === '') {
+		if (val.trim() === "") {
 			continue
 		}
 
-		if (val.trim().startsWith('//')) {
+		if (val.trim().startsWith("//")) {
 			continue
 		}
 
 		val = val.replace(/\$[a-z]+/g, function (match) {
 			if (match === v) {
-				return ''
+				return ""
 			}
 
 			let ni = get_var_index(match)
@@ -572,22 +518,22 @@ function move_lines_up() {
 	}
 
 	for (let i = index + 1; i < line_length; i++) {
-		let inp = $($('.line').get(i)).find('.input')[0]
-		let ninp = $(inp).parent().prev('.line').find('.input')[0]
+		let inp = $($(".line").get(i)).find(".input")[0]
+		let ninp = $(inp).parent().prev(".line").find(".input")[0]
 
 		ninp.value = inp.value
-		inp.value = ''
+		inp.value = ""
 	}
 
-	$('.line').last().remove()
+	$(".line").last().remove()
 	update_results()
 }
 
 function move_lines_down(alt = false) {
-	let line_length = $('.line').length
+	let line_length = $(".line").length
 
 	if (line_length === get_max_line_length()) {
-		play('nope')
+		play("nope")
 		return
 	}
 
@@ -596,26 +542,26 @@ function move_lines_down(alt = false) {
 	}
 
 	let input = focused.input
-	let line = $(input).parent()[0]
-	let v = $(input).data('variable')
+	let line = input.parentNode
+	let v = DOM.dataset(input, "variable")
 	let index = $(line).index()
 
 	for (let i = 0; i < line_length; i++) {
-		let ln = $('.line').get(i)
-		let inp = $(ln).find('.input')[0]
+		let ln = $(".line").get(i)
+		let inp = $(ln).find(".input")[0]
 		let val = inp.value
 
-		if (val.trim() === '') {
+		if (val.trim() === "") {
 			continue
 		}
 
-		if (val.trim().startsWith('//')) {
+		if (val.trim().startsWith("//")) {
 			continue
 		}
 
 		val = val.replace(/\$[a-z]+/g, function (match) {
 			if (match === v) {
-				return ''
+				return ""
 			}
 
 			let ni = get_var_index(match)
@@ -632,16 +578,16 @@ function move_lines_down(alt = false) {
 
 	add_line()
 
-	line_length = $('.line').length
+	line_length = $(".line").length
 
 	for (let i = line_length - 1; i > index; i--) {
-		let inp = $($('.line').get(i)).find('.input')[0]
-		let ninp = $(inp).parent().prev('.line').find('.input')[0]
+		let inp = $($(".line").get(i)).find(".input")[0]
+		let ninp = $(inp).parent().prev(".line").find(".input")[0]
 
 		inp.value = ninp.value
 	}
 
-	input.value = ''
+	input.value = ""
 
 	focus_input(input)
 
@@ -650,7 +596,7 @@ function move_lines_down(alt = false) {
 
 function decrease_var(v) {
 	let letter = v.substring(1)
-	let res = ''
+	let res = ""
 	let decrease_next = true
 
 	for (let i = letter.length - 1; i >= 0; i--) {
@@ -677,12 +623,12 @@ function decrease_var(v) {
 		}
 	}
 
-	return '$' + res.split('').reverse().join('')
+	return "$" + res.split("").reverse().join("")
 }
 
 function increase_var(v) {
 	let letter = v.substring(1)
-	let res = ''
+	let res = ""
 	let increase_next = true
 
 	for (let i = letter.length - 1; i >= 0; i--) {
@@ -692,7 +638,7 @@ function increase_var(v) {
 				increase_next = true
 
 				if (i == 0) {
-					res += 'a'
+					res += "a"
 				}
 			}
 
@@ -707,7 +653,7 @@ function increase_var(v) {
 		}
 	}
 
-	return '$' + res.split('').reverse().join('')
+	return "$" + res.split("").reverse().join("")
 }
 
 function get_var_index(v) {
@@ -735,35 +681,34 @@ function get_var_index(v) {
 }
 
 function remove_last_line() {
-	if ($('.line').length === 1) {
+	if ($(".line").length === 1) {
 		clear_input(focused.input)
 		return
 	}
 
-	let line = $('.line').last()[0]
-	let input = $('.input').last()[0]
+	let line = $(".line").last()[0]
+	let input = $(".input").last()[0]
 
 	if (input === focused.input) {
-		$(line).prev('.line').find('.input').focus()
+		$(line).prev(".line").find(".input").focus()
 	}
 
 	$(line).remove()
 	update_results()
-	update_main_scrollbar()
 }
 
 function hide_plus() {
-	$('#plus').css('display', 'none')
+	$("#plus").css("display", "none")
 }
 
 function get_result(input) {
-	let result = $(input).parent().find('.result')[0]
-	$(result).html('')
+	let result = input.parentNode.querySelector(".result")
+	$(result).html("")
 
 	try {
 		let val = input.value
 
-		if (val.trim().startsWith('//')) {
+		if (val.trim().startsWith("//")) {
 			show_comment(input)
 			return
 		}
@@ -773,11 +718,11 @@ function get_result(input) {
 		}
 
 		if (options.fraction) {
-			result = math_fraction.eval(val + '*1', linevars)
+			result = math_fraction.eval(val + "*1", linevars)
 		}
 
 		else {
-			result = math_normal.eval(val + '*1', linevars)
+			result = math_normal.eval(val + "*1", linevars)
 		}
 
 		update_variable(input, result)
@@ -790,19 +735,19 @@ function get_result(input) {
 }
 
 function show_error(input) {
-	show_result(input, 'Error')
+	show_result(input, "Error")
 }
 
 function show_comment(input) {
-	show_result(input, 'Comment')
+	show_result(input, "Comment")
 }
 
 function show_result(input, s) {
-	$(input).parent().find('.result').html(s)
+	input.parentNode.querySelector(".result").innerHTML = s
 }
 
 function update_variable(input, val) {
-	linevars[$(input).data('variable')] = val
+	linevars[DOM.dataset(input, "variable")] = val
 }
 
 function improper_to_mixed(n, d) {
@@ -813,7 +758,7 @@ function improper_to_mixed(n, d) {
 
 function format_result(n, f = false) {
 	if (options.fraction && !f) {
-		let split = math_fraction.format(n).split('/')
+		let split = math_fraction.format(n).split("/")
 
 		if (split.length === 2) {
 			let sup = split[0]
@@ -835,11 +780,11 @@ function format_result(n, f = false) {
 					return format_result(mwhole, true)
 				}
 
-				return `<span class='resolved'><span class='mwhole'>${mwhole}</span><span class='fraction'><sup>${sup}</sup><sub>${sub}</sub></span></span>`
+				return `<span class="resolved"><span class="mwhole">${mwhole}</span><span class="fraction"><sup>${sup}</sup><sub>${sub}</sub></span></span>`
 			}
 
 			else {
-				return `<span class='resolved'><span class='fraction'><sup>${sup}</sup><sub>${sub}</sub></span></span>`
+				return `<span class="resolved"><span class="fraction"><sup>${sup}</sup><sub>${sub}</sub></span></span>`
 			}
 		}
 
@@ -856,22 +801,22 @@ function format_result(n, f = false) {
 		let ns = n.toString()
 		let whole, decimal
 
-		if (ns.indexOf('.') !== -1) {
-			let split = ns.split('.')
-			whole = split[0].toString() + '.'
+		if (ns.indexOf(".") !== -1) {
+			let split = ns.split(".")
+			whole = split[0].toString() + "."
 			decimal = split[1].toString()
 		}
 
 		else {
 			whole = n.toString()
-			decimal = ''
+			decimal = ""
 		}
 
 		if (options.commas) {
 			whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 		}
 
-		return `<span class='resolved'><span class='whole'>${whole}</span><span class='decimal'>${decimal}</span></span>`
+		return `<span class="resolved"><span class="whole">${whole}</span><span class="decimal">${decimal}</span></span>`
 	}
 }
 
@@ -935,12 +880,11 @@ function press(s, aux = false) {
 		return
 	}
 
-	let v = $(focused.input).data('variable')
+	let v = DOM.dataset(focused.input, "variable")
 
 	if (s === v) {
 		focus_next_or_add()
-
-		v = $(focused.input).data('variable')
+		v = DOM.dataset(focused.input, "variable")
 
 		if (s === v) {
 			return
@@ -1144,11 +1088,11 @@ function prog_press(key, e) {
 }
 
 function clear_input(input) {
-	if (input.value === '') {
+	if (input.value === "") {
 		return
 	}
 
-	replace_text(input, '')
+	replace_text(input, "")
 }
 
 let update_results = (function () {
@@ -1165,27 +1109,27 @@ function do_update_results() {
 	undefine_variables()
 	let variables = {}
 
-	$('.input').each(function () {
-		let v = $(this).data('variable')
+	for (let input of DOM.els(".input")) {
+		let v = DOM.dataset(input, "variable")
 		variables[v] = {}
 		let vr = variables[v]
 		vr.edges = []
-	})
+	}
 
-	$('.input').each(function () {
-		let v = $(this).data('variable')
-		let val = this.value
+	for (let input of DOM.els(".input")) {
+		let v = DOM.dataset(input, "variable")
+		let val = input.value
 
-		if (val.trim() === '') {
+		if (val.trim() === "") {
 			if (val.length > 0) {
-				this.value = ''
+				input.value = ""
 			}
 
-			return true
+			continue
 		}
 
-		if (val.trim().startsWith('//')) {
-			return true
+		if (val.trim().startsWith("//")) {
+			continue
 		}
 
 		let matches = val.match(/\$[a-z]+/g)
@@ -1193,7 +1137,7 @@ function do_update_results() {
 		if (matches !== null) {
 			variables[v].edges = matches
 		}
-	})
+	}
 
 	let sorted = []
 	let n = 0
@@ -1224,18 +1168,16 @@ function do_update_results() {
 		}
 
 		if (!acyclic) {
-			$('.input').each(function () {
-				let v = $(this).data('variable')
+			for (let input of DOM.els(".input")) {
+				let v = DOM.dataset(input, "variable")
 				let letter = v.substring(1)
 
 				if (sorted.indexOf(v) !== -1) {
-					get_result($('#' + letter)[0])
+					get_result($("#" + letter)[0])
+				} else {
+					show_result($("#" + letter)[0], "Not Acyclical")
 				}
-
-				else {
-					show_result($('#' + letter)[0], 'Not Acyclical')
-				}
-			})
+			}
 
 			return
 		}
@@ -1247,23 +1189,23 @@ function do_update_results() {
 
 	for (let i = 0; i < sorted.length; i++) {
 		let letter = sorted[i].substring(1)
-		get_result($('#' + letter)[0])
+		get_result(DOM.el("#" + letter))
 	}
 }
 
 function check_line_visibility() {
-	let it = $(focused.input).parent()[0].getBoundingClientRect().top
-	let ct = $('#lines_container').offset().top
+	let it = focused.input.parentNode.getBoundingClientRect().top
+	let ct = $("#lines_container").offset().top
 
 	if (it < ct) {
-		$('#lines_container').scrollTop($('#lines_container').scrollTop() - (ct - it))
+		$("#lines_container").scrollTop($("#lines_container").scrollTop() - (ct - it))
 	}
 
-	let ib = it + $(focused.input).parent().outerHeight()
-	let cb = ct + $('#lines_container').outerHeight()
+	let ib = it + focused.input.parentNode.offsetHeight
+	let cb = ct + DOM.el("#lines_container").offsetHeight
 
 	if (ib > cb) {
-		$('#lines_container').scrollTop($('#lines_container').scrollTop() + (ib - cb))
+		DOM.el("#lines_container").scrollTop = DOM.el("#lines_container").scrollTop + (ib - cb)
 	}
 }
 
@@ -1272,11 +1214,11 @@ function focus_input(input) {
 }
 
 function focus_next() {
-	$(focused.input).parent().next('.line').find('.input').focus()
+	focused.input.parentNode.nextElementSibling.querySelector(".input").focus()
 }
 
 function focus_prev() {
-	$(focused.input).parent().prev('.line').find('.input').focus()
+	focused.input.parentNode.previousElementSibling.querySelector(".input").focus()
 }
 
 function line_up() {
@@ -1288,32 +1230,32 @@ function line_down() {
 }
 
 function move_line_up() {
-	let index = $(focused.input).parent().index()
+	let index = focused.input.parent().index()
 
 	if (index === 0) {
-		play('nope')
+		play("nope")
 		return
 	}
 
 	let inp = focused.input
-	let ninp = $(inp).parent().prev('.line').find('.input')[0]
+	let ninp = $(inp).parent().prev(".line").find(".input")[0]
 
 	let val = inp.value
 	let nval = ninp.value
 
-	let v = $(inp).data('variable')
-	let nv = $(ninp).data('variable')
+	let v = DOM.dataset(inp, "variable")
+	let nv = DOM.dataset(ninp, "variable")
 
-	let cv = '$@!#' + v.substring(1)
-	let cnv = '$@!#' + nv.substring(1)
+	let cv = "$@!#" + v.substring(1)
+	let cnv = "$@!#" + nv.substring(1)
 
-	let re = new RegExp("\\$" + v.substring(1), 'g')
-	let re2 = new RegExp("\\$" + nv.substring(1), 'g')
+	let re = new RegExp("\\$" + v.substring(1), "g")
+	let re2 = new RegExp("\\$" + nv.substring(1), "g")
 
-	$('.input').each(function () {
+	$(".input").each(function () {
 		let vl = this.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
-		this.value = vl.replace(/@!#/g, '')
+		this.value = vl.replace(/@!#/g, "")
 	})
 
 	val = inp.value
@@ -1328,33 +1270,33 @@ function move_line_up() {
 }
 
 function move_line_down() {
-	let index = $(focused.input).parent().index()
+	let index = focused.input.parent().index()
 
-	if (index === ($('.line').length - 1)) {
-		play('nope')
+	if (index === ($(".line").length - 1)) {
+		play("nope")
 		return
 	}
 
 	let inp = focused.input
-	let ninp = $(inp).parent().next('.line').find('.input')[0]
+	let ninp = inp.parentNode.nextElementSibling().querySelector(".input")
 
 	let val = inp.value
 	let nval = ninp.value
 
-	let v = $(inp).data('variable')
-	let nv = $(ninp).data('variable')
+	let v = DOM.dataset(inp, "variable")
+	let nv = DOM.dataset(ninp, "variable")
 
-	let cv = '$@!#' + v.substring(1)
-	let cnv = '$@!#' + nv.substring(1)
+	let cv = "$@!#" + v.substring(1)
+	let cnv = "$@!#" + nv.substring(1)
 
-	let re = new RegExp("\\$" + v.substring(1), 'g')
-	let re2 = new RegExp("\\$" + nv.substring(1), 'g')
+	let re = new RegExp("\\$" + v.substring(1), "g")
+	let re2 = new RegExp("\\$" + nv.substring(1), "g")
 
-	$('.input').each(function () {
-		let vl = this.value.replace(re, cnv)
+	for (let input of DOM.els(".input")) {
+		let vl = input.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
-		this.value = vl.replace(/@!#/g, '')
-	})
+		input.value = vl.replace(/@!#/g, "")
+	}
 
 	val = inp.value
 	nval = ninp.value
@@ -1368,15 +1310,15 @@ function move_line_down() {
 }
 
 function cycle_inputs(direction) {
-	if ($('.input').length === 1) {
+	if ($(".input").length === 1) {
 		return
 	}
 
-	let index = $(focused.input).parent().index()
+	let index = focused.input.parent().index()
 
-	if (direction === 'down') {
-		if (index === ($('.input').length - 1)) {
-			focus_input($('.input').first()[0])
+	if (direction === "down") {
+		if (index === ($(".input").length - 1)) {
+			focus_input($(".input").first()[0])
 		}
 
 		else {
@@ -1386,7 +1328,7 @@ function cycle_inputs(direction) {
 
 	else {
 		if (index === 0) {
-			focus_input($('.input').last()[0])
+			focus_input($(".input").last()[0])
 		}
 
 		else {
@@ -1396,20 +1338,20 @@ function cycle_inputs(direction) {
 }
 
 function change_borders() {
-	$('.input').each(function () {
-		$(this).removeClass("input_focus")
-	})
+	for (let input of DOM.els(".input")) {
+		input.classList.remove("input_focus")
+	}
 
-	$(focused.input).addClass("input_focus")
+	focused.input.classList.add("input_focus")
 }
 
 function place_lines_container() {
-	let h = $(window).height() - $('#app_top').outerHeight()
-	$('#lines_container').css('height', h + 'px')
+	let h = window.innerHeight - DOM.el("#app_top").offsetHeight
+	DOM.el("#lines_container").style.height = `${h}px`
 }
 
 function resize_events() {
-	$(window).resize(function () {
+	window.addEventListener("resize", function () {
 		resize_timer()
 	})
 }
@@ -1427,9 +1369,9 @@ let resize_timer = (function () {
 
 function play(what) {
 	if (options.sound) {
-		$('#' + what)[0].pause()
-		$('#' + what)[0].currentTime = 0
-		$('#' + what)[0].play()
+		$("#" + what)[0].pause()
+		$("#" + what)[0].currentTime = 0
+		$("#" + what)[0].play()
 	}
 }
 
@@ -1439,145 +1381,21 @@ function refresh_page() {
 
 function new_sheet() {
 	remove_all_lines()
-	edit_url('')
-}
-
-function check_new_sheet() {
-	let s = stringify_sheet()
-
-	if (s.trim().replace(/@!#/g, '').length < 1) {
-		new_sheet()
-		return
-	}
-
-	if (saved_content !== s) {
-		let conf = confirm("This will discard all unsaved changes. Are you sure?")
-
-		if (conf) {
-			new_sheet()
-		}
-	}
-
-	else {
-		new_sheet()
-	}
+	edit_url("")
 }
 
 function title_click_events() {
-	$('#lnk_new').click(function () {
-		check_new_sheet()
+	$("#lnk_new").click(function () {
+		new_sheet()
 	})
 
-	$('#lnk_save').click(function () {
-		save_sheet()
-	})
-
-	$('#lnk_options').click(function () {
+	$("#lnk_options").click(function () {
 		show_options()
 	})
 
-	$('#lnk_more').click(function () {
-		show_more()
+	$("#lnk_about").click(function () {
+		show_about()
 	})
-}
-
-function save_sheet() {
-	if (!save_enabled) {
-		return
-	}
-
-	let s = stringify_sheet()
-
-	if (s.trim().replace(/@!#/g, '').length < 1) {
-		show_modal("Info", "You can't save an empty sheet.")
-		return
-	}
-
-	else if (s.length > 50000) {
-		show_modal("Info", "Sheet is too big.")
-		return
-	}
-
-	save_enabled = false
-
-	$.post('/save_sheet/',
-		{
-			csrfmiddlewaretoken: csrf_token,
-			content: s
-		})
-
-		.done(function (data) {
-			on_save_response(data.response, s)
-		})
-
-		.fail(function (data) {
-			show_modal("Info", 'A network error occurred.')
-		})
-
-		.always(function () {
-			save_enabled = true
-		})
-}
-
-function on_save_response(response, svd) {
-	if (response === 'empty') {
-		show_modal("Info", "You can't save an empty sheet.")
-	}
-
-	else if (response === 'toobig') {
-		show_modal("Info", "Sheet is too big.")
-	}
-
-	else {
-		let uparams = make_uparams(response)
-
-		edit_url(uparams)
-
-		let s = ""
-		let url = site_root + uparams
-
-		s += url + "<br><br>"
-
-		s += "<span id='ctcb' class='linky2'>Copy To Clipboard</span>"
-
-		show_modal("Saved", s, function () {
-			play('done')
-		})
-
-		$('#ctcb').click(function () {
-			copy_to_clipboard(url)
-			play('pup')
-			msg.close()
-		})
-
-		add_to_saved(url, svd)
-
-		saved_content = svd
-	}
-}
-
-function add_to_saved(url, svd) {
-	if (saved === undefined) {
-		saved = []
-	}
-
-	let split = svd.split('@!#')
-	let num_lines = split.length
-	let n = Math.min(5, split.length)
-	let sample = ''
-
-	for (let i = 0; i < n; i++) {
-		let line = split[i].substring(0, 100).trim()
-
-		if (line === '') {
-			line = 'Empty'
-		}
-
-		sample += line + '\n'
-	}
-
-	saved.items.unshift([dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT"), url, num_lines, sample, options.fraction])
-	update_saved()
 }
 
 function copy_to_clipboard(s) {
@@ -1598,19 +1416,19 @@ function get_url_param(param) {
 }
 
 function edit_url(s) {
-	window.history.pushState({ "pageTitle": "title", "content": "etc" }, "", '/' + s)
+	window.history.pushState({ "pageTitle": "title", "content": "etc" }, "", "/" + s)
 }
 
 function stringify_sheet() {
 	let s = ""
 
-	$('.input').each(function () {
+	$(".input").each(function () {
 		s += this.value
 		s += "@!#"
 	})
 
 	s = s.substring(0, s.length - 3)
-	s = s.replace(/\\/g, '\\\\')
+	s = s.replace(/\\/g, "\\\\")
 
 	return s
 }
@@ -1625,7 +1443,6 @@ function create_about() {
 	s += "Calculations are done by the <a href='http://mathjs.org/docs/index.html' target=_blank>math.js</a> library, with high precision settings enabled.<br><br>"
 	s += "Calculations are done automatically in real time using topological sorting.<br><br>"
 	s += "Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>"
-	// s += "You can save a sheet for future use or sharing.<br><br>"
 	s += "There are 12 programmable buttons that can be set to execute certain commands in order.<br><br>"
 	s += "Note: Formatting and rounding are only applied to the displayed results, not to internal calculations."
 
@@ -1658,7 +1475,7 @@ function show_about() {
 }
 
 function check_params() {
-	if (get_url_param('frac') === null) {
+	if (get_url_param("frac") === null) {
 		if (options.fraction) {
 			toggle_fraction()
 		}
@@ -1671,39 +1488,27 @@ function check_params() {
 	}
 }
 
-function load_saved_content() {
-	check_params()
-
-	let splits = saved_content.split('@!#')
-
-	for (let i = 0; i < splits.length; i++) {
-		let value = splits[i]
-
-		add_line(value)
-	}
-
-	update_results()
-}
-
 function get_site_root() {
 	site_root = window.location.href.match(/^.*\//)[0]
 }
 
 function adjust_volumes() {
-	$('#nope')[0].volume = 0.4
-	$('#pup')[0].volume = 0.6
-	$('#done')[0].volume = 0.7
+	$("#nope")[0].volume = 0.4
+	$("#pup")[0].volume = 0.6
+	$("#done")[0].volume = 0.7
 }
 
 function add_ans(next = false) {
 	let variable
 
 	if (next) {
-		variable = $(focused.input).parent().next('.line').find('.input').data('variable')
+		let input = focused.input.parentNode.nextElementSibling.querySelector(".input")
+		variable = DOM.dataset(input, "variable")
 	}
 
 	else {
-		variable = $(focused.input).parent().prev('.line').find('.input').data('variable')
+		let input = focused.input.parentNode.previousElementSibling.querySelector(".input")
+		variable = DOM.dataset(input, "variable")
 	}
 
 	if (variable !== undefined) {
@@ -1715,11 +1520,11 @@ function add_result(next = false) {
 	let result
 
 	if (next) {
-		result = $(focused.input).parent().next('.line').find('.result')[0]
+		result = focused.input.parentNode.nextElementSibling.querySelector(".result")
 	}
-
+	
 	else {
-		result = $(focused.input).parent().prev('.line').find('.result')[0]
+		result = focused.input.parentNode.previousElementSibling.querySelector(".result")
 	}
 
 	if (result !== undefined) {
@@ -1731,40 +1536,16 @@ function add_input(next = false) {
 	let value
 
 	if (next) {
-		value = $(focused.input).parent().next('.line').find('.input').val()
+		value = focused.input.parentNode.nextElementSibling.querySelector(".input").value
 	}
 
 	else {
-		value = $(focused.input).parent().prev('.line').find('.input').val()
+		value = focused.input.parentNode.previousElementSibling.querySelector(".input").value
 	}
 
-	if (value !== undefined && value !== '') {
+	if (value !== undefined && value !== "") {
 		press(value)
 	}
-}
-
-function show_more() {
-	let s = ""
-
-	// s += "<span class='linky2' id='more_saved'>Saved</span><br><br>"
-
-	s += "<span class='linky2' id='more_data'>Data</span><br><br>"
-	s += "<span class='linky2' id='more_about'>About</span>"
-
-	show_modal("", s)
-
-	// $('#more_saved').click(function()
-	// {
-	// 	show_saved()
-	// })
-
-	$('#more_data').click(function () {
-		show_data_menu()
-	})
-
-	$('#more_about').click(function () {
-		show_about()
-	})
 }
 
 function show_options() {
@@ -1854,48 +1635,48 @@ function show_options() {
 
 	show_modal("Options", s)
 
-	$('#sel_round_places').find('option').each(function () {
+	$("#sel_round_places").find("option").each(function () {
 		if (this.value == options.round_places) {
-			$(this).prop('selected', true)
+			$(this).prop("selected", true)
 		}
 	})
 
-	$('#sel_theme').find('option').each(function () {
+	$("#sel_theme").find("option").each(function () {
 		if (this.value == options.theme) {
-			$(this).prop('selected', true)
+			$(this).prop("selected", true)
 		}
 	})
 
-	$('#chk_commas').change(function () {
-		options.commas = $(this).prop('checked')
+	$("#chk_commas").change(function () {
+		options.commas = $(this).prop("checked")
 		update_results()
 		update_options()
 	})
 
-	$('#chk_round').change(function () {
-		options.round = $(this).prop('checked')
+	$("#chk_round").change(function () {
+		options.round = $(this).prop("checked")
 		update_results()
 		update_options()
 	})
 
-	$('#sel_round_places').change(function () {
+	$("#sel_round_places").change(function () {
 		options.round_places = parseInt(this.value)
 		update_results()
 		update_options()
 	})
 
-	$('#chk_mixed').change(function () {
-		options.mixed = $(this).prop('checked')
+	$("#chk_mixed").change(function () {
+		options.mixed = $(this).prop("checked")
 		update_results()
 		update_options()
 	})
 
-	$('#chk_sound').change(function () {
-		options.sound = $(this).prop('checked')
+	$("#chk_sound").change(function () {
+		options.sound = $(this).prop("checked")
 		update_options()
 	})
 
-	$('#sel_theme').change(function () {
+	$("#sel_theme").change(function () {
 		options.theme = this.value
 		apply_theme(options.theme)
 		update_options()
@@ -1904,7 +1685,6 @@ function show_options() {
 
 function get_local_storage() {
 	get_options()
-	get_saved()
 	get_programs()
 }
 
@@ -1958,13 +1738,13 @@ function get_options() {
 	}
 
 	if (options.theme === undefined) {
-		options.theme = 'carbon'
+		options.theme = "carbon"
 		mod = true
 	}
 
 	else {
 		if (themes.indexOf(options.theme) === -1) {
-			options.theme = 'carbon'
+			options.theme = "carbon"
 			mod = true
 		}
 	}
@@ -1972,35 +1752,6 @@ function get_options() {
 	if (mod) {
 		update_options()
 	}
-}
-
-function get_saved() {
-	saved = JSON.parse(localStorage.getItem(ls_saved))
-
-	let mod = false
-
-	if (saved === null) {
-		saved = {}
-		mod = true
-	}
-
-	if (saved.version === undefined) {
-		saved.version = ls_saved
-		mod = true
-	}
-
-	if (saved.items === undefined) {
-		saved.items = []
-		mod = true
-	}
-
-	if (mod) {
-		update_saved()
-	}
-}
-
-function update_saved() {
-	localStorage.setItem(ls_saved, JSON.stringify(saved))
 }
 
 function get_programs() {
@@ -2030,7 +1781,7 @@ function get_programs() {
 		}
 
 		if (programs.items[i].name === undefined) {
-			programs.items[i].name = 'F' + (i + 1)
+			programs.items[i].name = "F" + (i + 1)
 			mod = true
 		}
 
@@ -2040,12 +1791,12 @@ function get_programs() {
 		}
 
 		if (programs.items[i].primary.title === undefined) {
-			programs.items[i].primary.title = ''
+			programs.items[i].primary.title = ""
 			mod = true
 		}
 
 		if (programs.items[i].primary.commands === undefined) {
-			programs.items[i].primary.commands = ''
+			programs.items[i].primary.commands = ""
 			mod = true
 		}
 
@@ -2060,11 +1811,11 @@ function get_programs() {
 		}
 
 		if (programs.items[i].secondary.title === undefined) {
-			programs.items[i].secondary.title = ''
+			programs.items[i].secondary.title = ""
 		}
 
 		if (programs.items[i].secondary.commands === undefined) {
-			programs.items[i].secondary.commands = ''
+			programs.items[i].secondary.commands = ""
 			mod = true
 		}
 
@@ -2083,97 +1834,10 @@ function update_programs() {
 	localStorage.setItem(ls_programs, JSON.stringify(programs))
 }
 
-function show_saved(j = 0) {
-	if (saved.items.length === 0) {
-		show_modal("Info", 'Nothing saved yet.')
-		return
-	}
-
-	else {
-		let s = ""
-		let n = Math.min(20 + j, saved.items.length)
-
-		for (let i = j; i < n; i++) {
-			s += "<a class='saved_item ancher1' target=_blank href='" + saved.items[i][1] + "' title='" + saved.items[i][3] + "'>"
-			s += saved.items[i][0]
-
-			let num_lines = saved.items[i][2]
-
-			s += "<br>" + num_lines
-
-			if (num_lines === 1) {
-				s += " Line"
-			}
-
-			else {
-				s += " Lines"
-			}
-
-			if (saved.items[i][4]) {
-				s += " - Fraction"
-			}
-
-			else {
-				s += " - Normal"
-			}
-
-			s += "</a>"
-
-			if (i < n - 1) {
-				s += "<br><br><br>"
-			}
-		}
-
-		if (n < saved.items.length) {
-			s += "<br><br><div id='svd_load_more' class='linky2' data-j=" + n + ">Load More</div>"
-		}
-
-		if (j > 0) {
-			$('#Msg-content-default').append(s)
-			update_modal_scrollbar()
-		}
-
-		else {
-			show_modal("Save History", s)
-		}
-
-		$('.saved_item').each(function () {
-			tippy(this,
-				{
-					delay: [100, 100],
-					animation: 'scale',
-					hideOnClick: true,
-					duration: 100,
-					arrow: true,
-					performance: true,
-					size: 'regular',
-					arrowSize: 'small',
-					zIndex: 60000000
-				})
-		})
-
-		$('#svd_load_more').click(function () {
-			let j = $(this).data('j')
-			$(this).remove()
-			show_saved(j)
-		})
-	}
-}
-
-function show_data_menu() {
-	stor.menu()
-}
-
 function reset_object(ls_name, data = false) {
 	if (ls_name === ls_options) {
 		reset_options(data)
-	}
-
-	else if (ls_name === ls_saved) {
-		reset_saved(data)
-	}
-
-	else if (ls_name === ls_programs) {
+	} else if (ls_name === ls_programs) {
 		reset_programs(data)
 	}
 }
@@ -2192,19 +1856,6 @@ function reset_options(data = false) {
 	update_infobar()
 	apply_theme(options.theme)
 	apply_mode()
-}
-
-function reset_saved(data = false) {
-	if (data) {
-		localStorage.setItem(ls_saved, data)
-	}
-
-	else {
-		localStorage.removeItem(ls_saved)
-	}
-
-	get_saved()
-	saved_content = ''
 }
 
 function reset_programs(data = false) {
@@ -2228,7 +1879,7 @@ function fill_sheet(x = false) {
 	}
 
 	else {
-		n = get_max_line_length() - $('.line').length
+		n = get_max_line_length() - $(".line").length
 	}
 
 	for (let i = 0; i < n; i++) {
@@ -2236,22 +1887,8 @@ function fill_sheet(x = false) {
 	}
 }
 
-function test1(x = false) {
-	fill_sheet(x)
-
-	let s = "+3*45-56/43^4+acosh(8.9)"
-
-	$('.input').each(function () {
-		this.value = this.value + s
-
-		$(this).parent().next('.line').find('.input').val($(this).data('variable'))
-	})
-
-	update_results()
-}
-
 function disable_context_menu(el) {
-	el.addEventListener('contextmenu', event => event.preventDefault())
+	el.addEventListener("contextmenu", event => event.preventDefault())
 }
 
 function focus_if_isnt(input) {
@@ -2261,7 +1898,7 @@ function focus_if_isnt(input) {
 }
 
 function get_max_line_length() {
-	return get_var_index('$zz') + 1
+	return get_var_index("$zz") + 1
 }
 
 function undefine_variables() {
@@ -2273,20 +1910,20 @@ function undefine_variables() {
 function get_result_text(el) {
 	let s = ""
 
-	if ($(el).find('sup').length > 0) {
-		if ($(el).find('.mwhole').length > 0) {
-			s += $(el).find('.mwhole').text() + ' '
+	if ($(el).find("sup").length > 0) {
+		if ($(el).find(".mwhole").length > 0) {
+			s += $(el).find(".mwhole").text() + " "
 		}
 
-		s += $(el).find('sup').text()
+		s += $(el).find("sup").text()
 
 		s += "/"
 
-		s += $(el).find('sub').text()
+		s += $(el).find("sub").text()
 	}
 
 	else {
-		s += $(el).text().replace(/,/g, '')
+		s += $(el).text().replace(/,/g, "")
 	}
 
 	return s
@@ -2294,7 +1931,7 @@ function get_result_text(el) {
 
 function on_result_click(el) {
 	copy_to_clipboard(get_result_text(el))
-	play('pup')
+	play("pup")
 }
 
 function toggle_fraction() {
@@ -2306,23 +1943,23 @@ function toggle_fraction() {
 }
 
 function copy_input_down() {
-	let og_var = $(focused.input).data('variable')
+	let og_var = DOM.dataset(input, "variable")
 	let og_val = focused.input.value
 
 	focus_next_or_add()
 
-	if (og_var !== $(focused.input).data('variable')) {
+	if (og_var !== DOM.dataset(input, "variable")) {
 		replace_text(focused.input, og_val)
 	}
 }
 
 function copy_result_down() {
-	let og_var = $(focused.input).data('variable')
-	let og_result = get_result_text($(focused.input).parent().find('.result')[0])
+	let og_var = DOM.dataset(input, "variable")
+	let og_result = get_result_text(focused.input.parent().find(".result")[0])
 
 	focus_next_or_add()
 
-	if (og_var !== $(focused.input).data('variable')) {
+	if (og_var !== DOM.dataset(input, "variable")) {
 		replace_text(focused.input, og_result)
 	}
 }
@@ -2330,19 +1967,19 @@ function copy_result_down() {
 function expand_value(input) {
 	let val = input.value
 
-	if (val.trim() === '') {
+	if (val.trim() === "") {
 		return
 	}
 
-	if (val.trim().startsWith('//')) {
+	if (val.trim().startsWith("//")) {
 		return
 	}
 
-	if (val.indexOf('$') === -1) {
+	if (val.indexOf("$") === -1) {
 		return
 	}
 
-	let vr = $(input).data('variable')
+	let vr = DOM.dataset(input, "variable")
 	let n = 0
 
 	while (true) {
@@ -2353,10 +1990,10 @@ function expand_value(input) {
 				return match
 			}
 
-			let v = $('#' + match.substring(1)).val()
+			let v = $("#" + match.substring(1)).val()
 
-			if (v !== undefined && v.trim() !== '') {
-				return "(" + v + ")"
+			if (v !== undefined && v.trim() !== "") {
+				return `(${v})`
 			}
 
 			else {
@@ -2376,17 +2013,17 @@ function expand_value(input) {
 		}
 	}
 
-	if (val.indexOf('$') !== -1) {
-		play('nope')
+	if (val.indexOf("$") !== -1) {
+		play("nope")
 		return
 	}
 
 	try {
-		val = math_normal.parse(val).toString({ parenthesis: 'auto', implicit: 'show' })
+		val = math_normal.parse(val).toString({ parenthesis: "auto", implicit: "show" })
 	}
 
 	catch (err) {
-		play('nope')
+		play("nope")
 		return
 	}
 
@@ -2396,20 +2033,20 @@ function expand_value(input) {
 function format_input(input) {
 	let val = input.value
 
-	if (val.trim() === '') {
+	if (val.trim() === "") {
 		return
 	}
 
-	if (val.trim().startsWith('//')) {
+	if (val.trim().startsWith("//")) {
 		return
 	}
 
 	try {
-		val = math_normal.parse(val).toString({ parenthesis: 'auto', implicit: 'show' })
+		val = math_normal.parse(val).toString({ parenthesis: "auto", implicit: "show" })
 	}
 
 	catch (err) {
-		play('nope')
+		play("nope")
 		return
 	}
 
@@ -2417,7 +2054,7 @@ function format_input(input) {
 }
 
 function format_all() {
-	$('.input').each(function () {
+	$(".input").each(function () {
 		format_input(this)
 	})
 }
@@ -2466,8 +2103,8 @@ function remove_ranges() {
 }
 
 function place_infobar() {
-	let w = $('#buttons').width()
-	$('#infobar').css('width', w + 'px')
+	let w = $("#buttons").width()
+	$("#infobar").css("width", w + "px")
 }
 
 function update_infobar() {
@@ -2485,15 +2122,15 @@ function update_infobar() {
 
 	s += "</span>"
 
-	$('#infobar').html(s)
+	$("#infobar").html(s)
 
-	$('#ib_fraction_toggle').click(function () {
+	$("#ib_fraction_toggle").click(function () {
 		toggle_fraction()
 	})
 }
 
 function apply_theme(theme) {
-	$('head').append("<link onload='set_modal_theme()' rel='stylesheet' href='themes/" + theme + ".css?v=" + app_version + "'>")
+	$("head").append("<link onload='set_modal_theme()' rel='stylesheet' href='themes/" + theme + ".css?v=" + app_version + "'>")
 }
 
 function apply_mode() {
@@ -2507,7 +2144,7 @@ function apply_mode() {
 		mode = "normal"
 	}
 
-	$('head').append("<link rel='stylesheet' href='modes/" + mode + ".css?v=" + app_version + "'>")
+	$("head").append("<link rel='stylesheet' href='modes/" + mode + ".css?v=" + app_version + "'>")
 }
 
 function capitalize_string(text) {
@@ -2603,41 +2240,39 @@ function show_program_editor(key) {
 	let prog = programs.items[key]
 
 	if (prog !== undefined) {
-		$('#prog_key_name')[0].value = prog.name
+		DOM.el("#prog_key_name").value = prog.name
 
-		$('#prog_p_title')[0].value = prog.primary.title
-		$('#prog_p_commands')[0].value = prog.primary.commands
+		DOM.el("#prog_p_title").value = prog.primary.title
+		DOM.el("#prog_p_commands").value = prog.primary.commands
 
-		$('#prog_s_title')[0].value = prog.secondary.title
-		$('#prog_s_commands')[0].value = prog.secondary.commands
+		DOM.el("#prog_s_title").value = prog.secondary.title
+		DOM.el("#prog_s_commands").value = prog.secondary.commands
 
-		$('#prog_p_dbl').prop('checked', prog.primary.doubleclick)
-		$('#prog_s_dbl').prop('checked', prog.secondary.doubleclick)
+		DOM.el("#prog_p_dbl").checked = prog.primary.doubleclick
+		DOM.el("#prog_s_dbl").checked = prog.secondary.doubleclick
 	}
 
-	$('#prog_save').click(function () {
+	DOM.el("#prog_save").addEventListener("click", function () {
 		save_program(key, prog.name)
 	})
 
-	$('#sel_prog_swap').change(function () {
+	DOM.el("#sel_prog_swap").addEventListener("change", function () {
 		prog_swap(key, parseInt(this.value))
 	})
 
-	$('#sel_prog_move').change(function () {
+	DOM.el("#sel_prog_move").addEventListener("change", function () {
 		prog_move(key, parseInt(this.value))
 	})
 
-	$('.prog_input').keyup(function (e) {
-		let code = e.keyCode
-
-		if (code === 13) {
+	DOM.el(".prog_input").addEventListener("keyup", function (e) {
+		if (e.key === "Enter") {
 			save_program(key, prog.name)
 		}
 	})
 }
 
 function prog_swap(index1, index2) {
-	if (index2 !== '--' && index1 !== index2) {
+	if (index2 !== "--" && index1 !== index2) {
 		let temp = programs.items[index1]
 
 		programs.items[index1] = programs.items[index2]
@@ -2650,7 +2285,7 @@ function prog_swap(index1, index2) {
 }
 
 function prog_move(oldKey, newKey) {
-	if (newKey !== '--' && oldKey !== newKey) {
+	if (newKey !== "--" && oldKey !== newKey) {
 		move_in_array(programs.items, oldKey, newKey)
 
 		msg.close()
@@ -2660,23 +2295,23 @@ function prog_move(oldKey, newKey) {
 }
 
 function save_program(key, name) {
-	let prog_key_name = $('#prog_key_name')[0].value.trim().replace(/\s+/g, '')
+	let prog_key_name = $("#prog_key_name")[0].value.trim().replace(/\s+/g, "")
 
-	let p_title = $('#prog_p_title')[0].value.trim().replace(/\s+/g, ' ')
-	let p_commands = $('#prog_p_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '')
-	let p_dbl = $('#prog_p_dbl').prop('checked')
+	let p_title = $("#prog_p_title")[0].value.trim().replace(/\s+/g, " ")
+	let p_commands = $("#prog_p_commands")[0].value.replace(/\s*;[;\s]*/g, "; ").replace(/\s+/g, " ").replace(/^;+/, "").trim().replace(/;$/, "")
+	let p_dbl = $("#prog_p_dbl").prop("checked")
 
-	let s_title = $('#prog_s_title')[0].value.trim().replace(/\s+/g, ' ')
-	let s_commands = $('#prog_s_commands')[0].value.replace(/\s*;[;\s]*/g, '; ').replace(/\s+/g, ' ').replace(/^;+/, '').trim().replace(/;$/, '')
-	let s_dbl = $('#prog_s_dbl').prop('checked')
+	let s_title = $("#prog_s_title")[0].value.trim().replace(/\s+/g, " ")
+	let s_commands = $("#prog_s_commands")[0].value.replace(/\s*;[;\s]*/g, "; ").replace(/\s+/g, " ").replace(/^;+/, "").trim().replace(/;$/, "")
+	let s_dbl = $("#prog_s_dbl").prop("checked")
 
-	if (prog_key_name === '') {
+	if (prog_key_name === "") {
 		prog_key_name = name
-		$('#prog_key_name')[0].value = name
+		$("#prog_key_name")[0].value = name
 	}
 
-	$('#prog_p_commands')[0].value = p_commands
-	$('#prog_s_commands')[0].value = s_commands
+	$("#prog_p_commands")[0].value = p_commands
+	$("#prog_s_commands")[0].value = s_commands
 
 	if (check_program(p_commands, s_commands)) {
 		msg.close()
@@ -2696,7 +2331,7 @@ function save_program(key, name) {
 	}
 
 	else {
-		play('nope')
+		play("nope")
 	}
 }
 
@@ -2704,36 +2339,36 @@ function check_program(p_commands, s_commands) {
 	let ok = true
 	let response = execute_program(p_commands, false)
 
-	if (response[0] !== 'ok') {
-		$('#prog_p_commands_error').text('"' + response[1] + '" is not a valid command.').css('display', 'block')
+	if (response[0] !== "ok") {
+		$("#prog_p_commands_error").text('"' + response[1] + '" is not a valid command.').css("display", "block")
 
-		focus_command_error($('#prog_p_commands')[0], response)
+		focus_command_error($("#prog_p_commands")[0], response)
 
-		$('#Msg-content-default').scrollTop($('#prog_p_label').offset().top - $('#Msg-content-default').offset().top + $('#Msg-content-default').scrollTop() - 10)
+		$("#Msg-content-default").scrollTop($("#prog_p_label").offset().top - $("#Msg-content-default").offset().top + $("#Msg-content-default").scrollTop() - 10)
 
 		ok = false
 	}
 
 	else {
-		$('#prog_p_commands_error').css('display', 'none')
+		$("#prog_p_commands_error").css("display", "none")
 	}
 
 	response = execute_program(s_commands, false)
 
-	if (response[0] !== 'ok') {
-		$('#prog_s_commands_error').text('"' + response[1] + '" is not a valid command.').css('display', 'block')
+	if (response[0] !== "ok") {
+		$("#prog_s_commands_error").text('"' + response[1] + '" is not a valid command.').css('display', 'block')
 
 		if (ok) {
-			focus_command_error($('#prog_s_commands')[0], response)
+			focus_command_error($("#prog_s_commands")[0], response)
 
-			$('#Msg-content-default').scrollTop($('#prog_s_label').offset().top - $('#Msg-content-default').offset().top + $('#Msg-content-default').scrollTop() - 10)
+			$("#Msg-content-default").scrollTop($("#prog_s_label").offset().top - $("#Msg-content-default").offset().top + $("#Msg-content-default").scrollTop() - 10)
 		}
 
 		ok = false
 	}
 
 	else {
-		$('#prog_s_commands_error').css('display', 'none')
+		$("#prog_s_commands_error").css("display", "none")
 	}
 
 	return ok
@@ -2774,19 +2409,19 @@ function execute_program(cmds, run = true) {
 		return ["ok"]
 	}
 
-	let split = cmds.split(';')
+	let split = cmds.split(";")
 
 	for (let i = 0; i < split.length; i++) {
-		let command = split[i].trim().replace(/\s+/g, ' ')
+		let command = split[i].trim().replace(/\s+/g, " ")
 
 		if (command.length === 0) {
 			continue
 		}
 
-		if (command.indexOf(' ') !== -1) {
-			let splt = command.split(' ')
+		if (command.indexOf(" ") !== -1) {
+			let splt = command.split(" ")
 
-			if (splt[0].toLowerCase() === 'insert') {
+			if (splt[0].toLowerCase() === "insert") {
 				if (run) {
 					insert_text(focused.input, splt.slice(1).join(" "))
 				}
@@ -2931,64 +2566,64 @@ function execute_command(command) {
 	}
 
 	else if (command === "play done") {
-		play('done')
+		play("done")
 	}
 
 	else if (command === "play pup") {
-		play('pup')
+		play("pup")
 	}
 
 	else if (command === "play nope") {
-		play('nope')
+		play("nope")
 	}
 }
 
 function go_to_first_input() {
-	focus_input($('.input').first()[0])
+	focus_input($(".input").first()[0])
 }
 
 function go_to_last_input() {
-	focus_input($('.input').last()[0])
+	focus_input($(".input").last()[0])
 }
 
 function show_execution_error(command) {
 	let s = ""
 	s += 'An error happened while executing "' + command + '".<br><br>'
-	s += 'It is not a valid command.'
+	s += "It is not a valid command."
 	show_modal("Info", s)
 }
 
 function comment(input) {
-	if (!input.value.trim().startsWith('//')) {
-		replace_text(input, '// ' + input.value.trim())
+	if (!input.value.trim().startsWith("//")) {
+		replace_text(input, "// " + input.value.trim())
 	}
 }
 
 function comment_all() {
-	$('.input').each(function () {
+	$(".input").each(function () {
 		comment(this)
 	})
 }
 
 function uncomment(input) {
-	if (input.value.trim().startsWith('//')) {
-		replace_text(input, input.value.replace('//', '').trim())
+	if (input.value.trim().startsWith("//")) {
+		replace_text(input, input.value.replace("//", "").trim())
 	}
 }
 
 function uncomment_all() {
-	$('.input').each(function () {
+	$(".input").each(function () {
 		uncomment(this)
 	})
 }
 
 function toggle_comment(input) {
-	if (!input.value.trim().startsWith('//')) {
-		replace_text(input, '// ' + input.value.trim())
+	if (!input.value.trim().startsWith("//")) {
+		replace_text(input, "// " + input.value.trim())
 	}
 
 	else {
-		replace_text(input, input.value.replace('//', '').trim())
+		replace_text(input, input.value.replace("//", "").trim())
 	}
 }
 
@@ -3024,132 +2659,40 @@ function on_object_modified(item) {
 		let parsed = JSON.parse(item.value)
 
 		if (parsed.version !== item.ls_name) {
-			play('nope')
+			play("nope")
 			alert("You're attempting to save an incompatible version.")
 			return
 		}
 
 		reset_object(item.ls_name, item.value)
-		play('done')
+		play("done")
 	}
 
 	catch (err) {
-		play('nope')
-		alert('There was an error parsing the JSON.\n\n' + err)
+		play("nope")
+		alert("There was an error parsing the JSON.\n\n" + err)
 	}
 }
 
-function init_msg_and_stor() {
-	msg = Msg.factory(
-		{
-			id: "default",
-			lock: false,
-			clear_editables: true,
-			window_x: "inner_right",
-			close_effect: "none",
-			show_effect: "none",
-			enable_titlebar: true,
-			center_titlebar: true,
-			titlebar_class: "!custom_titlebar !unselectable",
-			window_inner_x_class: "!titlebar_inner_x",
-			after_show: function () {
-				update_modal_scrollbar()
-			},
-			after_set: function () {
-				update_modal_scrollbar()
-			}
-		})
-
-	stor = StorageUI(
-		{
-			items:
-				[
-					{
-						name: "Options Data",
-						ls_name: ls_options,
-						on_copied: function (item) {
-							play('pup')
-						},
-						on_save: function (item) {
-							on_object_modified(item)
-						},
-						on_reset: function (item) {
-							reset_object(item.ls_name)
-						}
-					},
-					// {
-					// 	name: "Saved Data",
-					// 	ls_name: ls_saved,
-					// 	on_copied: function(item)
-					// 	{
-					// 		play('pup')
-					// 	},
-					// 	on_save: function(item)
-					// 	{
-					// 		on_object_modified(item)
-					// 	},
-					// 	on_reset: function(item)
-					// 	{
-					// 		reset_object(item.ls_name)
-					// 	}
-					// },
-					{
-						name: "Programs Data",
-						ls_name: ls_programs,
-						on_copied: function (item) {
-							play('pup')
-						},
-						on_save: function (item) {
-							on_object_modified(item)
-						},
-						on_reset: function (item) {
-							reset_object(item.ls_name)
-						}
-					}
-				],
-			msg: msg,
-			after_reset: function (list) {
-				if (list.length > 0) {
-					play('done')
-				}
-			}
-		})
+function init_msg() {
+	msg = Msg.factory({
+		id: "default",
+		lock: false,
+		clear_editables: true,
+		window_x: "inner_right",
+		close_effect: "none",
+		show_effect: "none",
+		enable_titlebar: true,
+		center_titlebar: true,
+		titlebar_class: "!custom_titlebar !unselectable",
+		window_inner_x_class: "!titlebar_inner_x"
+	})
 
 	msg.create()
-
-	$(`#Msg-content-container-default`).niceScroll
-		({
-			zindex: 9999999,
-			autohidemode: false,
-			cursorcolor: "#AFAFAF",
-			cursorborder: "0px solid white",
-			cursorwidth: "7px"
-		})
 }
 
 function show_modal(title, html, callback = function () { }) {
 	msg.show([title, html], callback)
-}
-
-function start_main_scrollbar() {
-	main_scrollbar = new PerfectScrollbar("#lines_container",
-		{
-			minScrollbarLength: 50,
-			suppressScrollX: true,
-			scrollingThreshold: 3000
-		})
-}
-
-function update_main_scrollbar() {
-	if (main_scrollbar !== undefined) {
-		if (main_scrollbar.element !== null) {
-			main_scrollbar.update()
-		}
-	}
-}
-
-function update_modal_scrollbar() {
-	$(`#Msg-content-container-default`).getNiceScroll().resize()
 }
 
 function set_modal_theme(a = true) {
@@ -3157,7 +2700,6 @@ function set_modal_theme(a = true) {
 	let background_color_2 = colorlib.get_lighter_or_darker(background_color, 0.07)
 	let font_color = colorlib.get_lighter_or_darker(background_color, 0.8)
 	let overlay_color = colorlib.rgb_to_rgba(font_color, 0.8)
-	let scrollbar_color = colorlib.get_lighter_or_darker(background_color, 0.4)
 
 	let css = `
 	<style class='appended_style'>
@@ -3192,10 +2734,6 @@ function set_modal_theme(a = true) {
 	.custom_popup {
 		border: 1px solid ${font_color} !important;
 	}	
-
-	.nicescroll-cursors {
-		background-color: ${scrollbar_color} !important;
-	}
 
 	.linky, .linky2, .linky3, a:visited, a:hover, a:link {
 		color: ${font_color} !important;

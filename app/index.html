@@ -10,31 +10,23 @@
 		<meta name="description" content="Powerful online calculator with multiple levels of calculations that can referenced and edited at anytime.">
 		<meta name="keywords" content="calculator, online, multiple, referenced, variables, programmable, themes, powerful, math, mathematics, arithmetic, fractions, precision, 64, web, save, share">
 
-		<link rel='shortcut icon' href="favicon.ico?v=1" type='image/x-icon'> 
+		<link rel="shortcut icon" href="favicon.ico?v=1" type="image/x-icon"> 
 		
-		<script src="js/jquery.min.js?v=1"></script>
-		<script src="js/tippy.min.js?v=1"></script>
-		<script src="js/dateformat.min.js?v=1"></script>
-		<script src="js/math.min.js?v=2"></script>
-		<script src="js/nicescroll.min.js?v=1"></script>
-		<script src="js/storageui.min.js?v=4"></script>
-		<script src="js/perfect-scrollbar.min.js?v=1"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/math.min.js"></script>
 
-		<link rel='stylesheet' href="css/tippy.min.css?v=1">
-		<link rel='stylesheet' href="css/perfect-scrollbar.css?v=1">
+		<script src="js/colorlib.js"></script>
+		<script src="js/msg.min.js"></script>
 
-		<script src="js/colorlib.js?v=1"></script>
-		<script src="js/msg.min.js?v=15"></script>
-
-		<script src="js/base.js?v=161"></script>
-		<link rel='stylesheet' href="css/style.css?v=41">
+		<script src="js/dom.js"></script>
+		<script src="js/base.js"></script>
+		<link rel="stylesheet" href="css/style.css">
 
 		<script>
 
 			$(function()
 			{
-				app_version = "21.0.0"
-				saved_content = ""
+				app_version = "22.0.0"
 				init()
 			})
 			
@@ -44,31 +36,31 @@
 
 	<body>
 
-		<div id='app_top'>
+		<div id="app_top">
 
-			<div id='title'>
-				<span class='linky' id='lnk_new'>New</span>
+			<div id="title">
+				<span class="linky" id="lnk_new">New</span>
 				&nbsp;&nbsp; - &nbsp;&nbsp;
-				<span class='linky' id='lnk_options'>Options</span>
+				<span class="linky" id="lnk_options">Options</span>
 				&nbsp;&nbsp; - &nbsp;&nbsp;
-				<span class='linky' id='lnk_more'>More</span>
+				<span class="linky" id="lnk_about">About</span>
 			</div>
 
 			<br>
 
-			<span id='buttons'></span>
+			<span id="buttons"></span>
 
-			<div id='infobar'>Nothing</div>
+			<div id="infobar">Nothing</div>
 
 		</div>
 
-		<div id='lines_container'>
-			<br><br><div id='lines'></div>
+		<div id="lines_container">
+			<br><br><div id="lines"></div>
 		</div>
 
-		<audio preload class='sound' id='nope' src='audio/nope.mp3?v=2'></audio>
-		<audio preload class='sound' id='pup' src='audio/pup.mp3?v=3'></audio>
-		<audio preload class='sound' id='done' src='audio/done.mp3?v=2'></audio>
+		<audio preload class="sound" id="nope" src="audio/nope.mp3?v=2"></audio>
+		<audio preload class="sound" id="pup" src="audio/pup.mp3?v=3"></audio>
+		<audio preload class="sound" id="done" src="audio/done.mp3?v=2"></audio>
 
 	</body>
 
