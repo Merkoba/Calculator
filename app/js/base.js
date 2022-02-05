@@ -426,7 +426,7 @@ function add_line_before() {
 }
 
 function add_line_after() {
-	let index = DOM.index(focused.input)
+	let index = DOM.index(focused.input.parentNode)
 
 	if (index === DOM.els(".line").length - 1) {
 		add_line()
@@ -436,7 +436,7 @@ function add_line_after() {
 }
 
 function remove_line() {
-	let index = DOM.index(focused.input)
+	let index = DOM.index(focused.input.parentNode)
 
 	if (DOM.els(".line").length === 1) {
 		clear_input(focused.input)
@@ -1132,7 +1132,7 @@ function line_down() {
 }
 
 function move_line_up() {
-	let index = DOM.index(focused.input)
+	let index = DOM.index(focused.input.parentNode)
 
 	if (index === 0) {
 		play("nope")
@@ -1172,7 +1172,7 @@ function move_line_up() {
 }
 
 function move_line_down() {
-	let index = DOM.index(focused.input)
+	let index = DOM.index(focused.input.parentNode)
 
 	if (index === (DOM.els(".line").length - 1)) {
 		play("nope")
@@ -1216,7 +1216,7 @@ function cycle_inputs(direction) {
 		return
 	}
 
-	let index = DOM.index(focused.input)
+	let index = DOM.index(focused.input.parentNode)
 
 	if (direction === "down") {
 		if (index === (DOM.els(".input").length - 1)) {
