@@ -214,7 +214,7 @@ function draw_buttons() {
 			continue
 		}
 
-		let dblclickers = ["Remove Line", "Clear"]
+		let dblclickers = []
 
 		if (dblclickers.indexOf(btn.textContent) !== -1) {
 			btn.addEventListener("mouseup", function (e) {
@@ -335,7 +335,7 @@ function focus_next_or_add() {
 	let found_line = false
 
 	for (let item of next_all) {
-		let inp = item.querySelector(".input")
+		let inp = DOM.el(".input", item)
 
 		if (inp.value === "") {
 			focus_input(inp)
@@ -468,7 +468,7 @@ function move_lines_up() {
 
 	if (index === (line_length - 1)) {
 		if (input === focused.input) {
-			line.previousElementSibling.querySelector(".input").focus()
+			DOM.el(".input", line.previousElementSibling).focus()
 		}
 
 		line.remove()
@@ -478,7 +478,7 @@ function move_lines_up() {
 
 	for (let i = 0; i < line_length; i++) {
 		let ln = DOM.els(".line")[i]
-		let inp = ln.querySelector(".input")
+		let inp = DOM.el(".input", ln)
 		let val = inp.value
 
 		if (val.trim() === "") {
@@ -507,8 +507,8 @@ function move_lines_up() {
 	}
 
 	for (let i = index + 1; i < line_length; i++) {
-		let inp = DOM.els(".line")[i].querySelector(".input")
-		let ninp = inp.parentNode.previousElementSibling.querySelector(".input")
+		let inp = DOM.el(".input", DOM.els(".line")[i])
+		let ninp = DOM.el(".input", inp.parentNode.previousElementSibling)
 
 		ninp.value = inp.value
 		inp.value = ""
@@ -537,7 +537,7 @@ function move_lines_down(alt = false) {
 
 	for (let i = 0; i < line_length; i++) {
 		let ln = DOM.els(".line")[i]
-		let inp = ln.querySelector(".input")
+		let inp = DOM.el(".input", ln)
 		let val = inp.value
 
 		if (val.trim() === "") {
@@ -570,9 +570,8 @@ function move_lines_down(alt = false) {
 	line_length = DOM.els(".line").length
 
 	for (let i = line_length - 1; i > index; i--) {
-		let inp = DOM.els(".line")[i].querySelector(".input")
-		let ninp = inp.parentNode.previousElementSibling.querySelector(".input")
-
+		let inp = DOM.el(".input", DOM.els(".line")[i])
+		let ninp = DOM.el(".input", inp.parentNode.previousElementSibling)
 		inp.value = ninp.value
 	}
 
@@ -669,7 +668,7 @@ function remove_last_line() {
 	let input = get_last_input()
 
 	if (input === focused.input) {
-		line.previousElementSibling.querySelector(".input").focus()
+		DOM.el(".input", line.previousElementSibling).focus()
 	}
 
 	line.remove()
@@ -677,7 +676,7 @@ function remove_last_line() {
 }
 
 function get_result(input) {
-	let result = input.parentNode.querySelector(".result")
+	let result = DOM.el(".result", input.parentNode)
 	result.innerHTML = ""
 
 	try {
@@ -716,7 +715,7 @@ function show_comment(input) {
 }
 
 function show_result(input, s) {
-	input.parentNode.querySelector(".result").innerHTML = s
+	DOM.el(".result", input.parentNode).innerHTML = s
 }
 
 function update_variable(input, val) {
@@ -1113,14 +1112,14 @@ function focus_input(input) {
 function focus_next() {
 	let line = focused.input.parentNode.nextElementSibling
 	if (line) {
-		line.querySelector(".input").focus()
+		DOM.el(".input", line).focus()
 	}
 }
 
 function focus_prev() {
 	let line = focused.input.parentNode.previousElementSibling
 	if (line) {
-		line.querySelector(".input").focus()
+		DOM.el(".input", line).focus()
 	}
 }
 
@@ -1141,7 +1140,7 @@ function move_line_up() {
 	}
 
 	let inp = focused.input
-	let ninp = inp.parentNode.previousElementSibling.querySelector(".input")
+	let ninp = DOM.el(".input", inp.parentNode.previousElementSibling)
 
 	let val = inp.value
 	let nval = ninp.value
@@ -1181,7 +1180,7 @@ function move_line_down() {
 	}
 
 	let inp = focused.input
-	let ninp = inp.parentNode.nextElementSibling.querySelector(".input")
+	let ninp = DOM.el(".input", inp.parentNode.nextElementSibling)
 
 	let val = inp.value
 	let nval = ninp.value
@@ -1394,12 +1393,12 @@ function add_ans(next = false) {
 	if (next) {
 		let line = focused.input.parentNode.nextElementSibling
 		if (!line) { return }
-		let input = line.querySelector(".input")
+		let input = DOM.el(".input", line)
 		variable = DOM.dataset(input, "variable")
 	} else {
 		let line = focused.input.parentNode.previousElementSibling
 		if (!line) { return }
-		let input = line.querySelector(".input")
+		let input = DOM.el(".input", line)
 		variable = DOM.dataset(input, "variable")
 	}
 
@@ -1412,9 +1411,9 @@ function add_result(next = false) {
 	let result
 
 	if (next) {
-		result = focused.input.parentNode.nextElementSibling.querySelector(".result")
+		result = DOM.el(".result", focused.input.parentNode.nextElementSibling)
 	} else {
-		result = focused.input.parentNode.previousElementSibling.querySelector(".result")
+		result = DOM.el(".result", focused.input.parentNode.previousElementSibling)
 	}
 
 	if (result !== undefined) {
@@ -1426,9 +1425,9 @@ function add_input(next = false) {
 	let value
 
 	if (next) {
-		value = focused.input.parentNode.nextElementSibling.querySelector(".input").value
+		value = DOM.el(focused.input.parentNode.nextElementSibling, ".input").value
 	} else {
-		value = focused.input.parentNode.previousElementSibling.querySelector(".input").value
+		value = DOM.el(focused.input.parentNode.previousElementSibling, ".input").value
 	}
 
 	if (value !== undefined && value !== "") {
@@ -1515,7 +1514,7 @@ function show_options() {
 
 	show_modal("Options", s)
 
-	let els = Array.from(DOM.el("#sel_round_places").querySelectorAll("option"))
+	let els = DOM.els("option", DOM.el("#sel_round_places"))
 	
 	for (let el of els) {
 		if (el.value == options.round_places) {
@@ -1523,7 +1522,7 @@ function show_options() {
 		}
 	}
 
-	els = Array.from(DOM.el("#sel_theme").querySelectorAll("option"))
+	els = DOM.els("option", DOM.el("#sel_theme"))
 	
 	for (let el of els) {
 		if (el.value == options.theme) {
@@ -1786,16 +1785,14 @@ function undefine_variables() {
 function get_result_text(el) {
 	let s = ""
 
-	if (Array.from(el.querySelectorAll("sup")).length > 0) {
-		if (Array.from(el.querySelectorAll(".mwhole")).length > 0) {
-			s += el.querySelector(".mwhole").textContent + " "
+	if (DOM.els("sup").length > 0) {
+		if (DOM.els(".mwhole", el).length > 0) {
+			s += DOM.el(".mwhole", el).textContent + " "
 		}
 
-		s += el.querySelector("sup").textContent
-
+		s += DOM.el("sup", el).textContent
 		s += "/"
-
-		s += el.querySelector("sub").textContent
+		s += DOM.el("sub", el).textContent
 	} else {
 		s += el.textContent.replace(/,/g, "")
 	}
@@ -1829,8 +1826,7 @@ function copy_input_down() {
 
 function copy_result_down() {
 	let og_var = DOM.dataset(focused.input, "variable")
-	let og_result = get_result_text(focused.input.parentNode.querySelector(".result"))
-
+	let og_result = get_result_text(DOM.el(".result", focused.input.parentNode))
 	focus_next_or_add()
 
 	if (og_var !== DOM.dataset(focused.input, "variable")) {

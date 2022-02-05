@@ -35,10 +35,6 @@ DOM.dataset = function (el, value, setvalue) {
     return
   }
 
-  if (!el.dataset) {
-    el.dataset = {}
-  }
-
   let id = el.dataset.dataset_id
 
   if (!id) {
