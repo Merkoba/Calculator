@@ -144,20 +144,6 @@ function key_detection() {
 			}
 
 			e.preventDefault()
-		} else if (e.key === " ") {
-			if (e.shiftKey && e.ctrlKey) {
-				format_input(focused.input)
-			} else if (e.shiftKey) {
-				add_ans()
-				e.preventDefault()
-			} else if (e.ctrlKey) {
-				add_input()
-				e.preventDefault()
-			}
-		} else if (e.key === "/") {
-			if (e.shiftKey && e.ctrlKey) {
-				toggle_comment(focused.input)
-			}
 		}
 
 		if (!e.ctrlKey) {
