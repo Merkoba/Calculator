@@ -14,6 +14,7 @@
 		
 		<script src="js/math.min.js"></script>
 		<script src="js/colorlib.js"></script>
+		<script src="js/handlebars.min.js"></script>
 		<script src="js/msg.min.js"></script>
 		<script src="js/dom.js"></script>
 		<script src="js/base.js"></script>
@@ -56,6 +57,184 @@
 		<audio preload class="sound" id="nope" src="audio/nope.mp3?v=2"></audio>
 		<audio preload class="sound" id="pup" src="audio/pup.mp3?v=3"></audio>
 		<audio preload class="sound" id="done" src="audio/done.mp3?v=2"></audio>
+
+		<!-- Templates -->
+
+		<script id='template_program_editor' type='text/x-handlebars-template' class='template'>
+			<input maxlength='5' id='prog_key_name' class='prog_input prog_key_input'><br><br><br>
+			<div id='prog_p_label' class='prog_label'>Primary Action Title</b2></div>
+			<input type='text' id='prog_p_title' class='prog_input prog_input_smaller'></input>
+			<br><br><br>
+			<div class='prog_label'>Primary Action Commands</div>
+			<input type='text' id='prog_p_commands' class='prog_input'></input>
+			<div id='prog_p_commands_error' class='error_message'></div>
+			<br><br><br>
+			<div class='prog_label'>Require Double Click</div>
+			<input type='checkbox' id='prog_p_dbl'>
+			<br><br><br><br>
+			<div id='prog_s_label' class='prog_label'>Secondary Action Title</div>
+			<input type='text' id='prog_s_title' class='prog_input prog_input_smaller'></input>
+			<br><br><br>
+			<div class='prog_label'>Secondary Action Commands</div>
+			<input type='text' id='prog_s_commands' class='prog_input'></input>
+			<div id='prog_s_commands_error' class='error_message'></div>
+			<br><br><br>
+			<div class='prog_label'>Require Double Click</div>
+			<input type='checkbox' id='prog_s_dbl'>
+			<br><br><br>
+			<span id='prog_save' class='linky2'>Save</span>
+			<br><br><br><div class='prog_label'>Swap With</div>
+			<select id='sel_prog_swap'>
+			<option value='--'></option>
+
+			{{#each programs}}
+				{{#if (eq @index ../key)}}
+					<option value='{{@index}}' disabled>{{name}}</option>
+				{{else}}
+					<option value='{{@index}}'>{{name}}</option>
+				{{/if}}
+			{{/each}}
+		
+			</select>
+		
+			<br><br><br><div class='prog_label'>Move To</div>
+		
+			<select id='sel_prog_move'>
+		
+			<option value='--'></option>
+
+			{{#each programs}}
+				{{#if (eq @index ../key)}}
+					<option value='{{@index}}' disabled>{{name}}</option>
+				{{else}}
+					<option value='{{@index}}'>{{name}}</option>
+				{{/if}}
+			{{/each}}
+		
+			</select>
+		
+			<br><br><br>
+		
+			<div class='prog_label underline'>Available Commands</div>
+
+			{{#each commands}}
+				{{this}} <br>
+			{{/each}}
+		
+			<br><br>
+		
+			<div class='prog_label underline'>Examples</div>
+			insert 34<br>
+			insert pi<br>
+			add line; insert cos(55)<br>
+			go up; erase; format<br>
+			insert 1; add line after; prev variable; insert + 2
+		</script>
+
+		<script id='template_about' type='text/x-handlebars-template' class='template'>
+			<b>Merkoba Calculator</b><br>
+			Version {{version}}<br><br>
+			This is a calculator that aims to empower users through a different workflow than what is found in most common calculator programs.<br><br>
+			It's based around multiple "line" of calculations which can be reused and edited anytime.<br><br>
+			Calculations are done by the <a href='http://mathjs.org/docs/index.html' target=_blank>math.js</a> library, with high precision settings enabled.<br><br>
+			Calculations are done automatically in real time using topological sorting.<br><br>
+			Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>
+			There are 12 programmable buttons that can be set to execute certain commands in order.<br><br>
+			Note: Formatting and rounding are only applied to the displayed results, not to internal calculations.
+		
+			<br><br><br><span class='b2'>Shortcuts</span><br><br>
+			Enter will focus the next available empty line or create a new one.<br><br>
+			Shift + Enter does the same but also adds the previous line's variable into the new one.<br><br>
+			Control + Enter does the same but also copies the line's input into the new one.<br><br>
+			Control + Shift + Enter replaces a line's input's variables with their corresponding inputs.<br><br>
+			Shift + Space adds the variable from the line above to the current line.<br><br>
+			Control + Space adds the input from the line above to the current line.<br><br>
+			Control + Shift + Space formats the input.<br><br>
+			Up and Down arrows change the focus between lines.<br><br>
+			Shift + Up and Shift + Down move the lines up or down.<br><br>
+			Tab and Shift + Tab cycle the focus between lines.<br><br>
+			Escape clears a line, removes the line if already cleared, or closes popups.<br><br>
+			Shift + Backspace clears a line.<br><br>
+			Control + Shift + / toggles line comments.<br><br>
+			Clicking on a result copies the result to the clipboard.<br><br>
+			Some buttons have other mapped functions. Hover the cursor over a button to see if it does.
+		</script>
+
+		<script id='template_options' type='text/x-handlebars-template' class='template'>
+			<div id='options_container'>
+			<div class='options_item'>
+			Add Commas
+			<div class='vseparator2'></div>
+		
+			{{#if commas}}
+				<input id='chk_commas' type='checkbox' checked>
+			{{else}}
+				<input id='chk_commas' type='checkbox'>
+			{{/if}}
+		
+			</div>
+			<div class='vseparator'></div>
+			<div class='options_item'>
+			Mixed Fractions
+			<div class='vseparator2'></div>
+		
+			{{#if mixed}}
+				<input id='chk_mixed' type='checkbox' checked>
+			{{else}}
+				<input id='chk_mixed' type='checkbox'>
+			{{/if}}
+		
+			</div>
+			<div class='vseparator'></div>
+			<div class='options_item'>
+			Round Results
+			<div class='vseparator2'></div>
+		
+			{{#if round}}
+				<input id='chk_round' type='checkbox' checked>
+			{{else}}
+				<input id='chk_round' type='checkbox'>
+			{{/if}}
+		
+			</div>
+			<div class='vseparator'></div>
+			<div class='options_item'>
+			Round Places
+			<div class='vseparator2'></div>
+			<select id='sel_round_places'>
+		
+			{{#each places}}
+				<option value='{{this}}'>{{this}}</option>
+			{{/each}}
+		
+			</select>
+			</div>
+			<div class='vseparator'></div>
+			<div class='options_item'>
+			Enable Sound
+			<div class='vseparator2'></div>
+		
+			{{#if sound}}
+				<input id='chk_sound' type='checkbox' checked>
+			{{else}}
+				<input id='chk_sound' type='checkbox'>
+			{{/if}}
+		
+			</div>
+			<div class='vseparator'></div>
+			<div class='options_item'>
+			Color Theme
+			<div class='vseparator2'></div>
+			
+			<select id='sel_theme'>
+				{{#each themes}}
+					<option value='{{lowercase}}'>{{capitalized}}</option>
+				{{/each}}
+			</select>
+
+			</div>
+			</div>
+		</script>
 
 	</body>
 

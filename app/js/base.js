@@ -9,7 +9,6 @@ let math_fraction = math.create({
 
 let letters = "abcdefghijklmnopqrstuvwxyz"
 let linevars = {}
-let about
 let site_root
 let options
 let programs
@@ -17,6 +16,7 @@ let ls_options = "options_v4"
 let ls_programs = "programs_v4"
 let msg
 let colorlib = ColorLib()
+let templates = {}
 
 let themes = [
 	"lake",
@@ -73,6 +73,7 @@ let focused = {
 
 function init() {
 	init_msg()
+	setup_templates()
 	get_local_storage()
 	apply_theme(options.theme)
 	apply_mode()
@@ -1310,45 +1311,10 @@ function stringify_sheet() {
 	return s
 }
 
-function create_about() {
-	let s = ""
-
-	s += "<b>Merkoba Calculator</b><br>"
-	s += "Version " + app_version + "<br><br>"
-	s += "This is a calculator that aims to empower users through a different workflow than what is found in most common calculator programs.<br><br>"
-	s += "It's based around multiple \"lines\" of calculations which can be reused and edited anytime.<br><br>"
-	s += "Calculations are done by the <a href='http://mathjs.org/docs/index.html' target=_blank>math.js</a> library, with high precision settings enabled.<br><br>"
-	s += "Calculations are done automatically in real time using topological sorting.<br><br>"
-	s += "Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>"
-	s += "There are 12 programmable buttons that can be set to execute certain commands in order.<br><br>"
-	s += "Note: Formatting and rounding are only applied to the displayed results, not to internal calculations."
-
-	s += "<br><br><br><span class='b2'>Shortcuts</span><br><br>"
-	s += "Enter will focus the next available empty line or create a new one.<br><br>"
-	s += "Shift + Enter does the same but also adds the previous line's variable into the new one.<br><br>"
-	s += "Control + Enter does the same but also copies the line's input into the new one.<br><br>"
-	s += "Control + Shift + Enter replaces a line's input's variables with their corresponding inputs.<br><br>"
-	s += "Shift + Space adds the variable from the line above to the current line.<br><br>"
-	s += "Control + Space adds the input from the line above to the current line.<br><br>"
-	s += "Control + Shift + Space formats the input.<br><br>"
-	s += "Up and Down arrows change the focus between lines.<br><br>"
-	s += "Shift + Up and Shift + Down move the lines up or down.<br><br>"
-	s += "Tab and Shift + Tab cycle the focus between lines.<br><br>"
-	s += "Escape clears a line, removes the line if already cleared, or closes popups.<br><br>"
-	s += "Shift + Backspace clears a line.<br><br>"
-	s += "Control + Shift + / toggles line comments.<br><br>"
-	s += "Clicking on a result copies the result to the clipboard.<br><br>"
-	s += "Some buttons have other mapped functions. Hover the cursor over a button to see if it does."
-
-	about = s
-}
-
 function show_about() {
-	if (about === undefined) {
-		create_about()
-	}
-
-	show_modal("About", about)
+	show_modal("About", templates["template_about"]({
+		version: app_version
+	}))
 }
 
 function check_params() {
@@ -1422,83 +1388,29 @@ function add_input(next = false) {
 }
 
 function show_options() {
-	let s = ""
+	let places = []
 
-	s += "<div id='options_container'>"
-	s += "<div class='options_item'>"
-	s += "Add Commas"
-	s += "<div class='vseparator2'></div>"
-
-	if (options.commas) {
-		s += "<input id='chk_commas' type='checkbox' checked>"
-	} else {
-		s += "<input id='chk_commas' type='checkbox'>"
+	for (let i=0; i<=30; i++) {
+		places.push(i)
 	}
 
-	s += "</div>"
-	s += "<div class='vseparator'></div>"
-	s += "<div class='options_item'>"
-	s += "Mixed Fractions"
-	s += "<div class='vseparator2'></div>"
+	let themelist = []
 
-	if (options.mixed) {
-		s += "<input id='chk_mixed' type='checkbox' checked>"
-	} else {
-		s += "<input id='chk_mixed' type='checkbox'>"
+	for (let theme of themes) {
+		let obj = {}
+		obj.lowercase = theme
+		obj.capitalized = capitalize_string(theme)
+		themelist.push(obj)
 	}
 
-	s += "</div>"
-	s += "<div class='vseparator'></div>"
-	s += "<div class='options_item'>"
-	s += "Round Results"
-	s += "<div class='vseparator2'></div>"
-
-	if (options.round) {
-		s += "<input id='chk_round' type='checkbox' checked>"
-	} else {
-		s += "<input id='chk_round' type='checkbox'>"
-	}
-
-	s += "</div>"
-	s += "<div class='vseparator'></div>"
-	s += "<div class='options_item'>"
-	s += "Round Places"
-	s += "<div class='vseparator2'></div>"
-	s += "<select id='sel_round_places'>"
-
-	for (let i = 0; i < 31; i++) {
-		s += "<option value='" + i + "'>" + i + "</option>"
-	}
-
-	s += "</select>"
-	s += "</div>"
-	s += "<div class='vseparator'></div>"
-	s += "<div class='options_item'>"
-	s += "Enable Sound"
-	s += "<div class='vseparator2'></div>"
-
-	if (options.sound) {
-		s += "<input id='chk_sound' type='checkbox' checked>"
-	} else {
-		s += "<input id='chk_sound' type='checkbox'>"
-	}
-
-	s += "</div>"
-	s += "<div class='vseparator'></div>"
-	s += "<div class='options_item'>"
-	s += "Color Theme"
-	s += "<div class='vseparator2'></div>"
-	s += "<select id='sel_theme'>"
-
-	for (let i = 0; i < themes.length; i++) {
-		s += "<option value='" + themes[i] + "'>" + capitalize_string(themes[i]) + "</option>"
-	}
-
-	s += "</select>"
-	s += "</div>"
-	s += "</div>"
-
-	show_modal("Options", s)
+	show_modal("Options", templates["template_options"]({
+		commas: options.commas,
+		mixed: options.mixed,
+		round: options.round,
+		sound: options.sound,
+		places: places,
+		themes: themelist
+	}))
 
 	let els = DOM.els("option", DOM.el("#sel_round_places"))
 	
@@ -2017,78 +1929,11 @@ function move_caret_to_start(input) {
 }
 
 function show_program_editor(key) {
-	let s = ""
-
-	s += "<input maxlength='5' id='prog_key_name' class='prog_input prog_key_input'><br><br><br>"
-	s += "<div id='prog_p_label' class='prog_label'>Primary Action Title</b2></div>"
-	s += "<input type='text' id='prog_p_title' class='prog_input prog_input_smaller'></input>"
-	s += "<br><br><br>"
-	s += "<div class='prog_label'>Primary Action Commands</div>"
-	s += "<input type='text' id='prog_p_commands' class='prog_input'></input>"
-	s += "<div id='prog_p_commands_error' class='error_message'></div>"
-	s += "<br><br><br>"
-	s += "<div class='prog_label'>Require Double Click</div>"
-	s += "<input type='checkbox' id='prog_p_dbl'>"
-	s += "<br><br><br><br>"
-	s += "<div id='prog_s_label' class='prog_label'>Secondary Action Title</div>"
-	s += "<input type='text' id='prog_s_title' class='prog_input prog_input_smaller'></input>"
-	s += "<br><br><br>"
-	s += "<div class='prog_label'>Secondary Action Commands</div>"
-	s += "<input type='text' id='prog_s_commands' class='prog_input'></input>"
-	s += "<div id='prog_s_commands_error' class='error_message'></div>"
-	s += "<br><br><br>"
-	s += "<div class='prog_label'>Require Double Click</div>"
-	s += "<input type='checkbox' id='prog_s_dbl'>"
-	s += "<br><br><br>"
-	s += "<span id='prog_save' class='linky2'>Save</span>"
-	s += "<br><br><br><div class='prog_label'>Swap With</div>"
-	s += "<select id='sel_prog_swap'>"
-	s += "<option value='--'></option>"
-
-	for (let i = 0; i < programs.items.length; i++) {
-		if (i === key) {
-			s += "<option value='" + i + "' disabled>" + programs.items[i].name + "</option>"
-		} else {
-			s += "<option value='" + i + "'>" + programs.items[i].name + "</option>"
-		}
-	}
-
-	s += "</select>"
-
-	s += "<br><br><br><div class='prog_label'>Move To</div>"
-
-	s += "<select id='sel_prog_move'>"
-
-	s += "<option value='--'></option>"
-
-	for (let i = 0; i < programs.items.length; i++) {
-		if (i === key) {
-			s += "<option value='" + i + "' disabled>" + programs.items[i].name + "</option>"
-		} else {
-			s += "<option value='" + i + "'>" + programs.items[i].name + "</option>"
-		}
-	}
-
-	s += "</select>"
-
-	s += "<br><br><br>"
-
-	s += "<div class='prog_label underline'>Available Commands</div>"
-
-	for (let i = 0; i < commands.length; i++) {
-		s += commands[i] + "<br>"
-	}
-
-	s += "<br><br>"
-
-	s += "<div class='prog_label underline'>Examples</div>"
-	s += "insert 34<br>"
-	s += "insert pi<br>"
-	s += "add line; insert cos(55)<br>"
-	s += "go up; erase; format<br>"
-	s += "insert 1; add line after; prev variable; insert + 2"
-
-	show_modal("Program Editor", s)
+	show_modal("Program Editor", templates["template_program_editor"]({
+		key: key,
+		programs: programs.items,
+		commands: commands
+	}))
 
 	let prog = programs.items[key]
 
@@ -2117,9 +1962,7 @@ function show_program_editor(key) {
 		prog_move(key, parseInt(this.value))
 	})
 
-	let els = DOM.els(".prog_input")
-
-	for (let el of els) {
+	for (let el of DOM.els(".prog_input")) {
 		el.addEventListener("keyup", function (e) {
 			if (e.key === "Enter") {
 				save_program(key, prog.name)
@@ -2552,4 +2395,12 @@ function set_modal_theme(a = true) {
 	}
 
 	DOM.el("head").append(el)
+}
+
+setup_templates = function () {
+	Handlebars.registerHelper("eq", (a, b) => a == b)
+
+  DOM.els(".template").forEach(it => {
+    templates[it.id] = Handlebars.compile(DOM.el(`#${it.id}`).innerHTML)
+  })
 }
