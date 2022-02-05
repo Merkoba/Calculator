@@ -128,9 +128,7 @@ function key_detection() {
 			}
 
 			e.preventDefault()
-		}
-
-		else if (e.key === "ArrowUp") {
+		} else if (e.key === "ArrowUp") {
 			if (e.shiftKey) {
 				move_line_up()
 			} else {
@@ -362,9 +360,7 @@ function add_line(value = false) {
 
 	if (num_lines === 0) {
 		letter = "a"
-	}
-
-	else {
+	} else {
 		let last_var = DOM.dataset(get_last_input(), "variable")
 		letter = increase_var(last_var).substring(1)
 	}
@@ -434,9 +430,7 @@ function add_line_after() {
 
 	if (index === DOM.els(".line").length - 1) {
 		add_line()
-	}
-
-	else {
+	} else {
 		move_lines_down(true)
 	}
 }
@@ -599,21 +593,15 @@ function decrease_var(v) {
 			if (letter[i] === letters[0]) {
 				if (i === 0) {
 					break
-				}
-
-				else {
+				} else {
 					res += letters[letters.length - 1]
 					decrease_next = true
 				}
-			}
-
-			else {
+			} else {
 				res += letters[letters.indexOf(letter[i]) - 1]
 				decrease_next = false
 			}
-		}
-
-		else {
+		} else {
 			res += letters[letters.indexOf(letter[i])]
 		}
 	}
@@ -635,15 +623,11 @@ function increase_var(v) {
 				if (i == 0) {
 					res += "a"
 				}
-			}
-
-			else {
+			} else {
 				res += letters[letters.indexOf(letter[i]) + 1]
 				increase_next = false
 			}
-		}
-
-		else {
+		} else {
 			res += letters[letters.indexOf(letter[i])]
 		}
 	}
@@ -710,9 +694,7 @@ function get_result(input) {
 
 		if (options.fraction) {
 			result = math_fraction.eval(val + "*1", linevars)
-		}
-
-		else {
+		} else {
 			result = math_normal.eval(val + "*1", linevars)
 		}
 
@@ -765,26 +747,18 @@ function format_result(n, f = false) {
 				if (mixed[1] !== 0 && mixed[2] !== 0) {
 					sup = mixed[1]
 					sub = mixed[2]
-				}
-
-				else {
+				} else {
 					return format_result(mwhole, true)
 				}
 
 				return `<span class="resolved"><span class="mwhole">${mwhole}</span><span class="fraction"><sup>${sup}</sup><sub>${sub}</sub></span></span>`
-			}
-
-			else {
+			} else {
 				return `<span class="resolved"><span class="fraction"><sup>${sup}</sup><sub>${sub}</sub></span></span>`
 			}
-		}
-
-		else {
+		} else {
 			return format_result(n, true)
 		}
-	}
-
-	else {
+	} else {
 		if (options.round) {
 			n = math_normal.round(n, options.round_places)
 		}
@@ -796,9 +770,7 @@ function format_result(n, f = false) {
 			let split = ns.split(".")
 			whole = split[0].toString() + "."
 			decimal = split[1].toString()
-		}
-
-		else {
+		} else {
 			whole = n.toString()
 			decimal = ""
 		}
@@ -814,17 +786,11 @@ function format_result(n, f = false) {
 function press(s, aux = false) {
 	if (s === "sin") {
 		s = "sin("
-	}
-
-	else if (s === "cos") {
+	} else if (s === "cos") {
 		s = "cos("
-	}
-
-	else if (s === "tan") {
+	} else if (s === "tan") {
 		s = "tan("
-	}
-
-	else if (s === "sqrt") {
+	} else if (s === "sqrt") {
 		s = "sqrt("
 	}
 
@@ -840,32 +806,22 @@ function press(s, aux = false) {
 	if (s === "Clear") {
 		clear_input(focused.input)
 		return
-	}
-
-	else if (s === "Erase") {
+	} else if (s === "Erase") {
 		erase_character()
 		return
-	}
-
-	else if (s === "New Line") {
+	} else if (s === "New Line") {
 		focus_next_or_add()
 		focus_input(focused.input)
 		return
-	}
-
-	else if (s === "Remove Line") {
+	} else if (s === "Remove Line") {
 		remove_line()
 		focus_input(focused.input)
 		return
-	}
-
-	else if (s === "Up") {
+	} else if (s === "Up") {
 		line_up()
 		focus_input(focused.input)
 		return
-	}
-
-	else if (s === "Down") {
+	} else if (s === "Down") {
 		line_down()
 		focus_input(focused.input)
 		return
@@ -896,9 +852,7 @@ function check_aux(s, aux) {
 			if (s == i) {
 				if (aux === 3) {
 					return "0." + i
-				}
-
-				else if (aux === 2) {
+				} else if (aux === 2) {
 					return "1/" + i
 				}
 			}
@@ -907,135 +861,87 @@ function check_aux(s, aux) {
 		if (s == 0) {
 			if (aux === 3) {
 				return "0."
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				return "000"
 			}
-		}
-
-		else if (s === "cos(") {
+		} else if (s === "cos(") {
 			if (aux === 3) {
 				return "acos("
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				return "acosh("
 			}
-		}
-
-		else if (s === "tan(") {
+		} else if (s === "tan(") {
 			if (aux === 3) {
 				return "atan("
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				return "atanh("
 			}
-		}
-
-		else if (s === "sin(") {
+		} else if (s === "sin(") {
 			if (aux === 3) {
 				return "asin("
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				return "asinh("
 			}
-		}
-
-		else if (s === "^") {
+		} else if (s === "^") {
 			if (aux === 3) {
 				return "^2"
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				return "^3"
 			}
-		}
-
-		else if (s === "sqrt(") {
+		} else if (s === "sqrt(") {
 			if (aux === 3) {
 				return "cbrt("
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				return "nthRoot("
 			}
-		}
-
-		else if (s === "pi") {
+		} else if (s === "pi") {
 			if (aux === 3) {
 				return "phi"
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				return "e"
 			}
-		}
-
-		else if (s === "/") {
+		} else if (s === "/") {
 			if (aux === 3) {
 				toggle_comment(focused.input)
 				return false
 			}
-		}
-
-		else if (s === "Up") {
+		} else if (s === "Up") {
 			if (aux === 3) {
 				move_line_up()
 				return false
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				go_to_first_input()
 				return false
 			}
-		}
-
-		else if (s === "Down") {
+		} else if (s === "Down") {
 			if (aux === 3) {
 				move_line_down()
 				return false
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				go_to_last_input()
 				return false
 			}
-		}
-
-		else if (s === "Remove Line") {
+		} else if (s === "Remove Line") {
 			if (aux === 3) {
 				remove_last_line()
 				return false
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				remove_all_lines()
 				return false
 			}
-		}
-
-		else if (s === "New Line") {
+		} else if (s === "New Line") {
 			if (aux === 3) {
 				add_line_after()
 				return false
-			}
-
-			else if (aux === 2) {
+			} else if (aux === 2) {
 				add_line_before()
 				return false
 			}
-		}
-
-		else if (s === "Clear") {
+		} else if (s === "Clear") {
 			if (aux === 3) {
 				format_input(focused.input)
 				return false
-			}
-
-			if (aux === 2) {
+			} else if (aux === 2) {
 				format_all()
 				return false
 			}
@@ -1316,19 +1222,13 @@ function cycle_inputs(direction) {
 	if (direction === "down") {
 		if (index === (DOM.els(".input").length - 1)) {
 			go_to_first_input()
-		}
-
-		else {
+		} else {
 			focus_next()
 		}
-	}
-
-	else {
+	} else {
 		if (index === 0) {
 			go_to_last_input()
-		}
-
-		else {
+		} else {
 			focus_prev()
 		}
 	}
@@ -1471,9 +1371,7 @@ function check_params() {
 		if (options.fraction) {
 			toggle_fraction()
 		}
-	}
-
-	else {
+	} else {
 		if (!options.fraction) {
 			toggle_fraction()
 		}
@@ -1515,9 +1413,7 @@ function add_result(next = false) {
 
 	if (next) {
 		result = focused.input.parentNode.nextElementSibling.querySelector(".result")
-	}
-	
-	else {
+	} else {
 		result = focused.input.parentNode.previousElementSibling.querySelector(".result")
 	}
 
@@ -1531,9 +1427,7 @@ function add_input(next = false) {
 
 	if (next) {
 		value = focused.input.parentNode.nextElementSibling.querySelector(".input").value
-	}
-
-	else {
+	} else {
 		value = focused.input.parentNode.previousElementSibling.querySelector(".input").value
 	}
 
@@ -1552,9 +1446,7 @@ function show_options() {
 
 	if (options.commas) {
 		s += "<input id='chk_commas' type='checkbox' checked>"
-	}
-
-	else {
+	} else {
 		s += "<input id='chk_commas' type='checkbox'>"
 	}
 
@@ -1566,9 +1458,7 @@ function show_options() {
 
 	if (options.mixed) {
 		s += "<input id='chk_mixed' type='checkbox' checked>"
-	}
-
-	else {
+	} else {
 		s += "<input id='chk_mixed' type='checkbox'>"
 	}
 
@@ -1580,9 +1470,7 @@ function show_options() {
 
 	if (options.round) {
 		s += "<input id='chk_round' type='checkbox' checked>"
-	}
-
-	else {
+	} else {
 		s += "<input id='chk_round' type='checkbox'>"
 	}
 
@@ -1606,9 +1494,7 @@ function show_options() {
 
 	if (options.sound) {
 		s += "<input id='chk_sound' type='checkbox' checked>"
-	}
-
-	else {
+	} else {
 		s += "<input id='chk_sound' type='checkbox'>"
 	}
 
@@ -1738,9 +1624,7 @@ function get_options() {
 	if (options.theme === undefined) {
 		options.theme = "carbon"
 		mod = true
-	}
-
-	else {
+	} else {
 		if (themes.indexOf(options.theme) === -1) {
 			options.theme = "carbon"
 			mod = true
@@ -1843,9 +1727,7 @@ function reset_object(ls_name, data = false) {
 function reset_options(data = false) {
 	if (data) {
 		localStorage.setItem(ls_options, data)
-	}
-
-	else {
+	} else {
 		localStorage.removeItem(ls_options)
 	}
 
@@ -1859,9 +1741,7 @@ function reset_options(data = false) {
 function reset_programs(data = false) {
 	if (data) {
 		localStorage.setItem(ls_programs, data)
-	}
-
-	else {
+	} else {
 		localStorage.removeItem(ls_programs)
 	}
 
@@ -1874,9 +1754,7 @@ function fill_sheet(x = false) {
 
 	if (x) {
 		n = x
-	}
-
-	else {
+	} else {
 		n = get_max_line_length() - DOM.els(".line").length
 	}
 
@@ -1918,9 +1796,7 @@ function get_result_text(el) {
 		s += "/"
 
 		s += el.querySelector("sub").textContent
-	}
-
-	else {
+	} else {
 		s += el.textContent.replace(/,/g, "")
 	}
 
@@ -1992,9 +1868,7 @@ function expand_value(input) {
 
 			if (v !== undefined && v.trim() !== "") {
 				return `(${v})`
-			}
-
-			else {
+			} else {
 				return match
 			}
 
@@ -2112,9 +1986,7 @@ function update_infobar() {
 
 	if (options.fraction) {
 		s += "Fraction Mode"
-	}
-
-	else {
+	} else {
 		s += "Normal Mode"
 	}
 
@@ -2140,9 +2012,7 @@ function apply_mode() {
 
 	if (options.fraction) {
 		mode = "fraction"
-	}
-
-	else {
+	} else {
 		mode = "normal"
 	}
 
@@ -2196,9 +2066,7 @@ function show_program_editor(key) {
 	for (let i = 0; i < programs.items.length; i++) {
 		if (i === key) {
 			s += "<option value='" + i + "' disabled>" + programs.items[i].name + "</option>"
-		}
-
-		else {
+		} else {
 			s += "<option value='" + i + "'>" + programs.items[i].name + "</option>"
 		}
 	}
@@ -2214,9 +2082,7 @@ function show_program_editor(key) {
 	for (let i = 0; i < programs.items.length; i++) {
 		if (i === key) {
 			s += "<option value='" + i + "' disabled>" + programs.items[i].name + "</option>"
-		}
-
-		else {
+		} else {
 			s += "<option value='" + i + "'>" + programs.items[i].name + "</option>"
 		}
 	}
@@ -2337,9 +2203,7 @@ function save_program(key, name) {
 
 		draw_prog_buttons()
 		update_programs()
-	}
-
-	else {
+	} else {
 		play("nope")
 	}
 }
@@ -2360,9 +2224,7 @@ function check_program(p_commands, s_commands) {
 			(DOM.el("#Msg-content-default").scrollTop - 10)
 
 		ok = false
-	}
-
-	else {
+	} else {
 		DOM.el("#prog_p_commands_error").style.display = "none"
 	}
 
@@ -2381,9 +2243,7 @@ function check_program(p_commands, s_commands) {
 		}
 
 		ok = false
-	}
-
-	else {
+	} else {
 		DOM.el("#prog_s_commands_error").style.display = "none"
 	}
 
@@ -2401,14 +2261,10 @@ function focus_command_error(input, response) {
 
 	if (indices.length === 0) {
 		index = 0
-	}
-
-	else {
+	} else {
 		if (response[2] === indices.length) {
 			index = input.value.length - response[1].length
-		}
-
-		else {
+		} else {
 			index = indices[response[2]] - response[1].length
 		}
 	}
@@ -2450,9 +2306,7 @@ function execute_program(cmds, run = true) {
 			if (run) {
 				execute_command(command.toLowerCase())
 			}
-		}
-
-		else {
+		} else {
 			if (run) {
 				show_execution_error(command)
 			}
@@ -2467,129 +2321,67 @@ function execute_program(cmds, run = true) {
 function execute_command(command) {
 	if (command === "clear") {
 		clear_input(focused.input)
-	}
-
-	else if (command === "erase") {
+	} else if (command === "erase") {
 		erase_character()
-	}
-
-	else if (command === "add line") {
+	} else if (command === "add line") {
 		add_line()
-	}
-
-	else if (command === "add line before") {
+	} else if (command === "add line before") {
 		add_line_before()
-	}
-
-	else if (command === "add line after") {
+	} else if (command === "add line after") {
 		add_line_after()
-	}
-
-	else if (command === "go to first line") {
+	} else if (command === "go to first line") {
 		go_to_first_input()
-	}
-
-	else if (command === "go to last line") {
+	} else if (command === "go to last line") {
 		go_to_last_input()
-	}
-
-	else if (command === "go to next empty line") {
+	} else if (command === "go to next empty line") {
 		focus_next_or_add()
-	}
-
-	else if (command === "remove line") {
+	} else if (command === "remove line") {
 		remove_line()
-	}
-
-	else if (command === "remove last line") {
+	} else if (command === "remove last line") {
 		remove_last_line()
-	}
-
-	else if (command === "remove all lines") {
+	} else if (command === "remove all lines") {
 		remove_all_lines()
-	}
-
-	else if (command === "prev variable") {
+	} else if (command === "prev variable") {
 		add_ans()
-	}
-
-	else if (command === "prev input") {
+	} else if (command === "prev input") {
 		add_input()
-	}
-
-	else if (command === "next variable") {
+	} else if (command === "next variable") {
 		add_ans(true)
-	}
-
-	else if (command === "next input") {
+	} else if (command === "next input") {
 		add_input(true)
-	}
-
-	else if (command === "go up") {
+	} else if (command === "go up") {
 		line_up()
-	}
-
-	else if (command === "go down") {
+	} else if (command === "go down") {
 		line_down()
-	}
-
-	else if (command === "move line up") {
+	} else if (command === "move line up") {
 		move_line_up()
-	}
-
-	else if (command === "move line down") {
+	} else if (command === "move line down") {
 		move_line_down()
-	}
-
-	else if (command === "format") {
+	} else if (command === "format") {
 		format_input(focused.input)
-	}
-
-	else if (command === "format all") {
+	} else if (command === "format all") {
 		format_all()
-	}
-
-	else if (command === "expand") {
+	} else if (command === "expand") {
 		expand_value(focused.input)
-	}
-
-	else if (command === "move caret to end") {
+	} else if (command === "move caret to end") {
 		move_caret_to_end(focused.input)
-	}
-
-	else if (command === "move caret to start") {
+	} else if (command === "move caret to start") {
 		move_caret_to_start(focused.input)
-	}
-
-	else if (command === "comment") {
+	} else if (command === "comment") {
 		comment(focused.input)
-	}
-
-	else if (command === "comment all") {
+	} else if (command === "comment all") {
 		comment_all()
-	}
-
-	else if (command === "uncomment") {
+	} else if (command === "uncomment") {
 		uncomment(focused.input)
-	}
-
-	else if (command === "uncomment all") {
+	} else if (command === "uncomment all") {
 		uncomment_all()
-	}
-
-	else if (command === "toggle comment") {
+	} else if (command === "toggle comment") {
 		toggle_comment(focused.input)
-	}
-
-	else if (command === "play done") {
+	} else if (command === "play done") {
 		play("done")
-	}
-
-	else if (command === "play pup") {
+	} else if (command === "play pup") {
 		play("pup")
-	}
-
-	else if (command === "play nope") {
+	} else if (command === "play nope") {
 		play("nope")
 	}
 }
@@ -2652,9 +2444,7 @@ function uncomment_all() {
 function toggle_comment(input) {
 	if (!input.value.trim().startsWith("//")) {
 		replace_text(input, "// " + input.value.trim())
-	}
-
-	else {
+	} else {
 		replace_text(input, input.value.replace("//", "").trim())
 	}
 }
