@@ -192,8 +192,8 @@ function draw_buttons() {
 	place_button_wider("Up", "Right Click: Move Line Up | Middle Click: Go To First Line")
 	place_button_wider("Down", "Right Click: Move Line Down | Middle Click: Go To Last Line")
 	place_button_wider("New Line", "Right Click: Add Line After | Middle Click: Add Line Before")
-	place_button_wider("Remove Line", "Requires Double Click | Right Click: Remove Last Line | Middle Click: Remove All Lines")
-	place_button_wider("Clear", "Requires Double Click | Right Click: Format Input | Middle Click: Format All Inputs")
+	place_button_wider("Remove Line", "Right Click: Remove Last Line | Middle Click: Remove All Lines")
+	place_button_wider("Clear", "Right Click: Format Input | Middle Click: Format All Inputs")
 	place_button_wider("Erase", "")
 
 	for (let btn of DOM.els(".button")) {
