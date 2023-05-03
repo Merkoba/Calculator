@@ -163,7 +163,7 @@ App.add_line = (value = false) => {
 	DOM.ev(input, `focus`, (e) => {
 		App.focused.input = e.target
 		App.change_borders()
-    input.scrollIntoView({block: `center`})
+    input.scrollIntoView({block: `center`, behavior: `smooth`})
 	})
 
 	DOM.ev(input, `input`, () => {
