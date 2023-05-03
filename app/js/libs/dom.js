@@ -1,5 +1,7 @@
 // DOM v1.0.0
 const DOM = {}
+DOM.dataset_obj = {}
+DOM.dataset_id = 0
 
 // Select a single element
 DOM.el = (query, root = document) => {
