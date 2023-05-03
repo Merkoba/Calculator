@@ -48,7 +48,7 @@ App.init = () => {
 }
 
 App.key_detection = () => {
-	document.addEventListener(`keyup`, function (e) {
+	document.addEventListener(`keyup`, (e) => {
 		if (e.key === `Escape`) {
 			if (App.focused.input.value === ``) {
 				App.remove_line()
@@ -58,7 +58,7 @@ App.key_detection = () => {
 		}
 	})
 
-	document.addEventListener(`keyup`, function (e) {
+	document.addEventListener(`keyup`, (e) => {
 		if (App.msg.is_open()) {
 			return
 		}
@@ -150,26 +150,12 @@ App.draw_buttons = () => {
 	App.place_button_wider(`Erase`, ``)
 
 	for (let btn of DOM.els(`.button`)) {
-		let dblclickers = []
+		btn.addEventListener(`click`, (e) => {
+			App.press(e.target.textContent)
+		})
 
-		if (dblclickers.indexOf(btn.textContent) !== -1) {
-			btn.addEventListener(`mouseup`, function (e) {
-				if (e.which === 1) {
-					if (e.detail % 2 === 0) {
-						App.press(this.textContent)
-					} else {
-						App.focus_input(App.focused.input)
-					}
-				}
-			}, false)
-		} else {
-			btn.addEventListener(`click`, function () {
-				App.press(this.textContent)
-			})
-		}
-
-		btn.addEventListener(`auxclick`, function (e) {
-			App.press(this.textContent, e.which)
+		btn.addEventListener(`auxclick`, (e) => {
+			App.press(e.target.textContent, e.which)
 		})
 
 		App.disable_context_menu(btn)
@@ -250,31 +236,31 @@ App.add_line = (value = false) => {
 	let input = App.get_last_input()
 	App.focused.input = input
 
-	DOM.els(`.variable`).slice(-1)[0].addEventListener(`click`, function () {
+	DOM.els(`.variable`).slice(-1)[0].addEventListener(`click`, () => {
 		App.press(`$` + letter)
 	})
 
-	input.addEventListener(`focus`, function () {
-		App.focused.input = this
+	input.addEventListener(`focus`, (e) => {
+		App.focused.input = e.target
 		App.change_borders()
 		App.check_line_visibility()
 	})
 
-	input.addEventListener(`input`, function () {
+	input.addEventListener(`input`, () => {
 		App.update_results()
 	})
 
-	input.addEventListener(`keydown`, function (e) {
+	input.addEventListener(`keydown`, (e) => {
 		if (e.key === `ArrowUp` || e.key === `ArrowDown`) {
 			e.preventDefault()
 		}
 	})
 
-	DOM.els(`.result`).slice(-1)[0].addEventListener(`click`, function () {
-		App.on_result_click(this)
+	DOM.els(`.result`).slice(-1)[0].addEventListener(`click`, (e) => {
+		App.on_result_click(e.target)
 	})
 
-	DOM.els(`.result`).slice(-1)[0].addEventListener(`mousedown`, function (e) {
+	DOM.els(`.result`).slice(-1)[0].addEventListener(`mousedown`, (e) => {
 		if (e.detail > 1) {
 			e.preventDefault()
 		}
@@ -353,7 +339,7 @@ App.move_lines_up = () => {
 			continue
 		}
 
-		val = val.replace(/\$[a-z]+/g, function (match) {
+		val = val.replace(/\$[a-z]+/g, (match) => {
 			if (match === v) {
 				return ``
 			}
@@ -411,7 +397,7 @@ App.move_lines_down = (alt = false) => {
 			continue
 		}
 
-		val = val.replace(/\$[a-z]+/g, function (match) {
+		val = val.replace(/\$[a-z]+/g, (match) => {
 			if (match === v) {
 				return ``
 			}
@@ -814,11 +800,11 @@ App.clear_input = (input) => {
 	App.replace_text(input, ``)
 }
 
-App.update_results = (function () {
+App.update_results = (() => {
 	let timer
-	return function () {
+	return () => {
 		clearTimeout(timer)
-		timer = setTimeout(function () {
+		timer = setTimeout(() => {
 			App.do_update_results()
 		}, 10)
 	}
@@ -1068,16 +1054,16 @@ App.place_lines_container = () => {
 }
 
 App.resize_events = () => {
-	window.addEventListener(`resize`, function () {
+	window.addEventListener(`resize`, () => {
 		App.resize_timer()
 	})
 }
 
-App.resize_timer = (function () {
+App.resize_timer = (() => {
 	let timer
-	return function () {
+	return () => {
 		clearTimeout(timer)
-		timer = setTimeout(function () {
+		timer = setTimeout(() => {
 			App.place_infobar()
 			App.place_lines_container()
 		}, 350)
@@ -1089,15 +1075,15 @@ App.new_sheet = () => {
 }
 
 App.title_click_events = () => {
-	DOM.el(`#lnk_new`).addEventListener(`click`, function () {
+	DOM.el(`#lnk_new`).addEventListener(`click`, () => {
 		App.new_sheet()
 	})
 
-	DOM.el(`#lnk_options`).addEventListener(`click`, function () {
+	DOM.el(`#lnk_options`).addEventListener(`click`, () => {
 		App.show_options()
 	})
 
-	DOM.el(`#lnk_about`).addEventListener(`click`, function () {
+	DOM.el(`#lnk_about`).addEventListener(`click`, () => {
 		App.show_about()
 	})
 }
@@ -1153,37 +1139,37 @@ App.show_options = () => {
 		}
 	}
 
-	DOM.el(`#chk_commas`).addEventListener(`change`, function () {
-		App.options.commas = this.checked
+	DOM.el(`#chk_commas`).addEventListener(`change`, (e) => {
+		App.options.commas = e.target.checked
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el(`#chk_round`).addEventListener(`change`, function () {
-		App.options.round = this.checked
+	DOM.el(`#chk_round`).addEventListener(`change`, (e) => {
+		App.options.round = e.target.checked
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el(`#sel_round_places`).addEventListener(`change`, function () {
-		App.options.round_places = parseInt(this.value)
+	DOM.el(`#sel_round_places`).addEventListener(`change`, (e) => {
+		App.options.round_places = parseInt(e.target.value)
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el(`#chk_mixed`).addEventListener(`change`, function () {
-		App.options.mixed = this.checked
+	DOM.el(`#chk_mixed`).addEventListener(`change`, (e) => {
+		App.options.mixed = e.target.checked
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el(`#chk_sound`).addEventListener(`change`, function () {
-		App.options.sound = this.checked
+	DOM.el(`#chk_sound`).addEventListener(`change`, (e) => {
+		App.options.sound = e.target.checked
 		App.update_options()
 	})
 
-	DOM.el(`#sel_theme`).addEventListener(`change`, function () {
-		App.options.theme = this.value
+	DOM.el(`#sel_theme`).addEventListener(`change`, (e) => {
+		App.options.theme = e.target.value
 		App.apply_theme(App.options.theme)
 		App.update_options()
 	})
@@ -1373,7 +1359,7 @@ App.expand_value = (input) => {
 	while (true) {
 		let og_val = val
 
-		val = val.replace(/\$[a-z]+/g, function (match) {
+		val = val.replace(/\$[a-z]+/g, (match) => {
 			if (match === vr) {
 				return match
 			}
@@ -1498,7 +1484,7 @@ App.update_infobar = () => {
 	s += `</span>`
 	DOM.el(`#infobar`).innerHTML = s
 
-	DOM.el(`#ib_fraction_toggle`).addEventListener(`click`, function () {
+	DOM.el(`#ib_fraction_toggle`).addEventListener(`click`, () => {
 		App.toggle_fraction()
 	})
 }
