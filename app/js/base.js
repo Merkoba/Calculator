@@ -35,7 +35,7 @@ App.focused = {
 App.init = () => {
 	init_msg()
 	setup_templates()
-	get_local_storage()
+	App.get_local_storage()
 	apply_theme(App.options.theme)
 	apply_mode()
 	App.draw_buttons()
@@ -44,8 +44,7 @@ App.init = () => {
 	App.place_lines_container()
 	App.key_detection()
 	App.resize_events()
-	title_click_events()
-	get_site_root()
+	App.title_click_events()
 	App.add_line()
 }
 
@@ -71,7 +70,7 @@ App.key_detection = () => {
 			} else if (e.shiftKey) {
 				App.press(DOM.dataset(App.focused.input, "variable"))
 			} else if (e.ctrlKey) {
-				copy_input_down()
+				App.copy_input_down()
 			} else {
 				App.focus_next_or_add()
 			}
@@ -107,7 +106,7 @@ App.key_detection = () => {
 		}
 
 		if (!e.ctrlKey) {
-			focus_if_isnt(App.focused.input)
+			App.focus_if_isnt(App.focused.input)
 		}
 	})
 }
@@ -174,7 +173,7 @@ App.draw_buttons = () => {
 			App.press(this.textContent, e.which)
 		})
 
-		disable_context_menu(btn)
+		App.disable_context_menu(btn)
 	}
 }
 
@@ -223,7 +222,7 @@ App.add_line = (value = false) => {
 	let num_lines = DOM.els(".line").length
 	let letter
 
-	if (num_lines === get_max_line_length()) {
+	if (num_lines === App.get_max_line_length()) {
 		return
 	}
 
@@ -273,7 +272,7 @@ App.add_line = (value = false) => {
 	})
 
 	DOM.els(".result").slice(-1)[0].addEventListener("click", function () {
-		on_result_click(this)
+		App.on_result_click(this)
 	})
 
 	DOM.els(".result").slice(-1)[0].addEventListener("mousedown", function (e) {
@@ -315,7 +314,7 @@ App.remove_line = () => {
 }
 
 App.remove_all_lines = () => {
-	undefine_variables()
+	App.undefine_variables()
 	DOM.el("#lines").innerHTML = ""
 	App.add_line()
 }
@@ -387,7 +386,7 @@ App.move_lines_up = () => {
 App.move_lines_down = (alt = false) => {
 	let line_length = DOM.els(".line").length
 
-	if (line_length === get_max_line_length()) {
+	if (line_length === App.get_max_line_length()) {
 		return
 	}
 
@@ -827,7 +826,7 @@ App.update_results = (function () {
 })()
 
 App.do_update_results = () => {
-	undefine_variables()
+	App.undefine_variables()
 	let variables = {}
 
 	for (let input of DOM.els(".input")) {
@@ -992,7 +991,7 @@ App.move_line_up = () => {
 	inp.value = nval
 	ninp.value = val
 
-	focus_if_isnt(ninp)
+	App.focus_if_isnt(ninp)
 	App.update_results()
 }
 
@@ -1030,7 +1029,7 @@ App.move_line_down = () => {
 	inp.value = nval
 	ninp.value = val
 
-	focus_if_isnt(ninp)
+	App.focus_if_isnt(ninp)
 	App.update_results()
 }
 
@@ -1090,122 +1089,31 @@ App.new_sheet = () => {
 	App.remove_all_lines()
 }
 
-function title_click_events() {
+App.title_click_events = () => {
 	DOM.el("#lnk_new").addEventListener("click", function () {
 		App.new_sheet()
 	})
 
 	DOM.el("#lnk_options").addEventListener("click", function () {
-		show_options()
+		App.show_options()
 	})
 
 	DOM.el("#lnk_about").addEventListener("click", function () {
-		show_about()
+		App.show_about()
 	})
 }
 
-function copy_to_clipboard(s) {
+App.copy_to_clipboard = (s) => {
 	navigator.clipboard.writeText(s)
 }
 
-function make_uparams(s) {
-	if (App.options.fraction) {
-		s += "?"
-		s += "frac"
-	}
-
-	return s
-}
-
-function get_url_param(param) {
-	return new URLSearchParams(window.location.search).get(param)
-}
-
-function stringify_sheet() {
-	let s = ""
-
-	for (let input of DOM.els(".input")) {
-		s += input.value
-		s += "@!#"
-	}
-
-	s = s.substring(0, s.length - 3)
-	s = s.replace(/\\/g, "\\\\")
-
-	return s
-}
-
-function show_about() {
+App.show_about = () => {
 	show_modal("About", App.templates["template_about"]({
 		version: App.version
 	}))
 }
 
-function check_params() {
-	if (get_url_param("frac") === null) {
-		if (App.options.fraction) {
-			toggle_fraction()
-		}
-	} else {
-		if (!App.options.fraction) {
-			toggle_fraction()
-		}
-	}
-}
-
-function get_site_root() {
-	App.site_root = window.location.href.match(/^.*\//)[0]
-}
-
-function add_ans(next = false) {
-	let variable
-
-	if (next) {
-		let line = App.focused.input.parentNode.nextElementSibling
-		if (!line) { return }
-		let input = DOM.el(".input", line)
-		variable = DOM.dataset(input, "variable")
-	} else {
-		let line = App.focused.input.parentNode.previousElementSibling
-		if (!line) { return }
-		let input = DOM.el(".input", line)
-		variable = DOM.dataset(input, "variable")
-	}
-
-	if (variable !== undefined) {
-		App.press(variable)
-	}
-}
-
-function add_result(next = false) {
-	let result
-
-	if (next) {
-		result = DOM.el(".result", App.focused.input.parentNode.nextElementSibling)
-	} else {
-		result = DOM.el(".result", App.focused.input.parentNode.previousElementSibling)
-	}
-
-	if (result !== undefined) {
-		App.press(get_result_text(result))
-	}
-}
-
-function add_input(next = false) {
-	let value
-
-	if (next) {
-		value = DOM.el(App.focused.input.parentNode.nextElementSibling, ".input").value
-	} else {
-		value = DOM.el(App.focused.input.parentNode.previousElementSibling, ".input").value
-	}
-
-	if (value !== undefined && value !== "") {
-		App.press(value)
-	}
-}
-
-function show_options() {
+App.show_options = () => {
 	let places = []
 
 	for (let i=0; i<=30; i++) {
@@ -1249,48 +1157,48 @@ function show_options() {
 	DOM.el("#chk_commas").addEventListener("change", function () {
 		App.options.commas = this.checked
 		App.update_results()
-		update_options()
+		App.update_options()
 	})
 
 	DOM.el("#chk_round").addEventListener("change", function () {
 		App.options.round = this.checked
 		App.update_results()
-		update_options()
+		App.update_options()
 	})
 
 	DOM.el("#sel_round_places").addEventListener("change", function () {
 		App.options.round_places = parseInt(this.value)
 		App.update_results()
-		update_options()
+		App.update_options()
 	})
 
 	DOM.el("#chk_mixed").addEventListener("change", function () {
 		App.options.mixed = this.checked
 		App.update_results()
-		update_options()
+		App.update_options()
 	})
 
 	DOM.el("#chk_sound").addEventListener("change", function () {
 		App.options.sound = this.checked
-		update_options()
+		App.update_options()
 	})
 
 	DOM.el("#sel_theme").addEventListener("change", function () {
 		App.options.theme = this.value
 		apply_theme(App.options.theme)
-		update_options()
+		App.update_options()
 	})
 }
 
-function get_local_storage() {
-	get_options()
+App.get_local_storage = () => {
+	App.get_options()
 }
 
-function update_options() {
+App.update_options = () => {
 	localStorage.setItem(App.ls_options, JSON.stringify(App.options))
 }
 
-function get_options() {
+App.get_options = () => {
 	App.options = JSON.parse(localStorage.getItem(App.ls_options))
 	let mod = false
 
@@ -1345,37 +1253,38 @@ function get_options() {
 	}
 
 	if (mod) {
-		update_options()
+		App.update_options()
 	}
 }
 
-function reset_object(ls_name, data = false) {
+App.reset_object = (ls_name, data = false) => {
 	if (ls_name === App.ls_options) {
-		reset_options(data)
+		App.reset_options(data)
 	}
 }
 
-function reset_options(data = false) {
+App.reset_options = (data = false) => {
 	if (data) {
 		localStorage.setItem(App.ls_options, data)
 	} else {
 		localStorage.removeItem(App.ls_options)
 	}
 
-	get_options()
+	App.get_options()
 	App.update_results()
 	update_infobar()
 	apply_theme(App.options.theme)
 	apply_mode()
 }
 
-function fill_sheet(x = false) {
+// For testing
+App.fill_sheet = (x = false) => {
 	let n
 
 	if (x) {
 		n = x
 	} else {
-		n = get_max_line_length() - DOM.els(".line").length
+		n = App.get_max_line_length() - DOM.els(".line").length
 	}
 
 	for (let i = 0; i < n; i++) {
@@ -1383,27 +1292,27 @@ function fill_sheet(x = false) {
 	}
 }
 
-function disable_context_menu(el) {
+App.disable_context_menu = (el) => {
 	el.addEventListener("contextmenu", event => event.preventDefault())
 }
 
-function focus_if_isnt(input) {
+App.focus_if_isnt = (input) => {
 	if (input !== document.activeElement) {
 		App.focus_input(input)
 	}
 }
 
-function get_max_line_length() {
+App.get_max_line_length = () => {
 	return App.get_var_index("$zz") + 1
 }
 
-function undefine_variables() {
+App.undefine_variables = () => {
 	for (let varName in App.linevars) {
 		App.linevars[varName] = undefined
 	}
 }
 
-function get_result_text(el) {
+App.get_result_text = (el) => {
 	let s = ""
 
 	if (DOM.els("sup").length > 0) {
@@ -1421,19 +1330,19 @@ function get_result_text(el) {
 	return s
 }
 
-function on_result_click(el) {
-	copy_to_clipboard(get_result_text(el))
+App.on_result_click = (el) => {
+	App.copy_to_clipboard(App.get_result_text(el))
 }
 
-function toggle_fraction() {
+App.toggle_fraction = () => {
 	App.options.fraction = !App.options.fraction
 	App.update_results()
 	apply_mode()
 	update_infobar()
-	update_options()
+	App.update_options()
 }
 
-function copy_input_down() {
+App.copy_input_down = () => {
 	let og_var = DOM.dataset(App.focused.input, "variable")
 	let og_val = App.focused.input.value
 
@@ -1446,7 +1355,7 @@ function copy_input_down() {
 
 function copy_result_down() {
 	let og_var = DOM.dataset(App.focused.input, "variable")
-	let og_result = get_result_text(DOM.el(".result", App.focused.input.parentNode))
+	let og_result = App.get_result_text(DOM.el(".result", App.focused.input.parentNode))
 	App.focus_next_or_add()
 
 	if (og_var !== DOM.dataset(App.focused.input, "variable")) {
@@ -1552,13 +1461,13 @@ function insert_text(input, s) {
 	App.focused.input.value = new_value
 	App.focused.input.selectionStart = ss + s.length
 	App.focused.input.selectionEnd = ss + s.length
-	focus_if_isnt(input)
+	App.focus_if_isnt(input)
 	App.update_results()
 }
 
 function replace_text(input, s) {
 	input.value = s
-	focus_if_isnt(input)
+	App.focus_if_isnt(input)
 	App.update_results()
 }
 
@@ -1577,7 +1486,7 @@ function erase_character() {
 		App.focused.input.value = new_value
 		App.focused.input.selectionStart = ss - 1
 		App.focused.input.selectionEnd = ss - 1
-		focus_if_isnt(App.focused.input)
+		App.focus_if_isnt(App.focused.input)
 		App.update_results()
 	}
 }
@@ -1608,7 +1517,7 @@ function update_infobar() {
 	DOM.el("#infobar").innerHTML = s
 
 	DOM.el("#ib_fraction_toggle").addEventListener("click", function () {
-		toggle_fraction()
+		App.toggle_fraction()
 	})
 }
 
@@ -1739,7 +1648,7 @@ function on_object_modified(item) {
 			return
 		}
 
-		reset_object(item.ls_name, item.value)
+		App.reset_object(item.ls_name, item.value)
 	}
 
 	catch (err) {
