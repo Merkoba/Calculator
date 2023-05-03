@@ -438,15 +438,3 @@ sup {
 		text-shadow: 0 0 1.2em
 	}
 }
-
-.Msg-content {
-	font-size: 1em !important;
-}
-
-.custom_titlebar {
-	font-family: imported_font, consolas, sans-serif !important;
-}
-
-.StorageUI-menu-item {
-	font-size: 1.2em !important;
-}

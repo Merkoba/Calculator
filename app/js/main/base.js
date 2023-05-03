@@ -1606,16 +1606,9 @@ App.toggle_comment = (input) => {
 
 App.start_msg = () => {
 	App.msg = Msg.factory({
-		id: `default`,
-		lock: false,
-		clear_editables: true,
-		window_x: `inner_right`,
-		close_effect: `none`,
-		show_effect: `none`,
+		class: `blue`,
 		enable_titlebar: true,
 		center_titlebar: true,
-		titlebar_class: `!custom_titlebar !unselectable`,
-		window_inner_x_class: `!titlebar_inner_x`
 	})
 
 	App.msg.create()
