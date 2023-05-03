@@ -1,19 +1,3 @@
-App.check_line_visibility = () => {
-	let it = App.focused.input.parentNode.getBoundingClientRect().top
-	let ct = DOM.el(`#lines`).getBoundingClientRect().top
-
-	if (it < ct) {
-		DOM.el(`#lines`).scrollTop = DOM.el(`#lines`).scrollTop - (ct - it)
-	}
-
-	let ib = it + App.focused.input.parentNode.offsetHeight
-	let cb = ct + DOM.el(`#lines`).offsetHeight
-
-	if (ib > cb) {
-		DOM.el(`#lines`).scrollTop = DOM.el(`#lines`).scrollTop + (ib - cb)
-	}
-}
-
 App.line_up = () => {
 	App.focus_prev()
 }
@@ -179,7 +163,7 @@ App.add_line = (value = false) => {
 	DOM.ev(input, `focus`, (e) => {
 		App.focused.input = e.target
 		App.change_borders()
-		App.check_line_visibility()
+    input.scrollIntoView({block: `center`})
 	})
 
 	DOM.ev(input, `input`, () => {
