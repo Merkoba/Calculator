@@ -61,7 +61,7 @@ App.do_update_results = () => {
 		let vars = Object.assign({}, variables)
 		let keys = Object.keys(vars)
 
-		for (let i = 0; i < keys.length; i++) {
+		for (let i=0; i<keys.length; i++) {
 			let edges = vars[keys[i]].edges
 			let found = false
 
@@ -100,7 +100,7 @@ App.do_update_results = () => {
 		}
 	}
 
-	for (let i = 0; i < sorted.length; i++) {
+	for (let i=0; i<sorted.length; i++) {
 		let letter = sorted[i].substring(1)
 		App.get_result(DOM.el(`#` + letter))
 	}
@@ -215,7 +215,7 @@ App.decrease_var = (v) => {
 	let res = ``
 	let decrease_next = true
 
-	for (let i = letter.length - 1; i >= 0; i--) {
+	for (let i =letter.length-1; i>= 0; i--) {
 		if (decrease_next) {
 			if (letter[i] === App.letters[0]) {
 				if (i === 0) {
@@ -244,7 +244,7 @@ App.increase_var = (v) => {
 	let res = ``
 	let increase_next = true
 
-	for (let i = letter.length - 1; i >= 0; i--) {
+	for (let i=letter.length-1; i>=0; i--) {
 		if (increase_next) {
 			if (letter[i] === App.letters[App.letters.length - 1]) {
 				res += App.letters[0]
@@ -272,7 +272,7 @@ App.get_var_index = (v) => {
 	let n = letter.length - 1
 	let index = 0
 
-	for (let i = 0; i < letter.length; i++) {
+	for (let i=0; i<letter.length; i++) {
 		let t = App.letters.indexOf(letter[i]) + 1
 		let p = Math.pow(App.letters.length, n)
 

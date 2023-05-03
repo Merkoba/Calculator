@@ -140,7 +140,7 @@ App.press = (s, aux = false) => {
 
 App.check_aux = (s, aux) => {
 	if (aux) {
-		for (let i = 1; i < 10; i++) {
+		for (let i=1; i<10; i++) {
 			if (s == i) {
 				if (aux === 3) {
 					return `0.` + i

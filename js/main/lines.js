@@ -265,7 +265,7 @@ App.move_lines_up = () => {
 		return
 	}
 
-	for (let i = 0; i < line_length; i++) {
+	for (let i=0; i<line_length; i++) {
 		let ln = DOM.els(`.line`)[i]
 		let inp = DOM.el(`.input`, ln)
 		let val = inp.value
@@ -295,7 +295,7 @@ App.move_lines_up = () => {
 		inp.value = val
 	}
 
-	for (let i = index + 1; i < line_length; i++) {
+	for (let i=index+1; i<line_length; i++) {
 		let inp = DOM.el(`.input`, DOM.els(`.line`)[i])
 		let ninp = DOM.el(`.input`, inp.parentNode.previousElementSibling)
 
@@ -323,7 +323,7 @@ App.move_lines_down = (alt = false) => {
 	let v = DOM.dataset(input, `variable`)
 	let index = DOM.index(line)
 
-	for (let i = 0; i < line_length; i++) {
+	for (let i=0; i<line_length; i++) {
 		let ln = DOM.els(`.line`)[i]
 		let inp = DOM.el(`.input`, ln)
 		let val = inp.value
@@ -357,7 +357,7 @@ App.move_lines_down = (alt = false) => {
 
 	line_length = DOM.els(`.line`).length
 
-	for (let i = line_length - 1; i > index; i--) {
+	for (let i=line_length-1; i>index; i--) {
 		let inp = DOM.el(`.input`, DOM.els(`.line`)[i])
 		let ninp = DOM.el(`.input`, inp.parentNode.previousElementSibling)
 		inp.value = ninp.value
