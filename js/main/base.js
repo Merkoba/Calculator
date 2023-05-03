@@ -78,12 +78,6 @@ App.key_detection = () => {
 				App.focus_next_or_add()
 			}
 		}
-		else if (e.key === `Backspace`) {
-			if (e.shiftKey) {
-				App.clear_input(App.focused.input)
-				e.preventDefault()
-			}
-		}
 		else if (e.key === `Tab`) {
 			if (e.shiftKey) {
 				App.cycle_inputs(`up`)
