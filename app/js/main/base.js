@@ -48,7 +48,7 @@ App.init = () => {
 }
 
 App.key_detection = () => {
-	document.addEventListener(`keyup`, (e) => {
+	DOM.ev(document, `keyup`, (e) => {
 		if (e.key === `Escape`) {
 			if (App.focused.input.value === ``) {
 				App.remove_line()
@@ -59,7 +59,7 @@ App.key_detection = () => {
 		}
 	})
 
-	document.addEventListener(`keyup`, (e) => {
+	DOM.ev(document, `keyup`, (e) => {
 		if (App.msg.is_open()) {
 			return
 		}
@@ -161,11 +161,11 @@ App.draw_buttons = () => {
 	App.place_button_wider(`Erase`, ``)
 
 	for (let btn of DOM.els(`.button`)) {
-		btn.addEventListener(`click`, (e) => {
+		DOM.ev(btn, `click`, (e) => {
 			App.press(e.target.textContent)
 		})
 
-		btn.addEventListener(`auxclick`, (e) => {
+		DOM.ev(btn, `auxclick`, (e) => {
 			App.press(e.target.textContent, e.which)
 		})
 
@@ -248,31 +248,31 @@ App.add_line = (value = false) => {
 	let input = App.get_last_input()
 	App.focused.input = input
 
-	DOM.els(`.variable`).slice(-1)[0].addEventListener(`click`, () => {
+	DOM.ev(DOM.els(`.variable`).slice(-1)[0], `click`, () => {
 		App.press(`$` + letter)
 	})
 
-	input.addEventListener(`focus`, (e) => {
+	DOM.ev(input, `focus`, (e) => {
 		App.focused.input = e.target
 		App.change_borders()
 		App.check_line_visibility()
 	})
 
-	input.addEventListener(`input`, () => {
+	DOM.ev(input, `input`, () => {
 		App.update_results()
 	})
 
-	input.addEventListener(`keydown`, (e) => {
+	DOM.ev(input, `keydown`, (e) => {
 		if (e.key === `ArrowUp` || e.key === `ArrowDown`) {
 			e.preventDefault()
 		}
 	})
 
-	DOM.els(`.result`).slice(-1)[0].addEventListener(`click`, (e) => {
+	DOM.ev(DOM.els(`.result`).slice(-1)[0], `click`, (e) => {
 		App.on_result_click(e.target)
 	})
 
-	DOM.els(`.result`).slice(-1)[0].addEventListener(`mousedown`, (e) => {
+	DOM.ev(DOM.els(`.result`).slice(-1)[0], `mousedown`, (e) => {
 		if (e.detail > 1) {
 			e.preventDefault()
 		}
@@ -1116,7 +1116,7 @@ App.place_lines_container = () => {
 }
 
 App.resize_events = () => {
-	window.addEventListener(`resize`, () => {
+	DOM.ev(window, `resize`, () => {
 		App.resize_timer()
 	})
 }
@@ -1137,15 +1137,15 @@ App.new_sheet = () => {
 }
 
 App.title_click_events = () => {
-	DOM.el(`#lnk_new`).addEventListener(`click`, () => {
+	DOM.ev(DOM.el(`#lnk_new`), `click`, () => {
 		App.new_sheet()
 	})
 
-	DOM.el(`#lnk_options`).addEventListener(`click`, () => {
+	DOM.ev(DOM.el(`#lnk_options`), `click`, () => {
 		App.show_options()
 	})
 
-	DOM.el(`#lnk_about`).addEventListener(`click`, () => {
+	DOM.ev(DOM.el(`#lnk_about`), `click`, () => {
 		App.show_about()
 	})
 }
@@ -1200,31 +1200,31 @@ App.show_options = () => {
 		}
 	}
 
-	DOM.el(`#chk_commas`).addEventListener(`change`, (e) => {
+	DOM.ev(DOM.el(`#chk_commas`), `change`, (e) => {
 		App.options.commas = e.target.checked
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el(`#chk_round`).addEventListener(`change`, (e) => {
+	DOM.ev(DOM.el(`#chk_round`), `change`, (e) => {
 		App.options.round = e.target.checked
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el(`#sel_round_places`).addEventListener(`change`, (e) => {
+	DOM.ev(DOM.el(`#sel_round_places`), `change`, (e) => {
 		App.options.round_places = parseInt(e.target.value)
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el(`#chk_mixed`).addEventListener(`change`, (e) => {
+	DOM.ev(DOM.el(`#chk_mixed`), `change`, (e) => {
 		App.options.mixed = e.target.checked
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el(`#sel_theme`).addEventListener(`change`, (e) => {
+	DOM.ev(DOM.el(`#sel_theme`), `change`, (e) => {
 		App.options.theme = e.target.value
 		App.apply_theme(App.options.theme)
 		App.update_options()
@@ -1332,7 +1332,7 @@ App.fill_sheet = (x = false) => {
 }
 
 App.disable_context_menu = (el) => {
-	el.addEventListener(`contextmenu`, event => event.preventDefault())
+	DOM.ev(el, `contextmenu`, event => event.preventDefault())
 }
 
 App.focus_if_isnt = (input) => {
@@ -1539,7 +1539,7 @@ App.update_infobar = () => {
 	s += `</span>`
 	DOM.el(`#infobar`).innerHTML = s
 
-	DOM.el(`#ib_fraction_toggle`).addEventListener(`click`, () => {
+	DOM.ev(DOM.el(`#ib_fraction_toggle`), `click`, () => {
 		App.toggle_fraction()
 	})
 }

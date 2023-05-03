@@ -80,3 +80,8 @@ DOM.next_all = function* (e, selector) {
 DOM.index = (el) => {
   return Array.from(el.parentNode.children).indexOf(el)
 }
+
+// Add an event listener
+DOM.ev = (element, action, callback, extra) => {
+  element.addEventListener(action, callback, extra)
+}
