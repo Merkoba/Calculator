@@ -69,8 +69,8 @@ body, html {
 	border: none;
 	padding: 0.2rrem;
 	outline: none;
-	letter-spacing: 0.06rem;
-	word-spacing: 0.06rem;
+	letter-spacing: 0.1rem;
+	word-spacing: 0.1rem;
 }
 
 .result_container {
