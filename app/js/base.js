@@ -52,7 +52,8 @@ App.key_detection = () => {
 		if (e.key === `Escape`) {
 			if (App.focused.input.value === ``) {
 				App.remove_line()
-			} else {
+			}
+			else {
 				App.clear_input(App.focused.input)
 			}
 		}
@@ -66,38 +67,48 @@ App.key_detection = () => {
 		if (e.key === `Enter`) {
 			if (e.shiftKey && e.ctrlKey) {
 				App.expand_value(App.focused.input)
-			} else if (e.shiftKey) {
+			}
+			else if (e.shiftKey) {
 				App.press(DOM.dataset(App.focused.input, `variable`))
-			} else if (e.ctrlKey) {
+			}
+			else if (e.ctrlKey) {
 				App.copy_input_down()
-			} else {
+			}
+			else {
 				App.focus_next_or_add()
 			}
-		} else if (e.key === `Backspace`) {
+		}
+		else if (e.key === `Backspace`) {
 			if (e.shiftKey) {
 				App.clear_input(App.focused.input)
 				e.preventDefault()
 			}
-		} else if (e.key === `Tab`) {
+		}
+		else if (e.key === `Tab`) {
 			if (e.shiftKey) {
 				App.cycle_inputs(`up`)
-			} else {
+			}
+			else {
 				App.cycle_inputs(`down`)
 			}
 
 			e.preventDefault()
-		} else if (e.key === `ArrowUp`) {
+		}
+		else if (e.key === `ArrowUp`) {
 			if (e.shiftKey) {
 				App.move_line_up()
-			} else {
+			}
+			else {
 				App.line_up()
 			}
 
 			e.preventDefault()
-		} else if (e.key === `ArrowDown`) {
+		}
+		else if (e.key === `ArrowDown`) {
 			if (e.shiftKey) {
 				App.move_line_down()
-			} else {
+			}
+			else {
 				App.line_down()
 			}
 
@@ -213,7 +224,8 @@ App.add_line = (value = false) => {
 
 	if (num_lines === 0) {
 		letter = `a`
-	} else {
+	}
+	else {
 		let last_var = DOM.dataset(App.get_last_input(), `variable`)
 		letter = App.increase_var(last_var).substring(1)
 	}
@@ -281,7 +293,8 @@ App.add_line_after = () => {
 
 	if (index === DOM.els(`.line`).length - 1) {
 		App.add_line()
-	} else {
+	}
+	else {
 		App.move_lines_down(true)
 	}
 }
@@ -291,9 +304,11 @@ App.remove_line = () => {
 
 	if (DOM.els(`.line`).length === 1) {
 		App.clear_input(App.focused.input)
-	} else if (index === DOM.els(`.line`).length - 1) {
+	}
+	else if (index === DOM.els(`.line`).length - 1) {
 		App.remove_last_line()
-	} else {
+	}
+	else {
 		App.move_lines_up()
 	}
 }
@@ -439,15 +454,18 @@ App.decrease_var = (v) => {
 			if (letter[i] === App.letters[0]) {
 				if (i === 0) {
 					break
-				} else {
+				}
+				else {
 					res += App.letters[App.letters.length - 1]
 					decrease_next = true
 				}
-			} else {
+			}
+			else {
 				res += App.letters[App.letters.indexOf(letter[i]) - 1]
 				decrease_next = false
 			}
-		} else {
+		}
+		else {
 			res += App.letters[App.letters.indexOf(letter[i])]
 		}
 	}
@@ -469,11 +487,13 @@ App.increase_var = (v) => {
 				if (i == 0) {
 					res += `a`
 				}
-			} else {
+			}
+			else {
 				res += App.letters[App.letters.indexOf(letter[i]) + 1]
 				increase_next = false
 			}
-		} else {
+		}
+		else {
 			res += App.letters[App.letters.indexOf(letter[i])]
 		}
 	}
@@ -540,14 +560,14 @@ App.get_result = (input) => {
 
 		if (App.options.fraction) {
 			result = App.math_fraction.eval(val + `*1`, App.linevars)
-		} else {
+		}
+		else {
 			result = App.math_normal.eval(val + `*1`, App.linevars)
 		}
 
 		App.update_variable(input, result)
 		App.show_result(input, App.format_result(result))
 	}
-
 	catch (err) {
 		App.show_error(input)
 	}
@@ -593,18 +613,22 @@ App.format_result = (n, f = false) => {
 				if (mixed[1] !== 0 && mixed[2] !== 0) {
 					sup = mixed[1]
 					sub = mixed[2]
-				} else {
+				}
+				else {
 					return App.format_result(mwhole, true)
 				}
 
 				return `<span class="resolved"><span class="mwhole">${mwhole}</span><span class="fraction"><sup>${sup}</sup><sub>${sub}</sub></span></span>`
-			} else {
+			}
+			else {
 				return `<span class="resolved"><span class="fraction"><sup>${sup}</sup><sub>${sub}</sub></span></span>`
 			}
-		} else {
+		}
+		else {
 			return App.format_result(n, true)
 		}
-	} else {
+	}
+	else {
 		if (App.options.round) {
 			n = App.math_normal.round(n, App.options.round_places)
 		}
@@ -616,7 +640,8 @@ App.format_result = (n, f = false) => {
 			let split = ns.split(`.`)
 			whole = split[0].toString() + `.`
 			decimal = split[1].toString()
-		} else {
+		}
+		else {
 			whole = n.toString()
 			decimal = ``
 		}
@@ -632,11 +657,14 @@ App.format_result = (n, f = false) => {
 App.press = (s, aux = false) => {
 	if (s === `sin`) {
 		s = `sin(`
-	} else if (s === `cos`) {
+	}
+	else if (s === `cos`) {
 		s = `cos(`
-	} else if (s === `tan`) {
+	}
+	else if (s === `tan`) {
 		s = `tan(`
-	} else if (s === `sqrt`) {
+	}
+	else if (s === `sqrt`) {
 		s = `sqrt(`
 	}
 
@@ -652,22 +680,27 @@ App.press = (s, aux = false) => {
 	if (s === `Clear`) {
 		App.clear_input(App.focused.input)
 		return
-	} else if (s === `Erase`) {
+	}
+	else if (s === `Erase`) {
 		App.erase_character()
 		return
-	} else if (s === `New Line`) {
+	}
+	else if (s === `New Line`) {
 		App.focus_next_or_add()
 		App.focus_input(App.focused.input)
 		return
-	} else if (s === `Remove Line`) {
+	}
+	else if (s === `Remove Line`) {
 		App.remove_line()
 		App.focus_input(App.focused.input)
 		return
-	} else if (s === `Up`) {
+	}
+	else if (s === `Up`) {
 		App.line_up()
 		App.focus_input(App.focused.input)
 		return
-	} else if (s === `Down`) {
+	}
+	else if (s === `Down`) {
 		App.line_down()
 		App.focus_input(App.focused.input)
 		return
@@ -693,7 +726,8 @@ App.check_aux = (s, aux) => {
 			if (s == i) {
 				if (aux === 3) {
 					return `0.` + i
-				} else if (aux === 2) {
+				}
+				else if (aux === 2) {
 					return `1/` + i
 				}
 			}
@@ -702,87 +736,111 @@ App.check_aux = (s, aux) => {
 		if (s == 0) {
 			if (aux === 3) {
 				return `0.`
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				return `000`
 			}
-		} else if (s === `cos(`) {
+		}
+		else if (s === `cos(`) {
 			if (aux === 3) {
 				return `acos(`
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				return `acosh(`
 			}
-		} else if (s === `tan(`) {
+		}
+		else if (s === `tan(`) {
 			if (aux === 3) {
 				return `atan(`
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				return `atanh(`
 			}
-		} else if (s === `sin(`) {
+		}
+		else if (s === `sin(`) {
 			if (aux === 3) {
 				return `asin(`
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				return `asinh(`
 			}
-		} else if (s === `^`) {
+		}
+		else if (s === `^`) {
 			if (aux === 3) {
 				return `^2`
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				return `^3`
 			}
-		} else if (s === `sqrt(`) {
+		}
+		else if (s === `sqrt(`) {
 			if (aux === 3) {
 				return `cbrt(`
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				return `nthRoot(`
 			}
-		} else if (s === `pi`) {
+		}
+		else if (s === `pi`) {
 			if (aux === 3) {
 				return `phi`
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				return `e`
 			}
-		} else if (s === `/`) {
+		}
+		else if (s === `/`) {
 			if (aux === 3) {
 				App.toggle_comment(App.focused.input)
 				return false
 			}
-		} else if (s === `Up`) {
+		}
+		else if (s === `Up`) {
 			if (aux === 3) {
 				App.move_line_up()
 				return false
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				App.go_to_first_input()
 				return false
 			}
-		} else if (s === `Down`) {
+		}
+		else if (s === `Down`) {
 			if (aux === 3) {
 				App.move_line_down()
 				return false
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				App.go_to_last_input()
 				return false
 			}
-		} else if (s === `Remove Line`) {
+		}
+		else if (s === `Remove Line`) {
 			if (aux === 3) {
 				App.remove_last_line()
 				return false
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				App.remove_all_lines()
 				return false
 			}
-		} else if (s === `New Line`) {
+		}
+		else if (s === `New Line`) {
 			if (aux === 3) {
 				App.add_line_after()
 				return false
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				App.add_line_before()
 				return false
 			}
-		} else if (s === `Clear`) {
+		}
+		else if (s === `Clear`) {
 			if (aux === 3) {
 				App.format_input(App.focused.input)
 				return false
-			} else if (aux === 2) {
+			}
+			else if (aux === 2) {
 				App.format_all()
 				return false
 			}
@@ -879,7 +937,8 @@ App.do_update_results = () => {
 
 				if (sorted.indexOf(v) !== -1) {
 					App.get_result(DOM.el(`#` + letter))
-				} else {
+				}
+				else {
 					App.show_result(DOM.el(`#` + letter), `Not Acyclical`)
 				}
 			}
@@ -1028,13 +1087,16 @@ App.cycle_inputs = (direction) => {
 	if (direction === `down`) {
 		if (index === (DOM.els(`.input`).length - 1)) {
 			App.go_to_first_input()
-		} else {
+		}
+		else {
 			App.focus_next()
 		}
-	} else {
+	}
+	else {
 		if (index === 0) {
 			App.go_to_last_input()
-		} else {
+		}
+		else {
 			App.focus_prev()
 		}
 	}
@@ -1230,7 +1292,8 @@ App.get_options = () => {
 	if (App.options.theme === undefined) {
 		App.options.theme = `carbon`
 		mod = true
-	} else {
+	}
+	else {
 		if (App.themes.indexOf(App.options.theme) === -1) {
 			App.options.theme = `carbon`
 			mod = true
@@ -1251,7 +1314,8 @@ App.reset_object = (ls_name, data = false) => {
 App.reset_options = (data = false) => {
 	if (data) {
 		localStorage.setItem(App.ls_options, data)
-	} else {
+	}
+	else {
 		localStorage.removeItem(App.ls_options)
 	}
 
@@ -1268,7 +1332,8 @@ App.fill_sheet = (x = false) => {
 
 	if (x) {
 		n = x
-	} else {
+	}
+	else {
 		n = App.get_max_line_length() - DOM.els(`.line`).length
 	}
 
@@ -1308,7 +1373,8 @@ App.get_result_text = (el) => {
 		s += DOM.el(`sup`, el).textContent
 		s += `/`
 		s += DOM.el(`sub`, el).textContent
-	} else {
+	}
+	else {
 		s += el.textContent.replace(/,/g, ``)
 	}
 
@@ -1368,7 +1434,8 @@ App.expand_value = (input) => {
 
 			if (v !== undefined && v.trim() !== ``) {
 				return `(${v})`
-			} else {
+			}
+			else {
 				return match
 			}
 
@@ -1392,7 +1459,6 @@ App.expand_value = (input) => {
 	try {
 		val = App.math_normal.parse(val).toString({ parenthesis: `auto`, implicit: `show` })
 	}
-
 	catch (err) {
 		return
 	}
@@ -1414,7 +1480,6 @@ App.format_input = (input) => {
 	try {
 		val = App.math_normal.parse(val).toString({ parenthesis: `auto`, implicit: `show` })
 	}
-
 	catch (err) {
 		return
 	}
@@ -1477,7 +1542,8 @@ App.update_infobar = () => {
 
 	if (App.options.fraction) {
 		s += `Fraction Mode`
-	} else {
+	}
+	else {
 		s += `Normal Mode`
 	}
 
@@ -1501,7 +1567,8 @@ App.apply_mode = () => {
 
 	if (App.options.fraction) {
 		mode = `fraction`
-	} else {
+	}
+	else {
 		mode = `normal`
 	}
 
@@ -1542,7 +1609,8 @@ App.go_to_last_input = () => {
 App.toggle_comment = (input) => {
 	if (!input.value.trim().startsWith(`//`)) {
 		App.replace_text(input, `// ` + input.value.trim())
-	} else {
+	}
+	else {
 		App.replace_text(input, input.value.replace(`//`, ``).trim())
 	}
 }
