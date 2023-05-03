@@ -123,10 +123,10 @@ App.get_result = (input) => {
 		}
 
 		if (App.options.fraction) {
-			result = App.math_fraction.eval(val + `*1`, App.linevars)
+			result = App.math_fraction.evaluate(val + `*1`, App.linevars)
 		}
 		else {
-			result = App.math_normal.eval(val + `*1`, App.linevars)
+			result = App.math_normal.evaluate(val + `*1`, App.linevars)
 		}
 
 		App.update_variable(input, result)
