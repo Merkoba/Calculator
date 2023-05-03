@@ -1620,7 +1620,7 @@ App.show_modal = (title, html, callback = () => {}) => {
 App.setup_templates = () => {
 	Handlebars.registerHelper(`eq`, (a, b) => a == b)
 
-  DOM.els(`.template`).forEach(it => {
-    App.templates[it.id] = Handlebars.compile(DOM.el(`#${it.id}`).innerHTML)
-  })
+  for (let el of DOM.els(`.template`)) {
+    App.templates[el.id] = Handlebars.compile(DOM.el(`#${el.id}`).innerHTML)
+  }
 }
