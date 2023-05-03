@@ -291,22 +291,6 @@ App.get_var_index = (v) => {
 	return index
 }
 
-App.apply_mode = () => {
-	let mode
-
-	if (App.options.fraction) {
-		mode = `fraction`
-	}
-	else {
-		mode = `normal`
-	}
-
-	let stylesheet = DOM.create(`link`)
-	stylesheet.rel = `stylesheet`
-	stylesheet.href = `modes/` + mode + `.css?v=` + App.version
-	DOM.el(`head`).appendChild(stylesheet)
-}
-
 App.expand_value = (input) => {
 	let val = input.value
 
@@ -372,7 +356,6 @@ App.expand_value = (input) => {
 App.toggle_fraction = () => {
 	App.options.fraction = !App.options.fraction
 	App.update_results()
-	App.apply_mode()
 	App.update_infobar()
 	App.update_options()
 }

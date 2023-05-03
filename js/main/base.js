@@ -13,7 +13,6 @@ App.init = () => {
 	App.setup_templates()
 	App.get_local_storage()
 	App.apply_theme(App.options.theme)
-	App.apply_mode()
 	App.draw_buttons()
 	App.place_infobar()
 	App.update_infobar()
