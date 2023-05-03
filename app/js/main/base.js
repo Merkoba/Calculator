@@ -174,7 +174,7 @@ App.draw_buttons = () => {
 }
 
 App.place_button = (s, title = ``) => {
-	let el = document.createElement(`button`)
+	let el = DOM.create(`button`)
 	el.title = title
 	el.classList.add(`button`)
 	el.textContent = s
@@ -182,7 +182,7 @@ App.place_button = (s, title = ``) => {
 }
 
 App.place_button_wider = (s, title = ``) => {
-	let el = document.createElement(`button`)
+	let el = DOM.create(`button`)
 	el.title = title
 	el.classList.add(`button`)
 	el.classList.add(`wider`)
@@ -191,7 +191,7 @@ App.place_button_wider = (s, title = ``) => {
 }
 
 App.buttons_br = () => {
-	let el = document.createElement(`br`)
+	let el = DOM.create(`br`)
 	DOM.el(`#buttons`).appendChild(el)
 }
 
@@ -1545,7 +1545,7 @@ App.update_infobar = () => {
 }
 
 App.apply_theme = (theme) => {
-	let stylesheet = document.createElement(`link`)
+	let stylesheet = DOM.create(`link`)
 	stylesheet.rel = `stylesheet`
 	stylesheet.href = `themes/` + theme + `.css?v=` + App.version
 	DOM.el(`head`).appendChild(stylesheet)
@@ -1561,7 +1561,7 @@ App.apply_mode = () => {
 		mode = `normal`
 	}
 
-	let stylesheet = document.createElement(`link`)
+	let stylesheet = DOM.create(`link`)
 	stylesheet.rel = `stylesheet`
 	stylesheet.href = `modes/` + mode + `.css?v=` + App.version
 	DOM.el(`head`).appendChild(stylesheet)
