@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 
 <html>
-
 	<head>
-
 		<title>Calculator</title>
 
 		<meta charset="utf-8">
 		<meta name="description" content="Powerful online calculator with multiple levels of calculations that can referenced and edited at anytime.">
 		<meta name="keywords" content="calculator, online, multiple, referenced, variables, programmable, themes, powerful, math, mathematics, arithmetic, fractions, precision, 64, web, save, share">
 
-		<link rel="shortcut icon" href="favicon.ico?v=1" type="image/x-icon"> 
-		
+		<link rel="shortcut icon" href="favicon.ico?v=1" type="image/x-icon">
+
 		<script src="js/math.min.js"></script>
 		<script src="js/colorlib.js"></script>
 		<script src="js/handlebars.min.js"></script>
@@ -23,15 +21,13 @@
 
 		<script>
 			window.onload = function () {
-				app_version = "22.0.0"
-				init()
+				App.version = "23.0.0"
+				App.init()
 			}
 		</script>
-
 	</head>
 
 	<body>
-
 		<div id="app_top">
 
 			<div id="title">
@@ -54,82 +50,7 @@
 			<br><br><div id="lines"></div>
 		</div>
 
-		<audio preload class="sound" id="nope" src="audio/nope.mp3?v=2"></audio>
-		<audio preload class="sound" id="pup" src="audio/pup.mp3?v=3"></audio>
-		<audio preload class="sound" id="done" src="audio/done.mp3?v=2"></audio>
-
 		<!-- Templates -->
-
-		<script id='template_program_editor' type='text/x-handlebars-template' class='template'>
-			<input maxlength='5' id='prog_key_name' class='prog_input prog_key_input'><br><br><br>
-			<div id='prog_p_label' class='prog_label'>Primary Action Title</b2></div>
-			<input type='text' id='prog_p_title' class='prog_input prog_input_smaller'></input>
-			<br><br><br>
-			<div class='prog_label'>Primary Action Commands</div>
-			<input type='text' id='prog_p_commands' class='prog_input'></input>
-			<div id='prog_p_commands_error' class='error_message'></div>
-			<br><br><br>
-			<div class='prog_label'>Require Double Click</div>
-			<input type='checkbox' id='prog_p_dbl'>
-			<br><br><br><br>
-			<div id='prog_s_label' class='prog_label'>Secondary Action Title</div>
-			<input type='text' id='prog_s_title' class='prog_input prog_input_smaller'></input>
-			<br><br><br>
-			<div class='prog_label'>Secondary Action Commands</div>
-			<input type='text' id='prog_s_commands' class='prog_input'></input>
-			<div id='prog_s_commands_error' class='error_message'></div>
-			<br><br><br>
-			<div class='prog_label'>Require Double Click</div>
-			<input type='checkbox' id='prog_s_dbl'>
-			<br><br><br>
-			<span id='prog_save' class='linky2'>Save</span>
-			<br><br><br><div class='prog_label'>Swap With</div>
-			<select id='sel_prog_swap'>
-			<option value='--'></option>
-
-			{{#each programs}}
-				{{#if (eq @index ../key)}}
-					<option value='{{@index}}' disabled>{{name}}</option>
-				{{else}}
-					<option value='{{@index}}'>{{name}}</option>
-				{{/if}}
-			{{/each}}
-		
-			</select>
-		
-			<br><br><br><div class='prog_label'>Move To</div>
-		
-			<select id='sel_prog_move'>
-		
-			<option value='--'></option>
-
-			{{#each programs}}
-				{{#if (eq @index ../key)}}
-					<option value='{{@index}}' disabled>{{name}}</option>
-				{{else}}
-					<option value='{{@index}}'>{{name}}</option>
-				{{/if}}
-			{{/each}}
-		
-			</select>
-		
-			<br><br><br>
-		
-			<div class='prog_label underline'>Available Commands</div>
-
-			{{#each commands}}
-				{{this}} <br>
-			{{/each}}
-		
-			<br><br>
-		
-			<div class='prog_label underline'>Examples</div>
-			insert 34<br>
-			insert pi<br>
-			add line; insert cos(55)<br>
-			go up; erase; format<br>
-			insert 1; add line after; prev variable; insert + 2
-		</script>
 
 		<script id='template_about' type='text/x-handlebars-template' class='template'>
 			<b>Merkoba Calculator</b><br>
@@ -141,7 +62,7 @@
 			Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>
 			There are 12 programmable buttons that can be set to execute certain commands in order.<br><br>
 			Note: Formatting and rounding are only applied to the displayed results, not to internal calculations.
-		
+
 			<br><br><br><span class='b2'>Shortcuts</span><br><br>
 			Enter will focus the next available empty line or create a new one.<br><br>
 			Shift + Enter does the same but also adds the previous line's variable into the new one.<br><br>
@@ -165,67 +86,67 @@
 			<div class='options_item'>
 			Add Commas
 			<div class='vseparator2'></div>
-		
+
 			{{#if commas}}
 				<input id='chk_commas' type='checkbox' checked>
 			{{else}}
 				<input id='chk_commas' type='checkbox'>
 			{{/if}}
-		
+
 			</div>
 			<div class='vseparator'></div>
 			<div class='options_item'>
 			Mixed Fractions
 			<div class='vseparator2'></div>
-		
+
 			{{#if mixed}}
 				<input id='chk_mixed' type='checkbox' checked>
 			{{else}}
 				<input id='chk_mixed' type='checkbox'>
 			{{/if}}
-		
+
 			</div>
 			<div class='vseparator'></div>
 			<div class='options_item'>
 			Round Results
 			<div class='vseparator2'></div>
-		
+
 			{{#if round}}
 				<input id='chk_round' type='checkbox' checked>
 			{{else}}
 				<input id='chk_round' type='checkbox'>
 			{{/if}}
-		
+
 			</div>
 			<div class='vseparator'></div>
 			<div class='options_item'>
 			Round Places
 			<div class='vseparator2'></div>
 			<select id='sel_round_places'>
-		
+
 			{{#each places}}
 				<option value='{{this}}'>{{this}}</option>
 			{{/each}}
-		
+
 			</select>
 			</div>
 			<div class='vseparator'></div>
 			<div class='options_item'>
 			Enable Sound
 			<div class='vseparator2'></div>
-		
+
 			{{#if sound}}
 				<input id='chk_sound' type='checkbox' checked>
 			{{else}}
 				<input id='chk_sound' type='checkbox'>
 			{{/if}}
-		
+
 			</div>
 			<div class='vseparator'></div>
 			<div class='options_item'>
 			Color Theme
 			<div class='vseparator2'></div>
-			
+
 			<select id='sel_theme'>
 				{{#each themes}}
 					<option value='{{lowercase}}'>{{capitalized}}</option>
@@ -235,7 +156,5 @@
 			</div>
 			</div>
 		</script>
-
 	</body>
-
 </html>
