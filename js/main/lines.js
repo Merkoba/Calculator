@@ -192,18 +192,7 @@ App.add_line = (value = false) => {
 		}
 	})
 
-	DOM.ev(DOM.els(`.result`).slice(-1)[0], `click`, (e) => {
-		App.on_result_click(e.target)
-	})
-
-	DOM.ev(DOM.els(`.result`).slice(-1)[0], `mousedown`, (e) => {
-		if (e.detail > 1) {
-			e.preventDefault()
-		}
-	})
-
 	DOM.dataset(input, `variable`, `$` + letter)
-
 	App.focus_input(input)
 	App.move_caret_to_end(input)
 }
@@ -370,10 +359,6 @@ App.move_lines_down = (alt = false) => {
 
 App.get_max_line_length = () => {
 	return App.get_var_index(`$zz`) + 1
-}
-
-App.on_result_click = (el) => {
-	App.copy_to_clipboard(App.get_result_text(el))
 }
 
 App.show_error = (input) => {
