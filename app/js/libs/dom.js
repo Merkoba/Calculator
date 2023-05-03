@@ -1,6 +1,5 @@
+// DOM v1.0.0
 const DOM = {}
-DOM.dataset_obj = {}
-DOM.dataset_id = 0
 
 // Select a single element
 DOM.el = (query, root = document) => {
@@ -10,6 +9,32 @@ DOM.el = (query, root = document) => {
 // Select an array of elements
 DOM.els = (query, root = document) => {
   return Array.from(root.querySelectorAll(query))
+}
+
+// Select a single element or self
+DOM.el_or_self = (query, root = document) => {
+  let el = root.querySelector(query)
+
+  if (!el) {
+    if (root.classList.contains(query.replace(`.`, ``))) {
+      el = root
+    }
+  }
+
+  return el
+}
+
+// Select an array of elements or self
+DOM.els_or_self = (query, root = document) => {
+  let els = Array.from(root.querySelectorAll(query))
+
+  if (els.length === 0) {
+    if (root.classList.contains(query.replace(`.`, ``))) {
+      els = [root]
+    }
+  }
+
+  return els
 }
 
 // Clone element
@@ -52,25 +77,34 @@ DOM.dataset = (el, value, setvalue) => {
   }
 }
 
-// Create an empty div
-DOM.div = (classes = ``) => {
-  let new_div = document.createElement(`div`)
+// Create an html element
+DOM.create = (type, classes = ``, id = ``) => {
+  let el = document.createElement(type)
 
   if (classes) {
     let classlist = classes.split(` `).filter(x => x != ``)
 
     for (let cls of classlist) {
-      new_div.classList.add(cls)
+      el.classList.add(cls)
     }
   }
 
-  return new_div
+  if (id) {
+    el.id = id
+  }
+
+  return el
+}
+
+// Add an event listener
+DOM.ev = (element, action, callback, extra) => {
+  element.addEventListener(action, callback, extra)
 }
 
 // Like jQuery's nextAll
 DOM.next_all = function* (e, selector) {
   while (e = e.nextElementSibling) {
-    if ( e.matches(selector) ) {
+    if (e.matches(selector)) {
       yield e;
     }
   }
@@ -79,9 +113,4 @@ DOM.next_all = function* (e, selector) {
 // Get item index
 DOM.index = (el) => {
   return Array.from(el.parentNode.children).indexOf(el)
-}
-
-// Add an event listener
-DOM.ev = (element, action, callback, extra) => {
-  element.addEventListener(action, callback, extra)
 }

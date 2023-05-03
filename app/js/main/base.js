@@ -234,7 +234,7 @@ App.add_line = (value = false) => {
 		value = ``
 	}
 
-	let el = DOM.div(`line`)
+	let el = DOM.create(`div`, `line`)
 
 	el.innerHTML = `
 		<button class="button variable">$${letter}</button>
