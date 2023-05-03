@@ -1180,7 +1180,6 @@ App.show_options = () => {
 		commas: App.options.commas,
 		mixed: App.options.mixed,
 		round: App.options.round,
-		sound: App.options.sound,
 		places: places,
 		themes: themelist
 	}))
@@ -1225,11 +1224,6 @@ App.show_options = () => {
 		App.update_options()
 	})
 
-	DOM.el(`#chk_sound`).addEventListener(`change`, (e) => {
-		App.options.sound = e.target.checked
-		App.update_options()
-	})
-
 	DOM.el(`#sel_theme`).addEventListener(`change`, (e) => {
 		App.options.theme = e.target.value
 		App.apply_theme(App.options.theme)
@@ -1256,11 +1250,6 @@ App.get_options = () => {
 
 	if (App.options.version === undefined) {
 		App.options.version = App.ls_options
-		mod = true
-	}
-
-	if (App.options.sound === undefined) {
-		App.options.sound = true
 		mod = true
 	}
 
