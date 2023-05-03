@@ -3,25 +3,25 @@ DOM.dataset_obj = {}
 DOM.dataset_id = 0
 
 // Select a single element
-DOM.el = function (query, root = document) {
+DOM.el = (query, root = document) => {
   return root.querySelector(query)
 }
 
 // Select an array of elements
-DOM.els = function (query, root = document) {
+DOM.els = (query, root = document) => {
   return Array.from(root.querySelectorAll(query))
 }
 
 // Clone element
-DOM.clone = function (el) {
+DOM.clone = (el) => {
   return el.cloneNode(true)
 }
 
 // Clone element children
-DOM.clone_children = function (query) {
+DOM.clone_children = (query) => {
   let items = []
   let children = Array.from(DOM.el(query).children)
-  
+
   for (let c of children) {
     items.push(DOM.clone(c))
   }
@@ -30,7 +30,7 @@ DOM.clone_children = function (query) {
 }
 
 // Data set manager
-DOM.dataset = function (el, value, setvalue) {
+DOM.dataset = (el, value, setvalue) => {
   if (!el) {
     return
   }
@@ -46,18 +46,19 @@ DOM.dataset = function (el, value, setvalue) {
 
   if (setvalue !== undefined) {
     DOM.dataset_obj[id][value] = setvalue
-  } else {
+  }
+  else {
     return DOM.dataset_obj[id][value]
   }
 }
 
 // Create an empty div
-DOM.div = function (classes = "") {
-  let new_div = document.createElement("div")
+DOM.div = (classes = ``) => {
+  let new_div = document.createElement(`div`)
 
   if (classes) {
-    let classlist = classes.split(" ").filter(x => x != "")
-  
+    let classlist = classes.split(` `).filter(x => x != ``)
+
     for (let cls of classlist) {
       new_div.classList.add(cls)
     }
@@ -76,6 +77,6 @@ DOM.next_all = function* (e, selector) {
 }
 
 // Get item index
-DOM.index = function (el) {
+DOM.index = (el) => {
   return Array.from(el.parentNode.children).indexOf(el)
 }
