@@ -1,31 +1,30 @@
 const App = {}
 
 App.math_normal = math.create({
-	number: "BigNumber",
+	number: `BigNumber`,
 	precision: 64
 })
 
 App.math_fraction = math.create({
-	number: "Fraction"
+	number: `Fraction`
 })
 
-App.letters = "abcdefghijklmnopqrstuvwxyz"
+App.letters = `abcdefghijklmnopqrstuvwxyz`
 App.linevars = {}
-App.ls_options = "options_v4"
-App.colorlib = ColorLib()
+App.ls_options = `options_v4`
 App.templates = {}
 
 App.themes = [
-	"lake",
-	"leaf",
-	"bulb",
-	"wine",
-	"bubble",
-	"vapor",
-	"clouds",
-	"paper",
-	"cobalt",
-	"carbon"
+	`lake`,
+	`leaf`,
+	`bulb`,
+	`wine`,
+	`bubble`,
+	`vapor`,
+	`clouds`,
+	`paper`,
+	`cobalt`,
+	`carbon`
 ]
 
 App.focused = {
@@ -49,9 +48,9 @@ App.init = () => {
 }
 
 App.key_detection = () => {
-	document.addEventListener("keyup", function (e) {
-		if (e.key === "Escape") {
-			if (App.focused.input.value === "") {
+	document.addEventListener(`keyup`, function (e) {
+		if (e.key === `Escape`) {
+			if (App.focused.input.value === ``) {
 				App.remove_line()
 			} else {
 				App.clear_input(App.focused.input)
@@ -59,35 +58,35 @@ App.key_detection = () => {
 		}
 	})
 
-	document.addEventListener("keyup", function (e) {
+	document.addEventListener(`keyup`, function (e) {
 		if (App.msg.is_open()) {
 			return
 		}
 
-		if (e.key === "Enter") {
+		if (e.key === `Enter`) {
 			if (e.shiftKey && e.ctrlKey) {
 				App.expand_value(App.focused.input)
 			} else if (e.shiftKey) {
-				App.press(DOM.dataset(App.focused.input, "variable"))
+				App.press(DOM.dataset(App.focused.input, `variable`))
 			} else if (e.ctrlKey) {
 				App.copy_input_down()
 			} else {
 				App.focus_next_or_add()
 			}
-		} else if (e.key === "Backspace") {
+		} else if (e.key === `Backspace`) {
 			if (e.shiftKey) {
 				App.clear_input(App.focused.input)
 				e.preventDefault()
 			}
-		} else if (e.key === "Tab") {
+		} else if (e.key === `Tab`) {
 			if (e.shiftKey) {
-				App.cycle_inputs("up")
+				App.cycle_inputs(`up`)
 			} else {
-				App.cycle_inputs("down")
+				App.cycle_inputs(`down`)
 			}
 
 			e.preventDefault()
-		} else if (e.key === "ArrowUp") {
+		} else if (e.key === `ArrowUp`) {
 			if (e.shiftKey) {
 				App.move_line_up()
 			} else {
@@ -95,7 +94,7 @@ App.key_detection = () => {
 			}
 
 			e.preventDefault()
-		} else if (e.key === "ArrowDown") {
+		} else if (e.key === `ArrowDown`) {
 			if (e.shiftKey) {
 				App.move_line_down()
 			} else {
@@ -112,49 +111,49 @@ App.key_detection = () => {
 }
 
 App.draw_buttons = () => {
-	App.place_button(1, "Right Click: 0.1 | Middle Click: 1/1")
-	App.place_button(2, "Right Click: 0.2 | Middle Click: 1/2")
-	App.place_button(3, "Right Click: 0.3 | Middle Click: 1/3")
-	App.place_button(4, "Right Click: 0.4 | Middle Click: 1/4")
-	App.place_button(5, "Right Click: 0.5 | Middle Click: 1/5")
-	App.place_button(6, "Right Click: 0.6 | Middle Click: 1/6")
-	App.place_button(7, "Right Click: 0.7 | Middle Click: 1/7")
-	App.place_button(8, "Right Click: 0.8 | Middle Click: 1/8")
-	App.place_button(9, "Right Click: 0.9 | Middle Click: 1/9")
-	App.place_button(0, "Right Click: 0. | Middle Click: 000")
+	App.place_button(1, `Right Click: 0.1 | Middle Click: 1/1`)
+	App.place_button(2, `Right Click: 0.2 | Middle Click: 1/2`)
+	App.place_button(3, `Right Click: 0.3 | Middle Click: 1/3`)
+	App.place_button(4, `Right Click: 0.4 | Middle Click: 1/4`)
+	App.place_button(5, `Right Click: 0.5 | Middle Click: 1/5`)
+	App.place_button(6, `Right Click: 0.6 | Middle Click: 1/6`)
+	App.place_button(7, `Right Click: 0.7 | Middle Click: 1/7`)
+	App.place_button(8, `Right Click: 0.8 | Middle Click: 1/8`)
+	App.place_button(9, `Right Click: 0.9 | Middle Click: 1/9`)
+	App.place_button(0, `Right Click: 0. | Middle Click: 000`)
 
-	App.place_button(".")
-	App.place_button(",")
-
-	App.buttons_br()
-
-	App.place_button("+")
-	App.place_button("-")
-	App.place_button("*")
-	App.place_button("/", "Right Click: Toggle Comment")
-	App.place_button("(")
-	App.place_button(")")
-	App.place_button("^", "Right Click: ^2 | Middle Click: ^3")
-	App.place_button("sqrt", "Right Click: Cube Root | Middle Click: nth Root")
-	App.place_button("sin", "Right Click: asin | Middle Click: asinh")
-	App.place_button("cos", "Right Click: acos | Middle Click: acosh")
-	App.place_button("tan", "Right Click: atan | Middle Click: atanh")
-	App.place_button("pi", "Right Click: phi | Middle Click: e")
+	App.place_button(`.`)
+	App.place_button(`,`)
 
 	App.buttons_br()
 
-	App.place_button_wider("Up", "Right Click: Move Line Up | Middle Click: Go To First Line")
-	App.place_button_wider("Down", "Right Click: Move Line Down | Middle Click: Go To Last Line")
-	App.place_button_wider("New Line", "Right Click: Add Line After | Middle Click: Add Line Before")
-	App.place_button_wider("Remove Line", "Right Click: Remove Last Line | Middle Click: Remove All Lines")
-	App.place_button_wider("Clear", "Right Click: Format Input | Middle Click: Format All Inputs")
-	App.place_button_wider("Erase", "")
+	App.place_button(`+`)
+	App.place_button(`-`)
+	App.place_button(`*`)
+	App.place_button(`/`, `Right Click: Toggle Comment`)
+	App.place_button(`(`)
+	App.place_button(`)`)
+	App.place_button(`^`, `Right Click: ^2 | Middle Click: ^3`)
+	App.place_button(`sqrt`, `Right Click: Cube Root | Middle Click: nth Root`)
+	App.place_button(`sin`, `Right Click: asin | Middle Click: asinh`)
+	App.place_button(`cos`, `Right Click: acos | Middle Click: acosh`)
+	App.place_button(`tan`, `Right Click: atan | Middle Click: atanh`)
+	App.place_button(`pi`, `Right Click: phi | Middle Click: e`)
 
-	for (let btn of DOM.els(".button")) {
+	App.buttons_br()
+
+	App.place_button_wider(`Up`, `Right Click: Move Line Up | Middle Click: Go To First Line`)
+	App.place_button_wider(`Down`, `Right Click: Move Line Down | Middle Click: Go To Last Line`)
+	App.place_button_wider(`New Line`, `Right Click: Add Line After | Middle Click: Add Line Before`)
+	App.place_button_wider(`Remove Line`, `Right Click: Remove Last Line | Middle Click: Remove All Lines`)
+	App.place_button_wider(`Clear`, `Right Click: Format Input | Middle Click: Format All Inputs`)
+	App.place_button_wider(`Erase`, ``)
+
+	for (let btn of DOM.els(`.button`)) {
 		let dblclickers = []
 
 		if (dblclickers.indexOf(btn.textContent) !== -1) {
-			btn.addEventListener("mouseup", function (e) {
+			btn.addEventListener(`mouseup`, function (e) {
 				if (e.which === 1) {
 					if (e.detail % 2 === 0) {
 						App.press(this.textContent)
@@ -164,12 +163,12 @@ App.draw_buttons = () => {
 				}
 			}, false)
 		} else {
-			btn.addEventListener("click", function () {
+			btn.addEventListener(`click`, function () {
 				App.press(this.textContent)
 			})
 		}
 
-		btn.addEventListener("auxclick", function (e) {
+		btn.addEventListener(`auxclick`, function (e) {
 			App.press(this.textContent, e.which)
 		})
 
@@ -177,36 +176,36 @@ App.draw_buttons = () => {
 	}
 }
 
-App.place_button = (s, title = "") => {
-	let el = document.createElement("button")
+App.place_button = (s, title = ``) => {
+	let el = document.createElement(`button`)
 	el.title = title
-	el.classList.add("button")
+	el.classList.add(`button`)
 	el.textContent = s
-	DOM.el("#buttons").appendChild(el)
+	DOM.el(`#buttons`).appendChild(el)
 }
 
-App.place_button_wider = (s, title = "") => {
-	let el = document.createElement("button")
+App.place_button_wider = (s, title = ``) => {
+	let el = document.createElement(`button`)
 	el.title = title
-	el.classList.add("button")
-	el.classList.add("wider")
+	el.classList.add(`button`)
+	el.classList.add(`wider`)
 	el.textContent = s
-	DOM.el("#buttons").appendChild(el)
+	DOM.el(`#buttons`).appendChild(el)
 }
 
 App.buttons_br = () => {
-	let el = document.createElement("br")
-	DOM.el("#buttons").appendChild(el)
+	let el = document.createElement(`br`)
+	DOM.el(`#buttons`).appendChild(el)
 }
 
 App.focus_next_or_add = () => {
-	let next_all = DOM.next_all(App.focused.input.parentNode, ".line")
+	let next_all = DOM.next_all(App.focused.input.parentNode, `.line`)
 	let found_line = false
 
 	for (let item of next_all) {
-		let inp = DOM.el(".input", item)
+		let inp = DOM.el(`.input`, item)
 
-		if (inp.value === "") {
+		if (inp.value === ``) {
 			App.focus_input(inp)
 			found_line = true
 			return false
@@ -219,7 +218,7 @@ App.focus_next_or_add = () => {
 }
 
 App.add_line = (value = false) => {
-	let num_lines = DOM.els(".line").length
+	let num_lines = DOM.els(`.line`).length
 	let letter
 
 	if (num_lines === App.get_max_line_length()) {
@@ -227,17 +226,17 @@ App.add_line = (value = false) => {
 	}
 
 	if (num_lines === 0) {
-		letter = "a"
+		letter = `a`
 	} else {
-		let last_var = DOM.dataset(App.get_last_input(), "variable")
+		let last_var = DOM.dataset(App.get_last_input(), `variable`)
 		letter = App.increase_var(last_var).substring(1)
 	}
 
 	if (!value) {
-		value = ""
+		value = ``
 	}
 
-	let el = DOM.div("line")
+	let el = DOM.div(`line`)
 
 	el.innerHTML = `
 		<button class="button variable">$${letter}</button>
@@ -247,41 +246,41 @@ App.add_line = (value = false) => {
 			<span class="result"></span>
 		</div>`
 
-	DOM.el("#lines").appendChild(el)
+	DOM.el(`#lines`).appendChild(el)
 	let input = App.get_last_input()
 	App.focused.input = input
 
-	DOM.els(".variable").slice(-1)[0].addEventListener("click", function () {
-		App.press("$" + letter)
+	DOM.els(`.variable`).slice(-1)[0].addEventListener(`click`, function () {
+		App.press(`$` + letter)
 	})
 
-	input.addEventListener("focus", function () {
+	input.addEventListener(`focus`, function () {
 		App.focused.input = this
 		App.change_borders()
 		App.check_line_visibility()
 	})
 
-	input.addEventListener("input", function () {
+	input.addEventListener(`input`, function () {
 		App.update_results()
 	})
 
-	input.addEventListener("keydown", function (e) {
-		if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+	input.addEventListener(`keydown`, function (e) {
+		if (e.key === `ArrowUp` || e.key === `ArrowDown`) {
 			e.preventDefault()
 		}
 	})
 
-	DOM.els(".result").slice(-1)[0].addEventListener("click", function () {
+	DOM.els(`.result`).slice(-1)[0].addEventListener(`click`, function () {
 		App.on_result_click(this)
 	})
 
-	DOM.els(".result").slice(-1)[0].addEventListener("mousedown", function (e) {
+	DOM.els(`.result`).slice(-1)[0].addEventListener(`mousedown`, function (e) {
 		if (e.detail > 1) {
 			e.preventDefault()
 		}
 	})
 
-	DOM.dataset(input, "variable", "$" + letter)
+	DOM.dataset(input, `variable`, `$` + letter)
 
 	App.focus_input(input)
 	App.move_caret_to_end(input)
@@ -294,7 +293,7 @@ App.add_line_before = () => {
 App.add_line_after = () => {
 	let index = DOM.index(App.focused.input.parentNode)
 
-	if (index === DOM.els(".line").length - 1) {
+	if (index === DOM.els(`.line`).length - 1) {
 		App.add_line()
 	} else {
 		App.move_lines_down(true)
@@ -304,9 +303,9 @@ App.add_line_after = () => {
 App.remove_line = () => {
 	let index = DOM.index(App.focused.input.parentNode)
 
-	if (DOM.els(".line").length === 1) {
+	if (DOM.els(`.line`).length === 1) {
 		App.clear_input(App.focused.input)
-	} else if (index === DOM.els(".line").length - 1) {
+	} else if (index === DOM.els(`.line`).length - 1) {
 		App.remove_last_line()
 	} else {
 		App.move_lines_up()
@@ -315,12 +314,12 @@ App.remove_line = () => {
 
 App.remove_all_lines = () => {
 	App.undefine_variables()
-	DOM.el("#lines").innerHTML = ""
+	DOM.el(`#lines`).innerHTML = ``
 	App.add_line()
 }
 
 App.move_lines_up = () => {
-	let line_length = DOM.els(".line").length
+	let line_length = DOM.els(`.line`).length
 
 	if (line_length === 1) {
 		return
@@ -328,12 +327,12 @@ App.move_lines_up = () => {
 
 	let input = App.focused.input
 	let line = input.parentNode
-	let v = DOM.dataset(input, "variable")
+	let v = DOM.dataset(input, `variable`)
 	let index = DOM.index(line)
 
 	if (index === (line_length - 1)) {
 		if (input === App.focused.input) {
-			DOM.el(".input", line.previousElementSibling).focus()
+			DOM.el(`.input`, line.previousElementSibling).focus()
 		}
 
 		line.remove()
@@ -342,21 +341,21 @@ App.move_lines_up = () => {
 	}
 
 	for (let i = 0; i < line_length; i++) {
-		let ln = DOM.els(".line")[i]
-		let inp = DOM.el(".input", ln)
+		let ln = DOM.els(`.line`)[i]
+		let inp = DOM.el(`.input`, ln)
 		let val = inp.value
 
-		if (val.trim() === "") {
+		if (val.trim() === ``) {
 			continue
 		}
 
-		if (val.trim().startsWith("//")) {
+		if (val.trim().startsWith(`//`)) {
 			continue
 		}
 
 		val = val.replace(/\$[a-z]+/g, function (match) {
 			if (match === v) {
-				return ""
+				return ``
 			}
 
 			let ni = App.get_var_index(match)
@@ -372,11 +371,11 @@ App.move_lines_up = () => {
 	}
 
 	for (let i = index + 1; i < line_length; i++) {
-		let inp = DOM.el(".input", DOM.els(".line")[i])
-		let ninp = DOM.el(".input", inp.parentNode.previousElementSibling)
+		let inp = DOM.el(`.input`, DOM.els(`.line`)[i])
+		let ninp = DOM.el(`.input`, inp.parentNode.previousElementSibling)
 
 		ninp.value = inp.value
-		inp.value = ""
+		inp.value = ``
 	}
 
 	App.get_last_line().remove()
@@ -384,7 +383,7 @@ App.move_lines_up = () => {
 }
 
 App.move_lines_down = (alt = false) => {
-	let line_length = DOM.els(".line").length
+	let line_length = DOM.els(`.line`).length
 
 	if (line_length === App.get_max_line_length()) {
 		return
@@ -396,25 +395,25 @@ App.move_lines_down = (alt = false) => {
 
 	let input = App.focused.input
 	let line = input.parentNode
-	let v = DOM.dataset(input, "variable")
+	let v = DOM.dataset(input, `variable`)
 	let index = DOM.index(line)
 
 	for (let i = 0; i < line_length; i++) {
-		let ln = DOM.els(".line")[i]
-		let inp = DOM.el(".input", ln)
+		let ln = DOM.els(`.line`)[i]
+		let inp = DOM.el(`.input`, ln)
 		let val = inp.value
 
-		if (val.trim() === "") {
+		if (val.trim() === ``) {
 			continue
 		}
 
-		if (val.trim().startsWith("//")) {
+		if (val.trim().startsWith(`//`)) {
 			continue
 		}
 
 		val = val.replace(/\$[a-z]+/g, function (match) {
 			if (match === v) {
-				return ""
+				return ``
 			}
 
 			let ni = App.get_var_index(match)
@@ -431,22 +430,22 @@ App.move_lines_down = (alt = false) => {
 
 	App.add_line()
 
-	line_length = DOM.els(".line").length
+	line_length = DOM.els(`.line`).length
 
 	for (let i = line_length - 1; i > index; i--) {
-		let inp = DOM.el(".input", DOM.els(".line")[i])
-		let ninp = DOM.el(".input", inp.parentNode.previousElementSibling)
+		let inp = DOM.el(`.input`, DOM.els(`.line`)[i])
+		let ninp = DOM.el(`.input`, inp.parentNode.previousElementSibling)
 		inp.value = ninp.value
 	}
 
-	input.value = ""
+	input.value = ``
 	App.focus_input(input)
 	App.update_results()
 }
 
 App.decrease_var = (v) => {
 	let letter = v.substring(1)
-	let res = ""
+	let res = ``
 	let decrease_next = true
 
 	for (let i = letter.length - 1; i >= 0; i--) {
@@ -467,12 +466,12 @@ App.decrease_var = (v) => {
 		}
 	}
 
-	return "$" + res.split("").reverse().join("")
+	return `$` + res.split(``).reverse().join(``)
 }
 
 App.increase_var = (v) => {
 	let letter = v.substring(1)
-	let res = ""
+	let res = ``
 	let increase_next = true
 
 	for (let i = letter.length - 1; i >= 0; i--) {
@@ -482,7 +481,7 @@ App.increase_var = (v) => {
 				increase_next = true
 
 				if (i == 0) {
-					res += "a"
+					res += `a`
 				}
 			} else {
 				res += App.letters[App.letters.indexOf(letter[i]) + 1]
@@ -493,7 +492,7 @@ App.increase_var = (v) => {
 		}
 	}
 
-	return "$" + res.split("").reverse().join("")
+	return `$` + res.split(``).reverse().join(``)
 }
 
 App.get_var_index = (v) => {
@@ -521,7 +520,7 @@ App.get_var_index = (v) => {
 }
 
 App.remove_last_line = () => {
-	if (DOM.els(".line").length === 1) {
+	if (DOM.els(`.line`).length === 1) {
 		App.clear_input(App.focused.input)
 		return
 	}
@@ -530,7 +529,7 @@ App.remove_last_line = () => {
 	let input = App.get_last_input()
 
 	if (input === App.focused.input) {
-		DOM.el(".input", line.previousElementSibling).focus()
+		DOM.el(`.input`, line.previousElementSibling).focus()
 	}
 
 	line.remove()
@@ -538,13 +537,13 @@ App.remove_last_line = () => {
 }
 
 App.get_result = (input) => {
-	let result = DOM.el(".result", input.parentNode)
-	result.innerHTML = ""
+	let result = DOM.el(`.result`, input.parentNode)
+	result.innerHTML = ``
 
 	try {
 		let val = input.value
 
-		if (val.trim().startsWith("//")) {
+		if (val.trim().startsWith(`//`)) {
 			App.show_comment(input)
 			return
 		}
@@ -554,9 +553,9 @@ App.get_result = (input) => {
 		}
 
 		if (App.options.fraction) {
-			result = App.math_fraction.eval(val + "*1", App.linevars)
+			result = App.math_fraction.eval(val + `*1`, App.linevars)
 		} else {
-			result = App.math_normal.eval(val + "*1", App.linevars)
+			result = App.math_normal.eval(val + `*1`, App.linevars)
 		}
 
 		App.update_variable(input, result)
@@ -569,19 +568,19 @@ App.get_result = (input) => {
 }
 
 App.show_error = (input) => {
-	App.show_result(input, "Error")
+	App.show_result(input, `Error`)
 }
 
 App.show_comment = (input) => {
-	App.show_result(input, "Comment")
+	App.show_result(input, `Comment`)
 }
 
 App.show_result = (input, s) => {
-	DOM.el(".result", input.parentNode).innerHTML = s
+	DOM.el(`.result`, input.parentNode).innerHTML = s
 }
 
 App.update_variable = (input, val) => {
-	App.linevars[DOM.dataset(input, "variable")] = val
+	App.linevars[DOM.dataset(input, `variable`)] = val
 }
 
 App.improper_to_mixed = (n, d) => {
@@ -592,7 +591,7 @@ App.improper_to_mixed = (n, d) => {
 
 App.format_result = (n, f = false) => {
 	if (App.options.fraction && !f) {
-		let split = App.math_fraction.format(n).split("/")
+		let split = App.math_fraction.format(n).split(`/`)
 
 		if (split.length === 2) {
 			let sup = split[0]
@@ -627,17 +626,17 @@ App.format_result = (n, f = false) => {
 		let ns = n.toString()
 		let whole, decimal
 
-		if (ns.indexOf(".") !== -1) {
-			let split = ns.split(".")
-			whole = split[0].toString() + "."
+		if (ns.indexOf(`.`) !== -1) {
+			let split = ns.split(`.`)
+			whole = split[0].toString() + `.`
 			decimal = split[1].toString()
 		} else {
 			whole = n.toString()
-			decimal = ""
+			decimal = ``
 		}
 
 		if (App.options.commas) {
-			whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+			whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, `,`)
 		}
 
 		return `<span class="resolved"><span class="whole">${whole}</span><span class="decimal">${decimal}</span></span>`
@@ -645,14 +644,14 @@ App.format_result = (n, f = false) => {
 }
 
 App.press = (s, aux = false) => {
-	if (s === "sin") {
-		s = "sin("
-	} else if (s === "cos") {
-		s = "cos("
-	} else if (s === "tan") {
-		s = "tan("
-	} else if (s === "sqrt") {
-		s = "sqrt("
+	if (s === `sin`) {
+		s = `sin(`
+	} else if (s === `cos`) {
+		s = `cos(`
+	} else if (s === `tan`) {
+		s = `tan(`
+	} else if (s === `sqrt`) {
+		s = `sqrt(`
 	}
 
 	if (aux) {
@@ -664,35 +663,35 @@ App.press = (s, aux = false) => {
 		}
 	}
 
-	if (s === "Clear") {
+	if (s === `Clear`) {
 		App.clear_input(App.focused.input)
 		return
-	} else if (s === "Erase") {
+	} else if (s === `Erase`) {
 		App.erase_character()
 		return
-	} else if (s === "New Line") {
+	} else if (s === `New Line`) {
 		App.focus_next_or_add()
 		App.focus_input(App.focused.input)
 		return
-	} else if (s === "Remove Line") {
+	} else if (s === `Remove Line`) {
 		App.remove_line()
 		App.focus_input(App.focused.input)
 		return
-	} else if (s === "Up") {
+	} else if (s === `Up`) {
 		App.line_up()
 		App.focus_input(App.focused.input)
 		return
-	} else if (s === "Down") {
+	} else if (s === `Down`) {
 		App.line_down()
 		App.focus_input(App.focused.input)
 		return
 	}
 
-	let v = DOM.dataset(App.focused.input, "variable")
+	let v = DOM.dataset(App.focused.input, `variable`)
 
 	if (s === v) {
 		App.focus_next_or_add()
-		v = DOM.dataset(App.focused.input, "variable")
+		v = DOM.dataset(App.focused.input, `variable`)
 
 		if (s === v) {
 			return
@@ -707,61 +706,61 @@ App.check_aux = (s, aux) => {
 		for (let i = 1; i < 10; i++) {
 			if (s == i) {
 				if (aux === 3) {
-					return "0." + i
+					return `0.` + i
 				} else if (aux === 2) {
-					return "1/" + i
+					return `1/` + i
 				}
 			}
 		}
 
 		if (s == 0) {
 			if (aux === 3) {
-				return "0."
+				return `0.`
 			} else if (aux === 2) {
-				return "000"
+				return `000`
 			}
-		} else if (s === "cos(") {
+		} else if (s === `cos(`) {
 			if (aux === 3) {
-				return "acos("
+				return `acos(`
 			} else if (aux === 2) {
-				return "acosh("
+				return `acosh(`
 			}
-		} else if (s === "tan(") {
+		} else if (s === `tan(`) {
 			if (aux === 3) {
-				return "atan("
+				return `atan(`
 			} else if (aux === 2) {
-				return "atanh("
+				return `atanh(`
 			}
-		} else if (s === "sin(") {
+		} else if (s === `sin(`) {
 			if (aux === 3) {
-				return "asin("
+				return `asin(`
 			} else if (aux === 2) {
-				return "asinh("
+				return `asinh(`
 			}
-		} else if (s === "^") {
+		} else if (s === `^`) {
 			if (aux === 3) {
-				return "^2"
+				return `^2`
 			} else if (aux === 2) {
-				return "^3"
+				return `^3`
 			}
-		} else if (s === "sqrt(") {
+		} else if (s === `sqrt(`) {
 			if (aux === 3) {
-				return "cbrt("
+				return `cbrt(`
 			} else if (aux === 2) {
-				return "nthRoot("
+				return `nthRoot(`
 			}
-		} else if (s === "pi") {
+		} else if (s === `pi`) {
 			if (aux === 3) {
-				return "phi"
+				return `phi`
 			} else if (aux === 2) {
-				return "e"
+				return `e`
 			}
-		} else if (s === "/") {
+		} else if (s === `/`) {
 			if (aux === 3) {
 				App.toggle_comment(App.focused.input)
 				return false
 			}
-		} else if (s === "Up") {
+		} else if (s === `Up`) {
 			if (aux === 3) {
 				App.move_line_up()
 				return false
@@ -769,7 +768,7 @@ App.check_aux = (s, aux) => {
 				App.go_to_first_input()
 				return false
 			}
-		} else if (s === "Down") {
+		} else if (s === `Down`) {
 			if (aux === 3) {
 				App.move_line_down()
 				return false
@@ -777,7 +776,7 @@ App.check_aux = (s, aux) => {
 				App.go_to_last_input()
 				return false
 			}
-		} else if (s === "Remove Line") {
+		} else if (s === `Remove Line`) {
 			if (aux === 3) {
 				App.remove_last_line()
 				return false
@@ -785,7 +784,7 @@ App.check_aux = (s, aux) => {
 				App.remove_all_lines()
 				return false
 			}
-		} else if (s === "New Line") {
+		} else if (s === `New Line`) {
 			if (aux === 3) {
 				App.add_line_after()
 				return false
@@ -793,7 +792,7 @@ App.check_aux = (s, aux) => {
 				App.add_line_before()
 				return false
 			}
-		} else if (s === "Clear") {
+		} else if (s === `Clear`) {
 			if (aux === 3) {
 				App.format_input(App.focused.input)
 				return false
@@ -808,11 +807,11 @@ App.check_aux = (s, aux) => {
 }
 
 App.clear_input = (input) => {
-	if (input.value === "") {
+	if (input.value === ``) {
 		return
 	}
 
-	App.replace_text(input, "")
+	App.replace_text(input, ``)
 }
 
 App.update_results = (function () {
@@ -829,26 +828,26 @@ App.do_update_results = () => {
 	App.undefine_variables()
 	let variables = {}
 
-	for (let input of DOM.els(".input")) {
-		let v = DOM.dataset(input, "variable")
+	for (let input of DOM.els(`.input`)) {
+		let v = DOM.dataset(input, `variable`)
 		variables[v] = {}
 		let vr = variables[v]
 		vr.edges = []
 	}
 
-	for (let input of DOM.els(".input")) {
-		let v = DOM.dataset(input, "variable")
+	for (let input of DOM.els(`.input`)) {
+		let v = DOM.dataset(input, `variable`)
 		let val = input.value
 
-		if (val.trim() === "") {
+		if (val.trim() === ``) {
 			if (val.length > 0) {
-				input.value = ""
+				input.value = ``
 			}
 
 			continue
 		}
 
-		if (val.trim().startsWith("//")) {
+		if (val.trim().startsWith(`//`)) {
 			continue
 		}
 
@@ -888,14 +887,14 @@ App.do_update_results = () => {
 		}
 
 		if (!acyclic) {
-			for (let input of DOM.els(".input")) {
-				let v = DOM.dataset(input, "variable")
+			for (let input of DOM.els(`.input`)) {
+				let v = DOM.dataset(input, `variable`)
 				let letter = v.substring(1)
 
 				if (sorted.indexOf(v) !== -1) {
-					App.get_result(DOM.el("#" + letter))
+					App.get_result(DOM.el(`#` + letter))
 				} else {
-					App.show_result(DOM.el("#" + letter), "Not Acyclical")
+					App.show_result(DOM.el(`#` + letter), `Not Acyclical`)
 				}
 			}
 
@@ -909,23 +908,23 @@ App.do_update_results = () => {
 
 	for (let i = 0; i < sorted.length; i++) {
 		let letter = sorted[i].substring(1)
-		App.get_result(DOM.el("#" + letter))
+		App.get_result(DOM.el(`#` + letter))
 	}
 }
 
 App.check_line_visibility = () => {
 	let it = App.focused.input.parentNode.getBoundingClientRect().top
-	let ct = DOM.el("#lines_container").getBoundingClientRect().top
+	let ct = DOM.el(`#lines_container`).getBoundingClientRect().top
 
 	if (it < ct) {
-		DOM.el("#lines_container").scrollTop = DOM.el("#lines_container").scrollTop - (ct - it)
+		DOM.el(`#lines_container`).scrollTop = DOM.el(`#lines_container`).scrollTop - (ct - it)
 	}
 
 	let ib = it + App.focused.input.parentNode.offsetHeight
-	let cb = ct + DOM.el("#lines_container").offsetHeight
+	let cb = ct + DOM.el(`#lines_container`).offsetHeight
 
 	if (ib > cb) {
-		DOM.el("#lines_container").scrollTop = DOM.el("#lines_container").scrollTop + (ib - cb)
+		DOM.el(`#lines_container`).scrollTop = DOM.el(`#lines_container`).scrollTop + (ib - cb)
 	}
 }
 
@@ -937,7 +936,7 @@ App.focus_next = () => {
 	let line = App.focused.input.parentNode.nextElementSibling
 
 	if (line) {
-		DOM.el(".input", line).focus()
+		DOM.el(`.input`, line).focus()
 	}
 }
 
@@ -945,7 +944,7 @@ App.focus_prev = () => {
 	let line = App.focused.input.parentNode.previousElementSibling
 
 	if (line) {
-		DOM.el(".input", line).focus()
+		DOM.el(`.input`, line).focus()
 	}
 }
 
@@ -965,24 +964,24 @@ App.move_line_up = () => {
 	}
 
 	let inp = App.focused.input
-	let ninp = DOM.el(".input", inp.parentNode.previousElementSibling)
+	let ninp = DOM.el(`.input`, inp.parentNode.previousElementSibling)
 
 	let val = inp.value
 	let nval = ninp.value
 
-	let v = DOM.dataset(inp, "variable")
-	let nv = DOM.dataset(ninp, "variable")
+	let v = DOM.dataset(inp, `variable`)
+	let nv = DOM.dataset(ninp, `variable`)
 
-	let cv = "$@!#" + v.substring(1)
-	let cnv = "$@!#" + nv.substring(1)
+	let cv = `$@!#` + v.substring(1)
+	let cnv = `$@!#` + nv.substring(1)
 
-	let re = new RegExp("\\$" + v.substring(1), "g")
-	let re2 = new RegExp("\\$" + nv.substring(1), "g")
+	let re = new RegExp(`\\$` + v.substring(1), `g`)
+	let re2 = new RegExp(`\\$` + nv.substring(1), `g`)
 
-	for (let input of DOM.els(".input")) {
+	for (let input of DOM.els(`.input`)) {
 		let vl = input.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
-		input.value = vl.replace(/@!#/g, "")
+		input.value = vl.replace(/@!#/g, ``)
 	}
 
 	val = inp.value
@@ -998,29 +997,29 @@ App.move_line_up = () => {
 App.move_line_down = () => {
 	let index = DOM.index(App.focused.input.parentNode)
 
-	if (index === (DOM.els(".line").length - 1)) {
+	if (index === (DOM.els(`.line`).length - 1)) {
 		return
 	}
 
 	let inp = App.focused.input
-	let ninp = DOM.el(".input", inp.parentNode.nextElementSibling)
+	let ninp = DOM.el(`.input`, inp.parentNode.nextElementSibling)
 
 	let val = inp.value
 	let nval = ninp.value
 
-	let v = DOM.dataset(inp, "variable")
-	let nv = DOM.dataset(ninp, "variable")
+	let v = DOM.dataset(inp, `variable`)
+	let nv = DOM.dataset(ninp, `variable`)
 
-	let cv = "$@!#" + v.substring(1)
-	let cnv = "$@!#" + nv.substring(1)
+	let cv = `$@!#` + v.substring(1)
+	let cnv = `$@!#` + nv.substring(1)
 
-	let re = new RegExp("\\$" + v.substring(1), "g")
-	let re2 = new RegExp("\\$" + nv.substring(1), "g")
+	let re = new RegExp(`\\$` + v.substring(1), `g`)
+	let re2 = new RegExp(`\\$` + nv.substring(1), `g`)
 
-	for (let input of DOM.els(".input")) {
+	for (let input of DOM.els(`.input`)) {
 		let vl = input.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
-		input.value = vl.replace(/@!#/g, "")
+		input.value = vl.replace(/@!#/g, ``)
 	}
 
 	val = inp.value
@@ -1034,14 +1033,14 @@ App.move_line_down = () => {
 }
 
 App.cycle_inputs = (direction) => {
-	if (DOM.els(".input").length === 1) {
+	if (DOM.els(`.input`).length === 1) {
 		return
 	}
 
 	let index = DOM.index(App.focused.input.parentNode)
 
-	if (direction === "down") {
-		if (index === (DOM.els(".input").length - 1)) {
+	if (direction === `down`) {
+		if (index === (DOM.els(`.input`).length - 1)) {
 			App.go_to_first_input()
 		} else {
 			App.focus_next()
@@ -1056,20 +1055,20 @@ App.cycle_inputs = (direction) => {
 }
 
 App.change_borders = () => {
-	for (let input of DOM.els(".input")) {
-		input.classList.remove("input_focus")
+	for (let input of DOM.els(`.input`)) {
+		input.classList.remove(`input_focus`)
 	}
 
-	App.focused.input.classList.add("input_focus")
+	App.focused.input.classList.add(`input_focus`)
 }
 
 App.place_lines_container = () => {
-	let h = window.innerHeight - DOM.el("#app_top").offsetHeight
-	DOM.el("#lines_container").style.height = `${h}px`
+	let h = window.innerHeight - DOM.el(`#app_top`).offsetHeight
+	DOM.el(`#lines_container`).style.height = `${h}px`
 }
 
 App.resize_events = () => {
-	window.addEventListener("resize", function () {
+	window.addEventListener(`resize`, function () {
 		App.resize_timer()
 	})
 }
@@ -1090,15 +1089,15 @@ App.new_sheet = () => {
 }
 
 App.title_click_events = () => {
-	DOM.el("#lnk_new").addEventListener("click", function () {
+	DOM.el(`#lnk_new`).addEventListener(`click`, function () {
 		App.new_sheet()
 	})
 
-	DOM.el("#lnk_options").addEventListener("click", function () {
+	DOM.el(`#lnk_options`).addEventListener(`click`, function () {
 		App.show_options()
 	})
 
-	DOM.el("#lnk_about").addEventListener("click", function () {
+	DOM.el(`#lnk_about`).addEventListener(`click`, function () {
 		App.show_about()
 	})
 }
@@ -1108,7 +1107,7 @@ App.copy_to_clipboard = (s) => {
 }
 
 App.show_about = () => {
-	App.show_modal("About", App.templates["template_about"]({
+	App.show_modal(`About`, App.templates[`template_about`]({
 		version: App.version
 	}))
 }
@@ -1129,7 +1128,7 @@ App.show_options = () => {
 		themelist.push(obj)
 	}
 
-	App.show_modal("Options", App.templates["template_options"]({
+	App.show_modal(`Options`, App.templates[`template_options`]({
 		commas: App.options.commas,
 		mixed: App.options.mixed,
 		round: App.options.round,
@@ -1138,7 +1137,7 @@ App.show_options = () => {
 		themes: themelist
 	}))
 
-	let els = DOM.els("option", DOM.el("#sel_round_places"))
+	let els = DOM.els(`option`, DOM.el(`#sel_round_places`))
 
 	for (let el of els) {
 		if (el.value == App.options.round_places) {
@@ -1146,7 +1145,7 @@ App.show_options = () => {
 		}
 	}
 
-	els = DOM.els("option", DOM.el("#sel_theme"))
+	els = DOM.els(`option`, DOM.el(`#sel_theme`))
 
 	for (let el of els) {
 		if (el.value == App.options.theme) {
@@ -1154,36 +1153,36 @@ App.show_options = () => {
 		}
 	}
 
-	DOM.el("#chk_commas").addEventListener("change", function () {
+	DOM.el(`#chk_commas`).addEventListener(`change`, function () {
 		App.options.commas = this.checked
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el("#chk_round").addEventListener("change", function () {
+	DOM.el(`#chk_round`).addEventListener(`change`, function () {
 		App.options.round = this.checked
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el("#sel_round_places").addEventListener("change", function () {
+	DOM.el(`#sel_round_places`).addEventListener(`change`, function () {
 		App.options.round_places = parseInt(this.value)
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el("#chk_mixed").addEventListener("change", function () {
+	DOM.el(`#chk_mixed`).addEventListener(`change`, function () {
 		App.options.mixed = this.checked
 		App.update_results()
 		App.update_options()
 	})
 
-	DOM.el("#chk_sound").addEventListener("change", function () {
+	DOM.el(`#chk_sound`).addEventListener(`change`, function () {
 		App.options.sound = this.checked
 		App.update_options()
 	})
 
-	DOM.el("#sel_theme").addEventListener("change", function () {
+	DOM.el(`#sel_theme`).addEventListener(`change`, function () {
 		App.options.theme = this.value
 		App.apply_theme(App.options.theme)
 		App.update_options()
@@ -1208,11 +1207,11 @@ App.get_options = () => {
 	}
 
 	if (App.options.version === undefined) {
-		options.version = App.ls_options
+		App.options.version = App.ls_options
 		mod = true
 	}
 
-	if (options.sound === undefined) {
+	if (App.options.sound === undefined) {
 		App.options.sound = true
 		mod = true
 	}
@@ -1243,11 +1242,11 @@ App.get_options = () => {
 	}
 
 	if (App.options.theme === undefined) {
-		App.options.theme = "carbon"
+		App.options.theme = `carbon`
 		mod = true
 	} else {
 		if (App.themes.indexOf(App.options.theme) === -1) {
-			App.options.theme = "carbon"
+			App.options.theme = `carbon`
 			mod = true
 		}
 	}
@@ -1284,7 +1283,7 @@ App.fill_sheet = (x = false) => {
 	if (x) {
 		n = x
 	} else {
-		n = App.get_max_line_length() - DOM.els(".line").length
+		n = App.get_max_line_length() - DOM.els(`.line`).length
 	}
 
 	for (let i = 0; i < n; i++) {
@@ -1293,7 +1292,7 @@ App.fill_sheet = (x = false) => {
 }
 
 App.disable_context_menu = (el) => {
-	el.addEventListener("contextmenu", event => event.preventDefault())
+	el.addEventListener(`contextmenu`, event => event.preventDefault())
 }
 
 App.focus_if_isnt = (input) => {
@@ -1303,7 +1302,7 @@ App.focus_if_isnt = (input) => {
 }
 
 App.get_max_line_length = () => {
-	return App.get_var_index("$zz") + 1
+	return App.get_var_index(`$zz`) + 1
 }
 
 App.undefine_variables = () => {
@@ -1313,18 +1312,18 @@ App.undefine_variables = () => {
 }
 
 App.get_result_text = (el) => {
-	let s = ""
+	let s = ``
 
-	if (DOM.els("sup").length > 0) {
-		if (DOM.els(".mwhole", el).length > 0) {
-			s += DOM.el(".mwhole", el).textContent + " "
+	if (DOM.els(`sup`).length > 0) {
+		if (DOM.els(`.mwhole`, el).length > 0) {
+			s += DOM.el(`.mwhole`, el).textContent + ` `
 		}
 
-		s += DOM.el("sup", el).textContent
-		s += "/"
-		s += DOM.el("sub", el).textContent
+		s += DOM.el(`sup`, el).textContent
+		s += `/`
+		s += DOM.el(`sub`, el).textContent
 	} else {
-		s += el.textContent.replace(/,/g, "")
+		s += el.textContent.replace(/,/g, ``)
 	}
 
 	return s
@@ -1343,12 +1342,12 @@ App.toggle_fraction = () => {
 }
 
 App.copy_input_down = () => {
-	let og_var = DOM.dataset(App.focused.input, "variable")
+	let og_var = DOM.dataset(App.focused.input, `variable`)
 	let og_val = App.focused.input.value
 
 	App.focus_next_or_add()
 
-	if (og_var !== DOM.dataset(App.focused.input, "variable")) {
+	if (og_var !== DOM.dataset(App.focused.input, `variable`)) {
 		App.replace_text(App.focused.input, og_val)
 	}
 }
@@ -1356,19 +1355,19 @@ App.copy_input_down = () => {
 App.expand_value = (input) => {
 	let val = input.value
 
-	if (val.trim() === "") {
+	if (val.trim() === ``) {
 		return
 	}
 
-	if (val.trim().startsWith("//")) {
+	if (val.trim().startsWith(`//`)) {
 		return
 	}
 
-	if (val.indexOf("$") === -1) {
+	if (val.indexOf(`$`) === -1) {
 		return
 	}
 
-	let vr = DOM.dataset(input, "variable")
+	let vr = DOM.dataset(input, `variable`)
 	let n = 0
 
 	while (true) {
@@ -1379,9 +1378,9 @@ App.expand_value = (input) => {
 				return match
 			}
 
-			let v = DOM.el("#" + match.substring(1)).value
+			let v = DOM.el(`#` + match.substring(1)).value
 
-			if (v !== undefined && v.trim() !== "") {
+			if (v !== undefined && v.trim() !== ``) {
 				return `(${v})`
 			} else {
 				return match
@@ -1400,12 +1399,12 @@ App.expand_value = (input) => {
 		}
 	}
 
-	if (val.indexOf("$") !== -1) {
+	if (val.indexOf(`$`) !== -1) {
 		return
 	}
 
 	try {
-		val = App.math_normal.parse(val).toString({ parenthesis: "auto", implicit: "show" })
+		val = App.math_normal.parse(val).toString({ parenthesis: `auto`, implicit: `show` })
 	}
 
 	catch (err) {
@@ -1418,16 +1417,16 @@ App.expand_value = (input) => {
 App.format_input = (input) => {
 	let val = input.value
 
-	if (val.trim() === "") {
+	if (val.trim() === ``) {
 		return
 	}
 
-	if (val.trim().startsWith("//")) {
+	if (val.trim().startsWith(`//`)) {
 		return
 	}
 
 	try {
-		val = App.math_normal.parse(val).toString({ parenthesis: "auto", implicit: "show" })
+		val = App.math_normal.parse(val).toString({ parenthesis: `auto`, implicit: `show` })
 	}
 
 	catch (err) {
@@ -1438,7 +1437,7 @@ App.format_input = (input) => {
 }
 
 App.format_all = () => {
-	for (let input of DOM.els(".input")) {
+	for (let input of DOM.els(`.input`)) {
 		App.format_input(input)
 	}
 }
@@ -1482,50 +1481,48 @@ App.erase_character = () => {
 }
 
 App.place_infobar = () => {
-	let w = DOM.el("#buttons").offsetWidth
-	DOM.el("#infobar").style.width = `${w}px`
+	let w = DOM.el(`#buttons`).offsetWidth
+	DOM.el(`#infobar`).style.width = `${w}px`
 }
 
 App.update_infobar = () => {
-	let s = ""
-
-	s += "<span id='ib_fraction_toggle' class='ib_item'>"
+	let s = ``
+	s += `<span id='ib_fraction_toggle' class='ib_item'>`
 
 	if (App.options.fraction) {
-		s += "Fraction Mode"
+		s += `Fraction Mode`
 	} else {
-		s += "Normal Mode"
+		s += `Normal Mode`
 	}
 
-	s += "</span>"
+	s += `</span>`
+	DOM.el(`#infobar`).innerHTML = s
 
-	DOM.el("#infobar").innerHTML = s
-
-	DOM.el("#ib_fraction_toggle").addEventListener("click", function () {
+	DOM.el(`#ib_fraction_toggle`).addEventListener(`click`, function () {
 		App.toggle_fraction()
 	})
 }
 
 App.apply_theme = (theme) => {
-	let stylesheet = document.createElement("link")
-	stylesheet.rel = "stylesheet"
-	stylesheet.href = "themes/" + theme + ".css?v=" + App.version
-	DOM.el("head").appendChild(stylesheet)
+	let stylesheet = document.createElement(`link`)
+	stylesheet.rel = `stylesheet`
+	stylesheet.href = `themes/` + theme + `.css?v=` + App.version
+	DOM.el(`head`).appendChild(stylesheet)
 }
 
 App.apply_mode = () => {
 	let mode
 
 	if (App.options.fraction) {
-		mode = "fraction"
+		mode = `fraction`
 	} else {
-		mode = "normal"
+		mode = `normal`
 	}
 
-	let stylesheet = document.createElement("link")
-	stylesheet.rel = "stylesheet"
-	stylesheet.href = "modes/" + mode + ".css?v=" + App.version
-	DOM.el("head").appendChild(stylesheet)
+	let stylesheet = document.createElement(`link`)
+	stylesheet.rel = `stylesheet`
+	stylesheet.href = `modes/` + mode + `.css?v=` + App.version
+	DOM.el(`head`).appendChild(stylesheet)
 }
 
 App.capitalize_string = (text) => {
@@ -1537,15 +1534,15 @@ App.move_caret_to_end = (input) => {
 }
 
 App.get_last_line = () => {
-	return DOM.els(".line").slice(-1)[0]
+	return DOM.els(`.line`).slice(-1)[0]
 }
 
 App.get_first_input = () => {
-	return DOM.els(".input")[0]
+	return DOM.els(`.input`)[0]
 }
 
 App.get_last_input = () => {
-	return DOM.els(".input").slice(-1)[0]
+	return DOM.els(`.input`).slice(-1)[0]
 }
 
 App.go_to_first_input = () => {
@@ -1557,25 +1554,25 @@ App.go_to_last_input = () => {
 }
 
 App.toggle_comment = (input) => {
-	if (!input.value.trim().startsWith("//")) {
-		App.replace_text(input, "// " + input.value.trim())
+	if (!input.value.trim().startsWith(`//`)) {
+		App.replace_text(input, `// ` + input.value.trim())
 	} else {
-		App.replace_text(input, input.value.replace("//", "").trim())
+		App.replace_text(input, input.value.replace(`//`, ``).trim())
 	}
 }
 
 App.start_msg = () => {
 	App.msg = Msg.factory({
-		id: "default",
+		id: `default`,
 		lock: false,
 		clear_editables: true,
-		window_x: "inner_right",
-		close_effect: "none",
-		show_effect: "none",
+		window_x: `inner_right`,
+		close_effect: `none`,
+		show_effect: `none`,
 		enable_titlebar: true,
 		center_titlebar: true,
-		titlebar_class: "!custom_titlebar !unselectable",
-		window_inner_x_class: "!titlebar_inner_x"
+		titlebar_class: `!custom_titlebar !unselectable`,
+		window_inner_x_class: `!titlebar_inner_x`
 	})
 
 	App.msg.create()
@@ -1586,9 +1583,9 @@ App.show_modal = (title, html, callback = () => {}) => {
 }
 
 App.setup_templates = () => {
-	Handlebars.registerHelper("eq", (a, b) => a == b)
+	Handlebars.registerHelper(`eq`, (a, b) => a == b)
 
-  DOM.els(".template").forEach(it => {
+  DOM.els(`.template`).forEach(it => {
     App.templates[it.id] = Handlebars.compile(DOM.el(`#${it.id}`).innerHTML)
   })
 }
