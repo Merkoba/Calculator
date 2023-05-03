@@ -3,19 +3,21 @@
 <html>
 	<head>
 		<title>Calculator</title>
-
 		<meta charset="utf-8">
 		<meta name="description" content="Powerful online calculator with multiple levels of calculations that can referenced and edited at anytime.">
 		<meta name="keywords" content="calculator, online, multiple, referenced, variables, themes, powerful, math, mathematics, arithmetic, fractions, precision, 64, web">
-
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-
 		<script src="js/libs/math.min.js"></script>
 		<script src="js/libs/handlebars.min.js"></script>
 		<script src="js/libs/msg.js"></script>
 		<script src="js/libs/dom.js"></script>
 		<script src="js/main/base.js"></script>
-
+		<script src="js/main/buttons.js"></script>
+		<script src="js/main/calc.js"></script>
+		<script src="js/main/inputs.js"></script>
+		<script src="js/main/keyboard.js"></script>
+		<script src="js/main/lines.js"></script>
+		<script src="js/main/options.js"></script>
 		<link rel="stylesheet" href="css/style.css">
 
 		<script>
@@ -27,26 +29,23 @@
 	</head>
 
 	<body>
-		<div id="app_top">
+		<div id="main">
+			<div id="app_top">
+				<div id="title">
+					<span class="linky" id="lnk_new">New</span>
+					&nbsp;&nbsp; - &nbsp;&nbsp;
+					<span class="linky" id="lnk_options">Options</span>
+					&nbsp;&nbsp; - &nbsp;&nbsp;
+					<span class="linky" id="lnk_about">About</span>
+				</div>
 
-			<div id="title">
-				<span class="linky" id="lnk_new">New</span>
-				&nbsp;&nbsp; - &nbsp;&nbsp;
-				<span class="linky" id="lnk_options">Options</span>
-				&nbsp;&nbsp; - &nbsp;&nbsp;
-				<span class="linky" id="lnk_about">About</span>
+				<br>
+
+				<span id="buttons"></span>
+				<div id="infobar">Nothing</div>
 			</div>
 
-			<br>
-
-			<span id="buttons"></span>
-
-			<div id="infobar">Nothing</div>
-
-		</div>
-
-		<div id="lines_container">
-			<br><br><div id="lines"></div>
+			<div id="lines">
 		</div>
 
 		<!-- Templates -->

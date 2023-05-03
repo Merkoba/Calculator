@@ -37,6 +37,13 @@ body {
 	width: 3em;
 }
 
+#main {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	height: 100vh;
+}
+
 #infobar {
 	font-size: 1em;
 	padding-top: 0.2em;
@@ -50,19 +57,13 @@ body {
 	user-select: none;
 }
 
-.ib_item {
-	cursor: pointer;
-}
-
-#lines_container {
+#lines {
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;
-}
-
-#lines {
-	position: relative;
-	max-height: 100%;
+	flex-grow: 1;
+	flex-shrink: 1;
+	margin-top: 1rem;
 }
 
 .line {
@@ -437,4 +438,8 @@ sup {
 	100% {
 		text-shadow: 0 0 1.2em
 	}
+}
+
+.ib_item {
+	cursor: pointer;
 }
