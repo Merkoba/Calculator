@@ -51,7 +51,7 @@ body, html {
 	overflow-y: auto;
 	flex-grow: 1;
 	flex-shrink: 1;
-	margin-top: 2rem;
+	padding-top: 2rem;
 }
 
 .line {
@@ -67,7 +67,7 @@ body, html {
 	font-size: 1.2rem;
 	width: 37.1rem;
 	border: none;
-	padding: 0.2rrem;
+	padding: 0.1rem;
 	outline: none;
 	letter-spacing: 0.1rem;
 	word-spacing: 0.1rem;
