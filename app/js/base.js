@@ -33,8 +33,8 @@ App.focused = {
 }
 
 App.init = () => {
-	init_msg()
-	setup_templates()
+	App.start_msg()
+	App.setup_templates()
 	App.get_local_storage()
 	App.apply_theme(App.options.theme)
 	App.apply_mode()
@@ -1108,7 +1108,7 @@ App.copy_to_clipboard = (s) => {
 }
 
 App.show_about = () => {
-	show_modal("About", App.templates["template_about"]({
+	App.show_modal("About", App.templates["template_about"]({
 		version: App.version
 	}))
 }
@@ -1129,7 +1129,7 @@ App.show_options = () => {
 		themelist.push(obj)
 	}
 
-	show_modal("Options", App.templates["template_options"]({
+	App.show_modal("Options", App.templates["template_options"]({
 		commas: App.options.commas,
 		mixed: App.options.mixed,
 		round: App.options.round,
@@ -1508,7 +1508,6 @@ App.update_infobar = () => {
 
 App.apply_theme = (theme) => {
 	let stylesheet = document.createElement("link")
-	stylesheet.onload = function () { set_modal_theme() }
 	stylesheet.rel = "stylesheet"
 	stylesheet.href = "themes/" + theme + ".css?v=" + App.version
 	DOM.el("head").appendChild(stylesheet)
@@ -1565,7 +1564,7 @@ App.toggle_comment = (input) => {
 	}
 }
 
-function init_msg() {
+App.start_msg = () => {
 	App.msg = Msg.factory({
 		id: "default",
 		lock: false,
@@ -1582,66 +1581,11 @@ function init_msg() {
 	App.msg.create()
 }
 
-function show_modal(title, html, callback = function () { }) {
+App.show_modal = (title, html, callback = () => {}) => {
 	App.msg.show([title, html], callback)
 }
 
-function set_modal_theme(a = true) {
-	let background_color = window.getComputedStyle(document.body, null).getPropertyValue("background-color")
-	let background_color_2 = App.colorlib.get_lighter_or_darker(background_color, 0.07)
-	let font_color = App.colorlib.get_lighter_or_darker(background_color, 0.8)
-	let overlay_color = App.colorlib.rgb_to_rgba(font_color, 0.8)
-
-	let el = document.createElement("style")
-	el.classList.add("appended_style")
-
-	el.innerHTML = `
-	.Msg-overlay {
-		background-color: ${overlay_color} !important;
-		color: ${background_color} !important;
-	}
-
-	.Msg-window {
-		background-color: ${background_color} !important;
-		color: ${font_color} !important;
-	}
-
-	.Msg-window-inner-x:hover {
-		background-color: ${background_color_2} !important;
-	}
-
-	.custom_titlebar {
-		background-color: ${background_color_2} !important;
-		color: ${font_color} !important;
-	}
-
-	.titlebar_inner_x {
-		background-color: ${background_color_2} !important;
-	}
-
-	.titlebar_inner_x:hover {
-		background-color: ${background_color} !important;
-	}
-
-	.custom_popup {
-		border: 1px solid ${font_color} !important;
-	}
-
-	.linky, .linky2, .linky3, a:visited, a:hover, a:link {
-		color: ${font_color} !important;
-	}
-
-	</style>
-	`
-
-	for (let item of DOM.els(".appended_style")) {
-		item.remove()
-	}
-
-	DOM.el("head").append(el)
-}
-
-setup_templates = function () {
+App.setup_templates = () => {
 	Handlebars.registerHelper("eq", (a, b) => a == b)
 
   DOM.els(".template").forEach(it => {
