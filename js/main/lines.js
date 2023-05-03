@@ -383,3 +383,7 @@ App.show_error = (input) => {
 App.show_comment = (input) => {
 	App.show_result(input, `Comment`)
 }
+
+App.new_sheet = () => {
+	App.remove_all_lines()
+}
