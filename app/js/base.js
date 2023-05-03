@@ -36,11 +36,11 @@ App.init = () => {
 	init_msg()
 	setup_templates()
 	App.get_local_storage()
-	apply_theme(App.options.theme)
-	apply_mode()
+	App.apply_theme(App.options.theme)
+	App.apply_mode()
 	App.draw_buttons()
-	place_infobar()
-	update_infobar()
+	App.place_infobar()
+	App.update_infobar()
 	App.place_lines_container()
 	App.key_detection()
 	App.resize_events()
@@ -66,7 +66,7 @@ App.key_detection = () => {
 
 		if (e.key === "Enter") {
 			if (e.shiftKey && e.ctrlKey) {
-				expand_value(App.focused.input)
+				App.expand_value(App.focused.input)
 			} else if (e.shiftKey) {
 				App.press(DOM.dataset(App.focused.input, "variable"))
 			} else if (e.ctrlKey) {
@@ -229,7 +229,7 @@ App.add_line = (value = false) => {
 	if (num_lines === 0) {
 		letter = "a"
 	} else {
-		let last_var = DOM.dataset(get_last_input(), "variable")
+		let last_var = DOM.dataset(App.get_last_input(), "variable")
 		letter = App.increase_var(last_var).substring(1)
 	}
 
@@ -248,7 +248,7 @@ App.add_line = (value = false) => {
 		</div>`
 
 	DOM.el("#lines").appendChild(el)
-	let input = get_last_input()
+	let input = App.get_last_input()
 	App.focused.input = input
 
 	DOM.els(".variable").slice(-1)[0].addEventListener("click", function () {
@@ -284,7 +284,7 @@ App.add_line = (value = false) => {
 	DOM.dataset(input, "variable", "$" + letter)
 
 	App.focus_input(input)
-	move_caret_to_end(input)
+	App.move_caret_to_end(input)
 }
 
 App.add_line_before = () => {
@@ -379,7 +379,7 @@ App.move_lines_up = () => {
 		inp.value = ""
 	}
 
-	get_last_line().remove()
+	App.get_last_line().remove()
 	App.update_results()
 }
 
@@ -526,8 +526,8 @@ App.remove_last_line = () => {
 		return
 	}
 
-	let line = get_last_line()
-	let input = get_last_input()
+	let line = App.get_last_line()
+	let input = App.get_last_input()
 
 	if (input === App.focused.input) {
 		DOM.el(".input", line.previousElementSibling).focus()
@@ -668,7 +668,7 @@ App.press = (s, aux = false) => {
 		App.clear_input(App.focused.input)
 		return
 	} else if (s === "Erase") {
-		erase_character()
+		App.erase_character()
 		return
 	} else if (s === "New Line") {
 		App.focus_next_or_add()
@@ -699,7 +699,7 @@ App.press = (s, aux = false) => {
 		}
 	}
 
-	insert_text(App.focused.input, s)
+	App.insert_text(App.focused.input, s)
 }
 
 App.check_aux = (s, aux) => {
@@ -758,7 +758,7 @@ App.check_aux = (s, aux) => {
 			}
 		} else if (s === "/") {
 			if (aux === 3) {
-				toggle_comment(App.focused.input)
+				App.toggle_comment(App.focused.input)
 				return false
 			}
 		} else if (s === "Up") {
@@ -766,7 +766,7 @@ App.check_aux = (s, aux) => {
 				App.move_line_up()
 				return false
 			} else if (aux === 2) {
-				go_to_first_input()
+				App.go_to_first_input()
 				return false
 			}
 		} else if (s === "Down") {
@@ -774,7 +774,7 @@ App.check_aux = (s, aux) => {
 				App.move_line_down()
 				return false
 			} else if (aux === 2) {
-				go_to_last_input()
+				App.go_to_last_input()
 				return false
 			}
 		} else if (s === "Remove Line") {
@@ -795,10 +795,10 @@ App.check_aux = (s, aux) => {
 			}
 		} else if (s === "Clear") {
 			if (aux === 3) {
-				format_input(App.focused.input)
+				App.format_input(App.focused.input)
 				return false
 			} else if (aux === 2) {
-				format_all()
+				App.format_all()
 				return false
 			}
 		}
@@ -812,7 +812,7 @@ App.clear_input = (input) => {
 		return
 	}
 
-	replace_text(input, "")
+	App.replace_text(input, "")
 }
 
 App.update_results = (function () {
@@ -1042,13 +1042,13 @@ App.cycle_inputs = (direction) => {
 
 	if (direction === "down") {
 		if (index === (DOM.els(".input").length - 1)) {
-			go_to_first_input()
+			App.go_to_first_input()
 		} else {
 			App.focus_next()
 		}
 	} else {
 		if (index === 0) {
-			go_to_last_input()
+			App.go_to_last_input()
 		} else {
 			App.focus_prev()
 		}
@@ -1079,7 +1079,7 @@ App.resize_timer = (function () {
 	return function () {
 		clearTimeout(timer)
 		timer = setTimeout(function () {
-			place_infobar()
+			App.place_infobar()
 			App.place_lines_container()
 		}, 350)
 	}
@@ -1125,7 +1125,7 @@ App.show_options = () => {
 	for (let theme of App.themes) {
 		let obj = {}
 		obj.lowercase = theme
-		obj.capitalized = capitalize_string(theme)
+		obj.capitalized = App.capitalize_string(theme)
 		themelist.push(obj)
 	}
 
@@ -1185,7 +1185,7 @@ App.show_options = () => {
 
 	DOM.el("#sel_theme").addEventListener("change", function () {
 		App.options.theme = this.value
-		apply_theme(App.options.theme)
+		App.apply_theme(App.options.theme)
 		App.update_options()
 	})
 }
@@ -1272,9 +1272,9 @@ App.reset_options = (data = false) => {
 
 	App.get_options()
 	App.update_results()
-	update_infobar()
-	apply_theme(App.options.theme)
-	apply_mode()
+	App.update_infobar()
+	App.apply_theme(App.options.theme)
+	App.apply_mode()
 }
 
 // For testing
@@ -1337,8 +1337,8 @@ App.on_result_click = (el) => {
 App.toggle_fraction = () => {
 	App.options.fraction = !App.options.fraction
 	App.update_results()
-	apply_mode()
-	update_infobar()
+	App.apply_mode()
+	App.update_infobar()
 	App.update_options()
 }
 
@@ -1349,21 +1349,11 @@ App.copy_input_down = () => {
 	App.focus_next_or_add()
 
 	if (og_var !== DOM.dataset(App.focused.input, "variable")) {
-		replace_text(App.focused.input, og_val)
+		App.replace_text(App.focused.input, og_val)
 	}
 }
 
-function copy_result_down() {
-	let og_var = DOM.dataset(App.focused.input, "variable")
-	let og_result = App.get_result_text(DOM.el(".result", App.focused.input.parentNode))
-	App.focus_next_or_add()
-
-	if (og_var !== DOM.dataset(App.focused.input, "variable")) {
-		replace_text(App.focused.input, og_result)
-	}
-}
-
-function expand_value(input) {
+App.expand_value = (input) => {
 	let val = input.value
 
 	if (val.trim() === "") {
@@ -1422,10 +1412,10 @@ function expand_value(input) {
 		return
 	}
 
-	replace_text(input, val)
+	App.replace_text(input, val)
 }
 
-function format_input(input) {
+App.format_input = (input) => {
 	let val = input.value
 
 	if (val.trim() === "") {
@@ -1444,16 +1434,16 @@ function format_input(input) {
 		return
 	}
 
-	replace_text(input, val)
+	App.replace_text(input, val)
 }
 
-function format_all() {
+App.format_all = () => {
 	for (let input of DOM.els(".input")) {
-		format_input(input)
+		App.format_input(input)
 	}
 }
 
-function insert_text(input, s) {
+App.insert_text = (input, s) => {
 	let ss = input.selectionStart
 	let se = input.selectionEnd
 	let value = input.value
@@ -1465,13 +1455,13 @@ function insert_text(input, s) {
 	App.update_results()
 }
 
-function replace_text(input, s) {
+App.replace_text = (input, s) => {
 	input.value = s
 	App.focus_if_isnt(input)
 	App.update_results()
 }
 
-function erase_character() {
+App.erase_character = () => {
 	let ss = App.focused.input.selectionStart
 	let se = App.focused.input.selectionEnd
 	let value = App.focused.input.value
@@ -1491,17 +1481,12 @@ function erase_character() {
 	}
 }
 
-function remove_ranges() {
-	let ss = App.focused.input.selectionEnd
-	App.focused.input.setSelectionRange(ss, ss)
-}
-
-function place_infobar() {
+App.place_infobar = () => {
 	let w = DOM.el("#buttons").offsetWidth
 	DOM.el("#infobar").style.width = `${w}px`
 }
 
-function update_infobar() {
+App.update_infobar = () => {
 	let s = ""
 
 	s += "<span id='ib_fraction_toggle' class='ib_item'>"
@@ -1521,7 +1506,7 @@ function update_infobar() {
 	})
 }
 
-function apply_theme(theme) {
+App.apply_theme = (theme) => {
 	let stylesheet = document.createElement("link")
 	stylesheet.onload = function () { set_modal_theme() }
 	stylesheet.rel = "stylesheet"
@@ -1529,7 +1514,7 @@ function apply_theme(theme) {
 	DOM.el("head").appendChild(stylesheet)
 }
 
-function apply_mode() {
+App.apply_mode = () => {
 	let mode
 
 	if (App.options.fraction) {
@@ -1544,115 +1529,39 @@ function apply_mode() {
 	DOM.el("head").appendChild(stylesheet)
 }
 
-function capitalize_string(text) {
+App.capitalize_string = (text) => {
 	return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
 }
 
-function move_caret_to_end(input) {
+App.move_caret_to_end = (input) => {
 	input.setSelectionRange(input.value.length, input.value.length)
 }
 
-function move_caret_to_start(input) {
-	input.setSelectionRange(0, 0)
-}
-
-function get_first_line() {
-	return DOM.els(".line")[0]
-}
-
-function get_last_line() {
+App.get_last_line = () => {
 	return DOM.els(".line").slice(-1)[0]
 }
 
-function get_first_input() {
+App.get_first_input = () => {
 	return DOM.els(".input")[0]
 }
 
-function get_last_input() {
+App.get_last_input = () => {
 	return DOM.els(".input").slice(-1)[0]
 }
 
-function go_to_first_input() {
-	App.focus_input(get_first_input())
+App.go_to_first_input = () => {
+	App.focus_input(App.get_first_input())
 }
 
-function go_to_last_input() {
-	App.focus_input(get_last_input())
+App.go_to_last_input = () => {
+	App.focus_input(App.get_last_input())
 }
 
-function comment(input) {
+App.toggle_comment = (input) => {
 	if (!input.value.trim().startsWith("//")) {
-		replace_text(input, "// " + input.value.trim())
-	}
-}
-
-function comment_all() {
-	for (let input of DOM.els(".input")) {
-		comment(input)
-	}
-}
-
-function uncomment(input) {
-	if (input.value.trim().startsWith("//")) {
-		replace_text(input, input.value.replace("//", "").trim())
-	}
-}
-
-function uncomment_all() {
-	for (let input of DOM.els(".input")) {
-		uncomment(input)
-	}
-}
-
-function toggle_comment(input) {
-	if (!input.value.trim().startsWith("//")) {
-		replace_text(input, "// " + input.value.trim())
+		App.replace_text(input, "// " + input.value.trim())
 	} else {
-		replace_text(input, input.value.replace("//", "").trim())
-	}
-}
-
-function rename_key(obj, old_name, new_name) {
-	if (obj.hasOwnProperty(old_name)) {
-		obj[new_name] = obj[old_name]
-		delete obj[old_name]
-	}
-}
-
-function move_in_array(array, old_index, new_index) {
-	while (old_index < 0) {
-		old_index += array.length
-	}
-
-	while (new_index < 0) {
-		new_index += array.length
-	}
-
-	if (new_index >= array.length) {
-		let k = new_index - array.length
-
-		while ((k--) + 1) {
-			array.push(undefined)
-		}
-	}
-
-	array.splice(new_index, 0, array.splice(old_index, 1)[0])
-}
-
-function on_object_modified(item) {
-	try {
-		let parsed = JSON.parse(item.value)
-
-		if (parsed.version !== item.ls_name) {
-			alert("You're attempting to save an incompatible version.")
-			return
-		}
-
-		App.reset_object(item.ls_name, item.value)
-	}
-
-	catch (err) {
-		alert("There was an error parsing the JSON.\n\n" + err)
+		App.replace_text(input, input.value.replace("//", "").trim())
 	}
 }
 
