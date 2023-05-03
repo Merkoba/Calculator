@@ -1606,7 +1606,6 @@ App.toggle_comment = (input) => {
 
 App.start_msg = () => {
 	App.msg = Msg.factory({
-		class: `blue`,
 		enable_titlebar: true,
 		center_titlebar: true,
 	})
