@@ -76,7 +76,6 @@ body, html {
 .result_container {
 	font-size: 1.2rem;
 	padding-top: 0.35rem;
-	min-height: 1.7rem;
 	max-width: 100vw;
 	overflow-wrap: break-word;
 	word-wrap: break-word;
@@ -94,14 +93,6 @@ body, html {
 
 #minus {
 	padding-left: 0.5rem;
-}
-
-.whole {
-	/*  */
-}
-
-.decimal {
-	cursor: pointer;
 }
 
 #title {
@@ -170,6 +161,7 @@ input[type="checkbox"] {
 
 sup, sub {
 	padding: 0 0.1rem;
+	font-size: 1.2rem;
 }
 
 sup {
@@ -211,23 +203,6 @@ sup {
 
 .underline {
 	text-decoration: underline;
-}
-
-.data_get_area {
-	margin-top: 0.2rem;
-	margin-bottom: 0.2rem;
-	width: 25rem;
-	border: 0.05em solid;
-	padding: 0.2rem;
-	outline: none;
-	letter-spacing: 0.06rem;
-	word-spacing: 0.06rem;
-}
-
-.data_click_item {
-	padding-top: 0.1rem;
-	cursor: pointer;
-	user-select: none;
 }
 
 .options_vseparator {
