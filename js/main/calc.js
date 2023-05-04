@@ -190,7 +190,7 @@ App.format_result = (n, f = false) => {
 			n = App.math_normal.round(n, App.options.round_places)
 		}
 
-		let ns = n.toString()
+    let ns = App.math_normal.format(n, {notation: 'fixed'})
 		let whole, decimal
 
 		if (ns.indexOf(`.`) !== -1) {
@@ -199,7 +199,7 @@ App.format_result = (n, f = false) => {
 			decimal = split[1].toString()
 		}
 		else {
-			whole = n.toString()
+			whole = ns
 			decimal = ``
 		}
 

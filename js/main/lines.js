@@ -398,6 +398,7 @@ App.view_line = (input) => {
 
     result = App.math_normal.bignumber(result)
     result = App.math_normal.round(result, App.options.round_places)
+    result = App.math_normal.format(result, {notation: 'fixed'})
     let text = `${calc} = ${result}`
     App.show_modal(`View Result`, text)
   }
