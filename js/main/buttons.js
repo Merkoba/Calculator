@@ -38,8 +38,10 @@ App.draw_buttons = () => {
 	App.place_button_wider(`Erase`)
 
 	for (let btn of DOM.els(`.button`)) {
-		DOM.ev(btn, `click`, (e) => {
-			App.press(e.target.textContent)
+		DOM.ev(btn, `mousedown`, (e) => {
+      if (e.button === 0) {
+        App.press(e.target.textContent)
+      }
 		})
 
 		DOM.ev(btn, `auxclick`, (e) => {
