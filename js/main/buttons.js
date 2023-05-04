@@ -30,11 +30,12 @@ App.draw_buttons = () => {
 	App.buttons_br()
 
 	App.place_button_wider(`Add Line`, `Right Click: Add Line After | Middle Click: Add Line Before`)
-	App.place_button_wider(`Rm Line`, `Right Click: Remove Last Line`)
 	App.place_button_wider(`Clear`)
 	App.place_button_wider(`Format`)
 	App.place_button_wider(`Erase`)
-	App.place_button(`e`, `Right Click: LN2 | Middle Click: LN10`)
+	App.place_button(`log`, `Right Click: log2 | Middle Click: log10`)
+	App.place_button(`LN2`, `Right Click: LN10`)
+	App.place_button(`e`, `Right Click: LOG2E | Middle Click: LOG10E`)
   App.place_button(`i`)
 
 	for (let btn of DOM.els(`.button`)) {
@@ -85,6 +86,9 @@ App.press = (s, aux = false) => {
 	else if (s === `sqrt`) {
 		s = `sqrt(`
 	}
+	else if (s === `log`) {
+		s = `log(`
+	}
 
 	if (aux) {
 		s = App.check_aux(s, aux)
@@ -96,7 +100,7 @@ App.press = (s, aux = false) => {
 	}
 
 	if (s === `Clear`) {
-		App.clear_input(App.focused.input)
+    App.check_clear()
 		return
 	}
 	else if (s === `Erase`) {
@@ -207,12 +211,25 @@ App.check_aux = (s, aux) => {
 				return `nthRoot(`
 			}
 		}
-    else if (s === `e`) {
+    else if (s === `log(`) {
 			if (aux === 3) {
-				return `LN2`
+				return `log2(`
 			}
 			else if (aux === 2) {
+				return `log10(`
+			}
+		}
+    else if (s === `LN2`) {
+			if (aux === 3) {
 				return `LN10`
+			}
+		}
+    else if (s === `e`) {
+			if (aux === 3) {
+				return `LOG2E`
+			}
+			else if (aux === 2) {
+				return `LOG10E`
 			}
 		}
 		else if (s === `pi`) {

@@ -1,12 +1,7 @@
 App.key_detection = () => {
 	DOM.ev(document, `keyup`, (e) => {
 		if (e.key === `Escape`) {
-			if (App.focused.input.value === ``) {
-				App.remove_line()
-			}
-			else {
-				App.clear_input(App.focused.input)
-			}
+      App.check_clear()
 		}
 	})
 

@@ -146,6 +146,15 @@ App.copy_input_down = () => {
 	}
 }
 
+App.check_clear = () => {
+  if (App.focused.input.value === ``) {
+    App.remove_line()
+  }
+  else {
+    App.clear_input(App.focused.input)
+  }
+}
+
 App.clear_input = (input) => {
 	if (input.value === ``) {
 		return
