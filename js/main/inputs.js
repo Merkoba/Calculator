@@ -55,21 +55,25 @@ App.change_borders = () => {
 	App.focused.input.classList.add(`input_focus`)
 }
 
-App.insert_text = (input, s) => {
+App.insert_text = (input, text) => {
 	let ss = input.selectionStart
 	let se = input.selectionEnd
 	let value = input.value
-	let new_value = value.substring(0, ss) + s + value.substring(se, value.length)
+	let new_value = value.substring(0, ss) + text + value.substring(se, value.length)
 	App.focused.input.value = new_value
-	App.focused.input.selectionStart = ss + s.length
-	App.focused.input.selectionEnd = ss + s.length
+	App.focused.input.selectionStart = ss + text.length
+	App.focused.input.selectionEnd = ss + text.length
 	App.focus_if_isnt(input)
 	App.update_results()
 }
 
-App.replace_text = (input, s) => {
+App.replace_text = (input, s, focus = true) => {
 	input.value = s
-	App.focus_if_isnt(input)
+
+  if (focus) {
+    App.focus_if_isnt(input)
+  }
+
 	App.update_results()
 }
 
@@ -111,7 +115,8 @@ App.format_input = (input) => {
 		return
 	}
 
-	App.replace_text(input, val)
+	App.replace_text(input, val, false)
+  App.focus_if_isnt()
 }
 
 App.format_all = () => {
@@ -148,7 +153,7 @@ App.toggle_comment = (input) => {
 	}
 }
 
-App.focus_if_isnt = (input) => {
+App.focus_if_isnt = (input = App.focused.input) => {
 	if (input !== document.activeElement) {
 		App.focus_input(input)
 	}

@@ -30,12 +30,12 @@ App.draw_buttons = () => {
 
 	App.buttons_br()
 
-	App.place_button_wider(`Up`, `Right Click: Move Line Up | Middle Click: Go To First Line`)
-	App.place_button_wider(`Down`, `Right Click: Move Line Down | Middle Click: Go To Last Line`)
-	App.place_button_wider(`New Line`, `Right Click: Add Line After | Middle Click: Add Line Before`)
-	App.place_button_wider(`Remove Line`, `Right Click: Remove Last Line | Middle Click: Remove All Lines`)
-	App.place_button_wider(`Clear`, `Right Click: Format Input | Middle Click: Format All Inputs`)
-	App.place_button_wider(`Erase`, ``)
+	App.place_button_wider(`Add Line`, `Right Click: Add Line After | Middle Click: Add Line Before`)
+	App.place_button_wider(`Rm Line`, `Right Click: Remove Last Line`)
+	App.place_button_wider(`Clear`)
+	App.place_button_wider(`Format`)
+	App.place_button_wider(`Space`)
+	App.place_button_wider(`Erase`)
 
 	for (let btn of DOM.els(`.button`)) {
 		DOM.ev(btn, `click`, (e) => {
@@ -103,12 +103,20 @@ App.press = (s, aux = false) => {
 		App.erase_character()
 		return
 	}
-	else if (s === `New Line`) {
+  else if (s === `Space`) {
+    App.insert_text(App.focused.input, ` `)
+    return
+  }
+  else if (s === `Format`) {
+    App.format_all()
+    return
+  }
+	else if (s === `Add Line`) {
 		App.focus_next_or_add()
 		App.focus_input(App.focused.input)
 		return
 	}
-	else if (s === `Remove Line`) {
+	else if (s === `Rm Line`) {
 		App.remove_line()
 		App.focus_input(App.focused.input)
 		return
@@ -233,17 +241,13 @@ App.check_aux = (s, aux) => {
 				return false
 			}
 		}
-		else if (s === `Remove Line`) {
+		else if (s === `Rm Line`) {
 			if (aux === 3) {
 				App.remove_last_line()
 				return false
 			}
-			else if (aux === 2) {
-				App.remove_all_lines()
-				return false
-			}
 		}
-		else if (s === `New Line`) {
+		else if (s === `Add Line`) {
 			if (aux === 3) {
 				App.add_line_after()
 				return false
