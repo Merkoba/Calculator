@@ -91,6 +91,7 @@ body, html {
 	max-width: 100vw;
 	overflow-wrap: break-word;
 	word-wrap: break-word;
+	text-align: center;
 }
 
 #top_buttons {
