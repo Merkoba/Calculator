@@ -9,9 +9,8 @@ App.draw_buttons = () => {
 	App.place_button(8, `Right Click: 0.8 | Middle Click: 1/8`)
 	App.place_button(9, `Right Click: 0.9 | Middle Click: 1/9`)
 	App.place_button(0, `Right Click: 0. | Middle Click: 000`)
-
 	App.place_button(`.`)
-	App.place_button(`,`)
+	App.place_button(`e`)
 
 	App.buttons_br()
 
