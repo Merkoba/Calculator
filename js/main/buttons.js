@@ -25,7 +25,7 @@ App.draw_buttons = () => {
 	App.place_button(`sin`, `Right Click: asin | Middle Click: asinh`)
 	App.place_button(`cos`, `Right Click: acos | Middle Click: acosh`)
 	App.place_button(`tan`, `Right Click: atan | Middle Click: atanh`)
-	App.place_button(`pi`, `Right Click: phi | Middle Click: e`)
+	App.place_button(`pi`, `Right Click: phi | Middle Click: tau`)
 
 	App.buttons_br()
 
@@ -213,7 +213,7 @@ App.check_aux = (s, aux) => {
 				return `phi`
 			}
 			else if (aux === 2) {
-				return `e`
+				return `tau`
 			}
 		}
 		else if (s === `/`) {
