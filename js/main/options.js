@@ -11,6 +11,7 @@ App.themes = [
 	`carbon`
 ]
 
+App.default_theme = `cobalt`
 App.max_decimals = 15
 
 App.get_options = () => {
@@ -53,12 +54,12 @@ App.get_options = () => {
 	}
 
 	if (App.options.theme === undefined) {
-		App.options.theme = `carbon`
+		App.options.theme = App.default_theme
 		mod = true
 	}
 	else {
 		if (App.themes.indexOf(App.options.theme) === -1) {
-			App.options.theme = `carbon`
+			App.options.theme = App.default_theme
 			mod = true
 		}
 	}
