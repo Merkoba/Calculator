@@ -37,17 +37,17 @@
 		<div id="main">
 			<div id="app_top">
 				<div id="top_buttons">
-					<span class="linky" id="lnk_new">New</span>
-					&nbsp;&nbsp; - &nbsp;&nbsp;
-					<span class="linky" id="lnk_options">Options</span>
-					&nbsp;&nbsp; - &nbsp;&nbsp;
-					<span class="linky" id="lnk_about">About</span>
+					<div class="linky" id="lnk_new">New</div>
+					<div>-</div>
+					<div class="linky" id="lnk_options">Options</div>
+					<div>-</div>
+					<div class="linky" id="lnk_about">About</div>
 				</div>
 
-				<br>
-
-				<span id="buttons"></span>
-				<div id="infobar">Nothing</div>
+				<div id="controls">
+					<div id="buttons"></div>
+					<div id="infobar">Nothing</div>
+				</div>
 			</div>
 
 			<div id="lines">
@@ -80,65 +80,64 @@
 
 		<script id='template_options' type='text/x-handlebars-template' class='template'>
 			<div id='options_container'>
-			<div class='options_item'>
-			Add Commas
-			<div class='vseparator2'></div>
+				<div class='options_item'>
+				Add Commas
+				<div class='vseparator2'></div>
 
-			{{#if commas}}
-				<input id='chk_commas' type='checkbox' checked>
-			{{else}}
-				<input id='chk_commas' type='checkbox'>
-			{{/if}}
+				{{#if commas}}
+					<input id='chk_commas' type='checkbox' checked>
+				{{else}}
+					<input id='chk_commas' type='checkbox'>
+				{{/if}}
 
-			</div>
-			<div class='vseparator'></div>
-			<div class='options_item'>
-			Mixed Fractions
-			<div class='vseparator2'></div>
+				</div>
+				<div class='vseparator'></div>
+				<div class='options_item'>
+				Mixed Fractions
+				<div class='vseparator2'></div>
 
-			{{#if mixed}}
-				<input id='chk_mixed' type='checkbox' checked>
-			{{else}}
-				<input id='chk_mixed' type='checkbox'>
-			{{/if}}
+				{{#if mixed}}
+					<input id='chk_mixed' type='checkbox' checked>
+				{{else}}
+					<input id='chk_mixed' type='checkbox'>
+				{{/if}}
 
-			</div>
-			<div class='vseparator'></div>
-			<div class='options_item'>
-			Round Results
-			<div class='vseparator2'></div>
+				</div>
+				<div class='vseparator'></div>
+				<div class='options_item'>
+				Round Results
+				<div class='vseparator2'></div>
 
-			{{#if round}}
-				<input id='chk_round' type='checkbox' checked>
-			{{else}}
-				<input id='chk_round' type='checkbox'>
-			{{/if}}
+				{{#if round}}
+					<input id='chk_round' type='checkbox' checked>
+				{{else}}
+					<input id='chk_round' type='checkbox'>
+				{{/if}}
 
-			</div>
-			<div class='vseparator'></div>
-			<div class='options_item'>
-			Round Places
-			<div class='vseparator2'></div>
-			<select id='sel_round_places'>
+				</div>
+				<div class='vseparator'></div>
+				<div class='options_item'>
+				Round Places
+				<div class='vseparator2'></div>
+				<select id='sel_round_places'>
 
-			{{#each places}}
-				<option value='{{this}}'>{{this}}</option>
-			{{/each}}
-
-			</select>
-			</div>
-			<div class='vseparator'></div>
-			<div class='options_item'>
-			Color Theme
-			<div class='vseparator2'></div>
-
-			<select id='sel_theme'>
-				{{#each themes}}
-					<option value='{{lowercase}}'>{{capitalized}}</option>
+				{{#each places}}
+					<option value='{{this}}'>{{this}}</option>
 				{{/each}}
-			</select>
 
-			</div>
+				</select>
+				</div>
+				<div class='vseparator'></div>
+				<div class='options_item'>
+				Color Theme
+				<div class='vseparator2'></div>
+
+				<select id='sel_theme'>
+					{{#each themes}}
+						<option value='{{lowercase}}'>{{capitalized}}</option>
+					{{/each}}
+				</select>
+				</div>
 			</div>
 		</script>
 	</body>

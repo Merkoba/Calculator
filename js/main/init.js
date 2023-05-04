@@ -15,7 +15,6 @@ App.init = () => {
 	App.get_local_storage()
 	App.apply_theme(App.options.theme)
 	App.draw_buttons()
-	App.place_infobar()
 	App.update_infobar()
 	App.key_detection()
 	App.title_click_events()

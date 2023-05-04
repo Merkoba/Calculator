@@ -133,6 +133,7 @@ App.get_result = (input) => {
 		App.show_result(input, App.format_result(result))
 	}
 	catch (err) {
+    // console.log(err)
 		App.show_error(input)
 	}
 }
@@ -358,11 +359,6 @@ App.toggle_fraction = () => {
 	App.update_results()
 	App.update_infobar()
 	App.update_options()
-}
-
-App.place_infobar = () => {
-	let w = DOM.el(`#buttons`).offsetWidth
-	DOM.el(`#infobar`).style.width = `${w}px`
 }
 
 App.update_infobar = () => {

@@ -11,6 +11,8 @@ App.themes = [
 	`carbon`
 ]
 
+App.max_decimals = 15
+
 App.get_options = () => {
 	App.options = JSON.parse(localStorage.getItem(App.ls_options))
 	let mod = false
@@ -69,7 +71,7 @@ App.get_options = () => {
 App.show_options = () => {
 	let places = []
 
-	for (let i=0; i<=30; i++) {
+	for (let i=0; i<=App.max_decimals; i++) {
 		places.push(i)
 	}
 

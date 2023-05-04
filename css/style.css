@@ -33,11 +33,17 @@ body, html {
 	height: calc(100vh - 2rem);
 }
 
+#controls {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 #infobar {
 	padding-top: 0.2rem;
 	padding-bottom: 0.2rem;
-	margin: 0 auto;
 	user-select: none;
+	width: 42rem;
 }
 
 .ib_item {
@@ -81,30 +87,22 @@ body, html {
 }
 
 #top_buttons {
-	cursor: default;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 2rem;
 	padding-top: 0.7rem;
 	padding-bottom: 0.7rem;
-	display: inline-block;
 	letter-spacing: 0.2rem;
 	user-select: none;
 }
 
-#top_buttons span {
-	cursor: pointer;
-	padding-top: 0.7rem;
-	padding-bottom: 0.7rem;
+.linky:hover {
+	text-decoration: underline;
 }
 
 a:hover, a:visited, a:link {
 	color: #153c50;
-	text-decoration: underline;
-}
-
-.linky {
-	user-select: none;
-}
-
-.linky:hover {
 	text-decoration: underline;
 }
 

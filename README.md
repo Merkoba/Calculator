@@ -12,4 +12,4 @@
 - Mixed or normal fractions.
 - Option to round results or not.
 - Option to add commas to long displayed results or not.
-- 0 to 30 decimal places in displayed results.
+- 0 to 15 decimal places in displayed results.
