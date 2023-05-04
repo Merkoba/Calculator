@@ -345,7 +345,7 @@ App.expand_value = (input, replace = true) => {
 	}
 
 	try {
-		val = App.math_normal.parse(val).toString({ parenthesis: `auto`, implicit: `show` })
+		val = App.format_calc(val)
 	}
 	catch (err) {
 		return
@@ -408,4 +408,8 @@ App.get_result_text = (el) => {
 	}
 
 	return s
+}
+
+App.format_calc = (val) => {
+  return App.math_normal.parse(val).toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
 }

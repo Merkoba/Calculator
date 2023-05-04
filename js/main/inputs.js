@@ -109,7 +109,7 @@ App.format_input = (input, replace = true) => {
 	}
 
 	try {
-		val = App.math_normal.parse(val).toString({ parenthesis: `auto`, implicit: `show` })
+		val = App.format_calc(val)
 	}
 	catch (err) {
 		return
