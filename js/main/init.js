@@ -1,3 +1,5 @@
+const App = {}
+
 App.letters = `abcdefghijklmnopqrstuvwxyz`
 App.linevars = {}
 App.ls_options = `options_v4`
