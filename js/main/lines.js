@@ -357,23 +357,3 @@ App.show_comment = (input) => {
 App.new_sheet = () => {
 	App.remove_all_lines()
 }
-
-App.show_menu = (button, input) => {
-  let items = []
-
-  items.push({
-    text: `Expand`,
-    action: () => {
-      App.expand_value(input)
-    }
-  })
-
-  items.push({
-    text: `Format`,
-    action: () => {
-      App.format_input(input)
-    }
-  })
-
-  NeedContext.show_on_element(button, items)
-}

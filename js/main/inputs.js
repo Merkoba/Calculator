@@ -169,3 +169,23 @@ App.focus_if_isnt = (input) => {
 		App.focus_input(input)
 	}
 }
+
+App.show_menu = (button, input) => {
+  let items = []
+
+  items.push({
+    text: `Format`,
+    action: () => {
+      App.format_input(input)
+    }
+  })
+
+  items.push({
+    text: `Expand`,
+    action: () => {
+      App.expand_value(input)
+    }
+  })
+
+  NeedContext.show_on_element(button, items)
+}
