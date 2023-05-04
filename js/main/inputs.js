@@ -158,30 +158,3 @@ App.focus_if_isnt = (input = App.focused.input) => {
 		App.focus_input(input)
 	}
 }
-
-App.show_menu = (button, input) => {
-  let items = []
-
-  items.push({
-    text: `Format`,
-    action: () => {
-      App.format_input(input)
-    }
-  })
-
-  items.push({
-    text: `Expand`,
-    action: () => {
-      App.expand_value(input)
-    }
-  })
-
-  items.push({
-    text: `Copy`,
-    action: () => {
-      App.copy_line(input)
-    }
-  })
-
-  NeedContext.show_on_element(button, items)
-}

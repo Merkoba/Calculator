@@ -1,7 +1,3 @@
-App.copy_to_clipboard = (s) => {
-	navigator.clipboard.writeText(s)
-}
-
 App.get_local_storage = () => {
 	App.get_options()
 }

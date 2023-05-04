@@ -382,7 +382,7 @@ App.focus_prev = () => {
 	}
 }
 
-App.copy_line = (input) => {
+App.view_line = (input) => {
   let calc = input.value
   let result = App.linevars[DOM.dataset(input, `variable`)]
 
@@ -391,6 +391,33 @@ App.copy_line = (input) => {
     result = App.math_normal.bignumber(result)
     result = App.math_normal.round(result, App.options.round_places)
     let text = `${calc} = ${result}`
-    App.copy_to_clipboard(text)
+    App.show_modal(`Calc + Result`, text)
   }
+}
+
+App.show_menu = (button, input) => {
+  let items = []
+
+  items.push({
+    text: `Format`,
+    action: () => {
+      App.format_input(input)
+    }
+  })
+
+  items.push({
+    text: `Expand`,
+    action: () => {
+      App.expand_value(input)
+    }
+  })
+
+  items.push({
+    text: `View`,
+    action: () => {
+      App.view_line(input)
+    }
+  })
+
+  NeedContext.show_on_element(button, items)
 }
