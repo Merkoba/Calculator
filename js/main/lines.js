@@ -144,20 +144,21 @@ App.add_line = (value = false) => {
 
 	let el = DOM.create(`div`, `line`)
 
-	el.innerHTML = `
-		<button class="button variable">$${letter}</button>
-		<input type="text" class="input" id="${letter}" value="${value}">
-
-		<div class="result_container">
-			<span class="result"></span>
-		</div>`
+  el.innerHTML = App.templates[`template_line`]({
+    letter: letter,
+    value: value,
+  })
 
 	DOM.el(`#lines`).appendChild(el)
 	let input = App.get_last_input()
 	App.focused.input = input
 
-	DOM.ev(DOM.els(`.variable`).slice(-1)[0], `click`, () => {
+	DOM.ev(DOM.el(`.variable`, el), `click`, () => {
 		App.press(`$` + letter)
+	})
+
+	DOM.ev(DOM.el(`.menu`, el), `click`, (e) => {
+		App.show_menu(e.target, input)
 	})
 
 	DOM.ev(input, `focus`, (e) => {
@@ -355,4 +356,24 @@ App.show_comment = (input) => {
 
 App.new_sheet = () => {
 	App.remove_all_lines()
+}
+
+App.show_menu = (button, input) => {
+  let items = []
+
+  items.push({
+    text: `Expand`,
+    action: () => {
+      App.expand_value(input)
+    }
+  })
+
+  items.push({
+    text: `Format`,
+    action: () => {
+      App.format_input(input)
+    }
+  })
+
+  NeedContext.show_on_element(button, items)
 }

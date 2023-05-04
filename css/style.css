@@ -63,19 +63,16 @@ body, html {
 	padding-bottom: 2rem;
 }
 
-.variable {
-	margin-right: 0.5rem;
-	user-select: none;
-}
-
 .input {
 	font-size: 1.2rem;
-	width: 37.1rem;
+	width: 33rem;
 	border: none;
 	padding: 0.1rem;
 	outline: none;
 	letter-spacing: 0.1rem;
 	word-spacing: 0.1rem;
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
 }
 
 .result_container {
