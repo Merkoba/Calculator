@@ -387,7 +387,15 @@ App.view_line = (input) => {
   let result = App.linevars[DOM.dataset(input, `variable`)]
 
   if (calc && result) {
-    calc = App.expand_value(input, false)
+    let exp = App.expand_value(input, false)
+
+    if (exp) {
+      calc = exp
+    }
+    else {
+      calc = App.format_input(input, false)
+    }
+
     result = App.math_normal.bignumber(result)
     result = App.math_normal.round(result, App.options.round_places)
     let text = `${calc} = ${result}`

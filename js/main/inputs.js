@@ -97,7 +97,7 @@ App.erase_character = () => {
 	}
 }
 
-App.format_input = (input) => {
+App.format_input = (input, replace = true) => {
 	let val = input.value
 
 	if (val.trim() === ``) {
@@ -115,8 +115,13 @@ App.format_input = (input) => {
 		return
 	}
 
-	App.replace_text(input, val, false)
-  App.focus_if_isnt()
+  if (replace) {
+    App.replace_text(input, val, false)
+    App.focus_if_isnt()
+  }
+  else {
+    return val
+  }
 }
 
 App.format_all = () => {
