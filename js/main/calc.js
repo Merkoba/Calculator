@@ -13,7 +13,7 @@ App.update_results = (() => {
 		clearTimeout(timer)
 		timer = setTimeout(() => {
 			App.do_update_results()
-		}, 10)
+		}, 25)
 	}
 })()
 
