@@ -10,7 +10,7 @@ App.draw_buttons = () => {
 	App.place_button(9, `Right Click: 0.9 | Middle Click: 1/9`)
 	App.place_button(0, `Right Click: 0. | Middle Click: 000`)
 	App.place_button(`.`)
-	App.place_button(`e`, `Right Click: LN2 | Middle Click: LN10`)
+  App.place_button(`i`)
 
 	App.buttons_br()
 
@@ -25,7 +25,7 @@ App.draw_buttons = () => {
 	App.place_button(`sin`, `Right Click: asin | Middle Click: asinh`)
 	App.place_button(`cos`, `Right Click: acos | Middle Click: acosh`)
 	App.place_button(`tan`, `Right Click: atan | Middle Click: atanh`)
-	App.place_button(`pi`, `Right Click: phi | Middle Click: tau`)
+	App.place_button(`pi`, `Right Click: tau`)
 
 	App.buttons_br()
 
@@ -33,14 +33,13 @@ App.draw_buttons = () => {
 	App.place_button_wider(`Rm Line`, `Right Click: Remove Last Line`)
 	App.place_button_wider(`Clear`)
 	App.place_button_wider(`Format`)
-	App.place_button_wider(`Space`)
 	App.place_button_wider(`Erase`)
+	App.place_button(`e`, `Right Click: LN2 | Middle Click: LN10`)
+	App.place_button(`phi`)
 
 	for (let btn of DOM.els(`.button`)) {
-		DOM.ev(btn, `mousedown`, (e) => {
-      if (e.button === 0) {
-        App.press(e.target.textContent)
-      }
+		DOM.ev(btn, `click`, (e) => {
+      App.press(e.target.textContent)
 		})
 
 		DOM.ev(btn, `auxclick`, (e) => {
@@ -218,9 +217,6 @@ App.check_aux = (s, aux) => {
 		}
 		else if (s === `pi`) {
 			if (aux === 3) {
-				return `phi`
-			}
-			else if (aux === 2) {
 				return `tau`
 			}
 		}

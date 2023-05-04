@@ -7,7 +7,7 @@ App.math_fraction = math.create({
 	number: `Fraction`
 })
 
-App.update_delay = 250
+App.update_delay = 200
 
 App.setup_calc = () => {
   App.update_results = App.create_debouncer(() => {

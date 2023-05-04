@@ -60,9 +60,9 @@ App.insert_text = (input, text) => {
 	let se = input.selectionEnd
 	let value = input.value
 	let new_value = value.substring(0, ss) + text + value.substring(se, value.length)
-	App.focused.input.value = new_value
-	App.focused.input.selectionStart = ss + text.length
-	App.focused.input.selectionEnd = ss + text.length
+	input.value = new_value
+	input.selectionStart = ss + text.length
+	input.selectionEnd = ss + text.length
 	App.focus_if_isnt(input)
 	App.calc()
 }
