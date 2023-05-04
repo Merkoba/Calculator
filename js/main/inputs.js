@@ -176,5 +176,12 @@ App.show_menu = (button, input) => {
     }
   })
 
+  items.push({
+    text: `Copy`,
+    action: () => {
+      App.copy_line(input)
+    }
+  })
+
   NeedContext.show_on_element(button, items)
 }

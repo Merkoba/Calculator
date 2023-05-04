@@ -381,3 +381,16 @@ App.focus_prev = () => {
 		DOM.el(`.input`, line).focus()
 	}
 }
+
+App.copy_line = (input) => {
+  let calc = input.value
+  let result = App.linevars[DOM.dataset(input, `variable`)]
+
+  if (calc && result) {
+    calc = App.expand_value(input, false)
+    result = App.math_normal.bignumber(result)
+    result = App.math_normal.round(result, App.options.round_places)
+    let text = `${calc} = ${result}`
+    App.copy_to_clipboard(text)
+  }
+}

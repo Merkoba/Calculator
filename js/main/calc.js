@@ -292,7 +292,7 @@ App.get_var_index = (v) => {
 	return index
 }
 
-App.expand_value = (input) => {
+App.expand_value = (input, replace = true) => {
 	let val = input.value
 
 	if (val.trim() === ``) {
@@ -351,7 +351,12 @@ App.expand_value = (input) => {
 		return
 	}
 
-	App.replace_text(input, val)
+  if (replace) {
+    App.replace_text(input, val)
+  }
+  else {
+    return val
+  }
 }
 
 App.toggle_fraction = () => {
