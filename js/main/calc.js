@@ -361,30 +361,28 @@ App.expand_value = (input, replace = true) => {
   }
 }
 
-App.toggle_fraction = () => {
+App.setup_infobar = () => {
+  DOM.ev(DOM.el(`#infobar`), `click`, () => {
+    App.toggle_infobar()
+  })
+
+  App.update_infobar()
+}
+
+App.update_infobar = () => {
+	if (App.options.fraction) {
+		DOM.el(`#infobar`).textContent = `Fraction Mode`
+	}
+	else {
+		DOM.el(`#infobar`).textContent = `Normal Mode`
+	}
+}
+
+App.toggle_infobar = () => {
 	App.options.fraction = !App.options.fraction
 	App.calc()
 	App.update_infobar()
 	App.update_options()
-}
-
-App.update_infobar = () => {
-	let s = ``
-	s += `<span id='ib_fraction_toggle' class='ib_item'>`
-
-	if (App.options.fraction) {
-		s += `Fraction Mode`
-	}
-	else {
-		s += `Normal Mode`
-	}
-
-	s += `</span>`
-	DOM.el(`#infobar`).innerHTML = s
-
-	DOM.ev(DOM.el(`#ib_fraction_toggle`), `click`, () => {
-		App.toggle_fraction()
-	})
 }
 
 App.undefine_variables = () => {
