@@ -106,6 +106,8 @@ App.do_update_results = () => {
 		let letter = sorted[i].substring(1)
 		App.get_result(DOM.el(`#` + letter))
 	}
+
+  App.focus_input()
 }
 
 App.get_result = (input) => {

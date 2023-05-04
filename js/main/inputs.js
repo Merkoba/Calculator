@@ -43,8 +43,13 @@ App.cycle_inputs = (direction) => {
 	}
 }
 
-App.focus_input = (input) => {
-	input.focus()
+App.focus_input = (input = App.focused.input) => {
+  if (document.activeElement === input) {
+    App.focus_line(input)
+  }
+  else {
+    input.focus()
+  }
 }
 
 App.change_borders = () => {
@@ -84,7 +89,7 @@ App.erase_character = () => {
 
 	if (ss === se) {
 		if (ss === 0) {
-			App.focus_input(App.focused.input)
+			App.focus_input()
 			return
 		}
 

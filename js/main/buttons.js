@@ -90,7 +90,7 @@ App.press = (s, aux = false) => {
 		s = App.check_aux(s, aux)
 
 		if (!s) {
-			App.focus_input(App.focused.input)
+			App.focus_input()
 			return
 		}
 	}
@@ -113,22 +113,22 @@ App.press = (s, aux = false) => {
   }
 	else if (s === `Add Line`) {
 		App.focus_next_or_add()
-		App.focus_input(App.focused.input)
+		App.focus_input()
 		return
 	}
 	else if (s === `Rm Line`) {
 		App.remove_line()
-		App.focus_input(App.focused.input)
+		App.focus_input()
 		return
 	}
 	else if (s === `Up`) {
 		App.line_up()
-		App.focus_input(App.focused.input)
+		App.focus_input()
 		return
 	}
 	else if (s === `Down`) {
 		App.line_down()
-		App.focus_input(App.focused.input)
+		App.focus_input()
 		return
 	}
 

@@ -164,7 +164,7 @@ App.add_line = (value = false) => {
 	DOM.ev(input, `focus`, (e) => {
 		App.focused.input = e.target
 		App.change_borders()
-    input.scrollIntoView({block: `center`, behavior: `smooth`})
+    App.focus_line()
 	})
 
 	DOM.ev(input, `input`, () => {
@@ -429,4 +429,9 @@ App.show_menu = (button, input) => {
   })
 
   NeedContext.show_on_element(button, items)
+}
+
+App.focus_line = (input = App.focused.input) => {
+  let line = App.get_line_el(input)
+  line.scrollIntoView({block: `center`, behavior: `smooth`})
 }
