@@ -121,6 +121,10 @@ input[type="checkbox"] {
 	height: 1.2rem;
 }
 
+.decimal {
+	font-size: 1.1rem;
+}
+
 .mwhole {
 	padding-right: 0.4rem;
 	vertical-align: middle;
