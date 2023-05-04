@@ -10,7 +10,7 @@ App.draw_buttons = () => {
 	App.place_button(9, `Right Click: 0.9 | Middle Click: 1/9`)
 	App.place_button(0, `Right Click: 0. | Middle Click: 000`)
 	App.place_button(`.`)
-	App.place_button(`e`)
+	App.place_button(`e`, `Right Click: LN2 | Middle Click: LN10`)
 
 	App.buttons_br()
 
@@ -206,6 +206,14 @@ App.check_aux = (s, aux) => {
 			}
 			else if (aux === 2) {
 				return `nthRoot(`
+			}
+		}
+    else if (s === `e`) {
+			if (aux === 3) {
+				return `LN2`
+			}
+			else if (aux === 2) {
+				return `LN10`
 			}
 		}
 		else if (s === `pi`) {
