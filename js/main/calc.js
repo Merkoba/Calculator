@@ -133,7 +133,7 @@ App.get_result = (input) => {
 		App.show_result(input, App.format_result(result))
 	}
 	catch (err) {
-    // console.log(err)
+    // console.error(err)
 		App.show_error(input)
 	}
 }
