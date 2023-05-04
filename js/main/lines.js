@@ -357,3 +357,7 @@ App.show_comment = (input) => {
 App.new_sheet = () => {
 	App.remove_all_lines()
 }
+
+App.get_result_el = (input) => {
+  return DOM.el(`.result`, input.closest(`.line`))
+}

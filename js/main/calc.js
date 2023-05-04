@@ -107,7 +107,7 @@ App.do_update_results = () => {
 }
 
 App.get_result = (input) => {
-	let result = DOM.el(`.result`, input.parentNode)
+	let result = App.get_result_el(input)
 	result.innerHTML = ``
 
 	try {
@@ -139,7 +139,7 @@ App.get_result = (input) => {
 }
 
 App.show_result = (input, s) => {
-	DOM.el(`.result`, input.parentNode).innerHTML = s
+	App.get_result_el(input).innerHTML = s
 }
 
 App.update_variable = (input, val) => {

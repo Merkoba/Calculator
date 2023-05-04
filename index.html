@@ -144,12 +144,16 @@
 		</script>
 
 		<script id="template_line" type="text/x-handlebars-template" class="template">
-			<button class="button variable">${{letter}}</button>
-			<input type="text" class="input" id="{{letter}}" value="{{value}}">
-			<button class="button menu">...</button>
+			<div class="line">
+				<div class="line_top">
+					<button class="button variable">${{letter}}</button>
+					<input type="text" class="input" id="{{letter}}" value="{{value}}">
+					<button class="button menu">...</button>
+				</div>
 
-			<div class="result_container">
-				<span class="result"></span>
+				<div class="result_container">
+					<span class="result"></span>
+				</div>
 			</div>
 		</script>
 	</body>
