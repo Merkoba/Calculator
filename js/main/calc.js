@@ -7,13 +7,15 @@ App.math_fraction = math.create({
 	number: `Fraction`
 })
 
+App.update_delay = 250
+
 App.update_results = (() => {
 	let timer
 	return () => {
 		clearTimeout(timer)
 		timer = setTimeout(() => {
 			App.do_update_results()
-		}, 25)
+		}, App.update_delay)
 	}
 })()
 
