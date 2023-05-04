@@ -111,25 +111,25 @@ App.show_options = () => {
 
 	DOM.ev(DOM.el(`#chk_commas`), `change`, (e) => {
 		App.options.commas = e.target.checked
-		App.update_results()
+		App.calc()
 		App.update_options()
 	})
 
 	DOM.ev(DOM.el(`#chk_round`), `change`, (e) => {
 		App.options.round = e.target.checked
-		App.update_results()
+		App.calc()
 		App.update_options()
 	})
 
 	DOM.ev(DOM.el(`#sel_round_places`), `change`, (e) => {
 		App.options.round_places = parseInt(e.target.value)
-		App.update_results()
+		App.calc()
 		App.update_options()
 	})
 
 	DOM.ev(DOM.el(`#chk_mixed`), `change`, (e) => {
 		App.options.mixed = e.target.checked
-		App.update_results()
+		App.calc()
 		App.update_options()
 	})
 

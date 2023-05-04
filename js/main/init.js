@@ -10,7 +10,8 @@ App.focused = {
 }
 
 App.init = () => {
-	App.start_msg()
+	App.setup_calc()
+	App.setup_windows()
 	App.setup_templates()
 	App.get_local_storage()
 	App.apply_theme(App.options.theme)

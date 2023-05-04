@@ -41,7 +41,7 @@ App.move_line_up = () => {
 	ninp.value = val
 
 	App.focus_if_isnt(ninp)
-	App.update_results()
+	App.calc()
 }
 
 App.move_line_down = () => {
@@ -79,7 +79,7 @@ App.move_line_down = () => {
 	ninp.value = val
 
 	App.focus_if_isnt(ninp)
-	App.update_results()
+	App.calc()
 }
 
 App.get_last_line = () => {
@@ -100,7 +100,7 @@ App.remove_last_line = () => {
 	}
 
 	line.remove()
-	App.update_results()
+	App.calc()
 }
 
 App.focus_next_or_add = () => {
@@ -168,7 +168,7 @@ App.add_line = (value = false) => {
 	})
 
 	DOM.ev(input, `input`, () => {
-		App.update_results()
+		App.calc()
 	})
 
 	DOM.ev(input, `keydown`, (e) => {
@@ -235,7 +235,7 @@ App.move_lines_up = () => {
 		}
 
 		line.remove()
-		App.update_results()
+		App.calc()
 		return
 	}
 
@@ -278,7 +278,7 @@ App.move_lines_up = () => {
 	}
 
 	App.get_last_line().remove()
-	App.update_results()
+	App.calc()
 }
 
 App.move_lines_down = (alt = false) => {
@@ -339,7 +339,7 @@ App.move_lines_down = (alt = false) => {
 
 	input.value = ``
 	App.focus_input(input)
-	App.update_results()
+	App.calc()
 }
 
 App.get_max_line_length = () => {

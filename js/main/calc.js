@@ -9,15 +9,15 @@ App.math_fraction = math.create({
 
 App.update_delay = 250
 
-App.update_results = (() => {
-	let timer
-	return () => {
-		clearTimeout(timer)
-		timer = setTimeout(() => {
-			App.do_update_results()
-		}, App.update_delay)
-	}
-})()
+App.setup_calc = () => {
+  App.update_results = App.create_debouncer(() => {
+    App.do_update_results()
+  }, App.update_delay)
+}
+
+App.calc = () => {
+  App.update_results.call()
+}
 
 App.do_update_results = () => {
 	App.undefine_variables()
@@ -363,7 +363,7 @@ App.expand_value = (input, replace = true) => {
 
 App.toggle_fraction = () => {
 	App.options.fraction = !App.options.fraction
-	App.update_results()
+	App.calc()
 	App.update_infobar()
 	App.update_options()
 }

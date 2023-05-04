@@ -64,7 +64,7 @@ App.insert_text = (input, text) => {
 	App.focused.input.selectionStart = ss + text.length
 	App.focused.input.selectionEnd = ss + text.length
 	App.focus_if_isnt(input)
-	App.update_results()
+	App.calc()
 }
 
 App.replace_text = (input, s, focus = true) => {
@@ -74,7 +74,7 @@ App.replace_text = (input, s, focus = true) => {
     App.focus_if_isnt(input)
   }
 
-	App.update_results()
+	App.calc()
 }
 
 App.erase_character = () => {
@@ -93,7 +93,7 @@ App.erase_character = () => {
 		App.focused.input.selectionStart = ss - 1
 		App.focused.input.selectionEnd = ss - 1
 		App.focus_if_isnt(App.focused.input)
-		App.update_results()
+		App.calc()
 	}
 }
 
