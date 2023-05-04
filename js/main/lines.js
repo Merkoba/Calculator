@@ -7,14 +7,14 @@ App.line_down = () => {
 }
 
 App.move_line_up = () => {
-	let index = DOM.index(App.focused.input.parentNode)
+	let index = DOM.index(App.get_line_el())
 
 	if (index === 0) {
 		return
 	}
 
 	let inp = App.focused.input
-	let ninp = DOM.el(`.input`, inp.parentNode.previousElementSibling)
+	let ninp = DOM.el(`.input`, App.get_line(inp).previousElementSibling)
 
 	let val = inp.value
 	let nval = ninp.value
@@ -45,14 +45,14 @@ App.move_line_up = () => {
 }
 
 App.move_line_down = () => {
-	let index = DOM.index(App.focused.input.parentNode)
+	let index = DOM.index(App.get_line_el())
 
 	if (index === (DOM.els(`.line`).length - 1)) {
 		return
 	}
 
 	let inp = App.focused.input
-	let ninp = DOM.el(`.input`, inp.parentNode.nextElementSibling)
+	let ninp = DOM.el(`.input`, App.get_line_el(inp).nextElementSibling)
 
 	let val = inp.value
 	let nval = ninp.value
@@ -104,7 +104,7 @@ App.remove_last_line = () => {
 }
 
 App.focus_next_or_add = () => {
-	let next_all = DOM.next_all(App.focused.input.parentNode, `.line`)
+	let next_all = DOM.next_all(App.get_line_el(), `.line`)
 	let found_line = false
 
 	for (let item of next_all) {
@@ -187,7 +187,7 @@ App.add_line_before = () => {
 }
 
 App.add_line_after = () => {
-	let index = DOM.index(App.focused.input.parentNode)
+	let index = DOM.index(App.get_line_el())
 
 	if (index === DOM.els(`.line`).length - 1) {
 		App.add_line()
@@ -198,7 +198,7 @@ App.add_line_after = () => {
 }
 
 App.remove_line = () => {
-	let index = DOM.index(App.focused.input.parentNode)
+	let index = DOM.index(App.get_line_el())
 
 	if (DOM.els(`.line`).length === 1) {
 		App.clear_input(App.focused.input)
@@ -225,7 +225,7 @@ App.move_lines_up = () => {
 	}
 
 	let input = App.focused.input
-	let line = input.parentNode
+	let line = App.get_line_el(input)
 	let v = DOM.dataset(input, `variable`)
 	let index = DOM.index(line)
 
@@ -271,7 +271,7 @@ App.move_lines_up = () => {
 
 	for (let i=index+1; i<line_length; i++) {
 		let inp = DOM.el(`.input`, DOM.els(`.line`)[i])
-		let ninp = DOM.el(`.input`, inp.parentNode.previousElementSibling)
+		let ninp = DOM.el(`.input`, App.get_line_el(inp).previousElementSibling)
 
 		ninp.value = inp.value
 		inp.value = ``
@@ -293,7 +293,7 @@ App.move_lines_down = (alt = false) => {
 	}
 
 	let input = App.focused.input
-	let line = input.parentNode
+	let line = App.get_line_el(input)
 	let v = DOM.dataset(input, `variable`)
 	let index = DOM.index(line)
 
@@ -333,7 +333,7 @@ App.move_lines_down = (alt = false) => {
 
 	for (let i=line_length-1; i>index; i--) {
 		let inp = DOM.el(`.input`, DOM.els(`.line`)[i])
-		let ninp = DOM.el(`.input`, inp.parentNode.previousElementSibling)
+		let ninp = DOM.el(`.input`, App.get_line_el(inp).previousElementSibling)
 		inp.value = ninp.value
 	}
 
@@ -358,6 +358,26 @@ App.new_sheet = () => {
 	App.remove_all_lines()
 }
 
-App.get_result_el = (input) => {
+App.get_result_el = (input = App.focused.input) => {
   return DOM.el(`.result`, input.closest(`.line`))
+}
+
+App.get_line_el = (input = App.focused.input) => {
+  return input.closest(`.line`)
+}
+
+App.focus_next = () => {
+	let line = App.get_line_el().nextElementSibling
+
+	if (line) {
+		DOM.el(`.input`, line).focus()
+	}
+}
+
+App.focus_prev = () => {
+	let line = App.get_line_el().previousElementSibling
+
+	if (line) {
+		DOM.el(`.input`, line).focus()
+	}
 }

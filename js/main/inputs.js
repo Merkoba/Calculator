@@ -23,7 +23,7 @@ App.cycle_inputs = (direction) => {
 		return
 	}
 
-	let index = DOM.index(App.focused.input.parentNode)
+	let index = DOM.index(App.get_line_el())
 
 	if (direction === `down`) {
 		if (index === (DOM.els(`.input`).length - 1)) {
@@ -40,22 +40,6 @@ App.cycle_inputs = (direction) => {
 		else {
 			App.focus_prev()
 		}
-	}
-}
-
-App.focus_next = () => {
-	let line = App.focused.input.parentNode.nextElementSibling
-
-	if (line) {
-		DOM.el(`.input`, line).focus()
-	}
-}
-
-App.focus_prev = () => {
-	let line = App.focused.input.parentNode.previousElementSibling
-
-	if (line) {
-		DOM.el(`.input`, line).focus()
 	}
 }
 
