@@ -1,28 +1,31 @@
-body
-{
+body {
 	background-color: #ADD6E0;
 	color: black;
 }
 
-.button
-{
+.button {
 	background-color: #bbd1ff;
 	border-color: #bdd3ff;
 	color: black;
 }
 
-#infobar
-{
+#infobar {
 	background-color: #c6eaf3;
 	color: black;
 }
 
-.linky 
-{
+#title {
 	color: #153c50;
 }
 
-.ps__thumb-y
-{
+.input {
+	box-shadow: 0 0 0 2px #355f6a;
+}
+
+.input_focus {
+	box-shadow: 0 0 0 6px #355f6a !important;
+}
+
+.ps__thumb-y {
 	background-color: black !important;
 }

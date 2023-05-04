@@ -146,6 +146,6 @@ App.update_options = () => {
 App.apply_theme = (theme) => {
 	let stylesheet = DOM.create(`link`)
 	stylesheet.rel = `stylesheet`
-	stylesheet.href = `themes/` + theme + `.css?v=` + App.version
+	stylesheet.href = `css/themes/` + theme + `.css`
 	DOM.el(`head`).appendChild(stylesheet)
 }
