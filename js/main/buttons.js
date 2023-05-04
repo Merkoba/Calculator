@@ -10,7 +10,7 @@ App.draw_buttons = () => {
 	App.place_button(9, `Right Click: 0.9 | Middle Click: 1/9`)
 	App.place_button(0, `Right Click: 0. | Middle Click: 000`)
 	App.place_button(`.`)
-  App.place_button(`i`)
+  App.place_button(`pi`, `Right Click: tau`)
 
 	App.buttons_br()
 
@@ -25,7 +25,7 @@ App.draw_buttons = () => {
 	App.place_button(`sin`, `Right Click: asin | Middle Click: asinh`)
 	App.place_button(`cos`, `Right Click: acos | Middle Click: acosh`)
 	App.place_button(`tan`, `Right Click: atan | Middle Click: atanh`)
-	App.place_button(`pi`, `Right Click: tau`)
+  App.place_button(`phi`)
 
 	App.buttons_br()
 
@@ -35,7 +35,7 @@ App.draw_buttons = () => {
 	App.place_button_wider(`Format`)
 	App.place_button_wider(`Erase`)
 	App.place_button(`e`, `Right Click: LN2 | Middle Click: LN10`)
-	App.place_button(`phi`)
+  App.place_button(`i`)
 
 	for (let btn of DOM.els(`.button`)) {
 		DOM.ev(btn, `click`, (e) => {
