@@ -24,3 +24,17 @@ App.show_about = () => {
 		version: App.version
 	}))
 }
+
+App.title_click_events = () => {
+	DOM.ev(DOM.el(`#lnk_new`), `click`, () => {
+		App.new_sheet()
+	})
+
+	DOM.ev(DOM.el(`#lnk_options`), `click`, () => {
+		App.show_options()
+	})
+
+	DOM.ev(DOM.el(`#lnk_about`), `click`, () => {
+		App.show_about()
+	})
+}
