@@ -1,3 +1,6 @@
+App.letters = `abcdefghijklmnopqrstuvwxyz`
+App.linevars = {}
+
 App.math_normal = math.create({
 	number: `BigNumber`,
 	precision: 64
@@ -108,6 +111,7 @@ App.do_update_results = () => {
 	}
 
   App.focus_input()
+	App.save_state()
 }
 
 App.get_result = (input) => {

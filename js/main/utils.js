@@ -1,7 +1,3 @@
-App.get_local_storage = () => {
-	App.get_options()
-}
-
 App.disable_context_menu = (el) => {
 	DOM.ev(el, `contextmenu`, event => event.preventDefault())
 }
@@ -18,7 +14,7 @@ App.fill_sheet = (x = false) => {
 		n = x
 	}
 	else {
-		n = App.get_max_line_length() - DOM.els(`.line`).length
+		n = App.max_line_length - DOM.els(`.line`).length
 	}
 
 	for (let i=0; i<n; i++) {

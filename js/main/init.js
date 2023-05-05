@@ -1,23 +1,15 @@
 const App = {}
 
-App.letters = `abcdefghijklmnopqrstuvwxyz`
-App.linevars = {}
-App.ls_options = `options_v4`
-App.templates = {}
-
-App.focused = {
-	input: null
-}
-
 App.init = () => {
 	App.setup_calc()
+	App.setup_lines()
 	App.setup_windows()
-	App.setup_templates()
-	App.get_local_storage()
+	App.get_options()
+	App.get_state()
 	App.apply_theme(App.options.theme)
 	App.draw_buttons()
 	App.setup_infobar()
 	App.key_detection()
 	App.title_click_events()
-	App.add_line()
+	App.apply_state()
 }

@@ -1,3 +1,7 @@
+App.setup_lines = () => {
+  App.get_max_line_length()
+}
+
 App.line_up = () => {
 	App.focus_prev()
 }
@@ -126,7 +130,7 @@ App.add_line = (value = false) => {
 	let num_lines = DOM.els(`.line`).length
 	let letter
 
-	if (num_lines === App.get_max_line_length()) {
+	if (num_lines === App.max_line_length) {
 		return
 	}
 
@@ -143,6 +147,7 @@ App.add_line = (value = false) => {
 	}
 
 	let el = DOM.create(`div`, `line`)
+  let vr = `$` + letter
 
   el.innerHTML = App.templates[`template_line`]({
     letter: letter,
@@ -154,7 +159,7 @@ App.add_line = (value = false) => {
 	App.focused.input = input
 
 	DOM.ev(DOM.el(`.variable`, el), `click`, () => {
-		App.press(`$` + letter)
+		App.press(vr)
 	})
 
 	DOM.ev(DOM.el(`.menu`, el), `click`, (e) => {
@@ -177,9 +182,10 @@ App.add_line = (value = false) => {
 		}
 	})
 
-	DOM.dataset(input, `variable`, `$` + letter)
+	DOM.dataset(input, `variable`, vr)
 	App.focus_input(input)
 	App.move_caret_to_end(input)
+  return vr
 }
 
 App.add_line_before = () => {
@@ -284,7 +290,7 @@ App.move_lines_up = () => {
 App.move_lines_down = (alt = false) => {
 	let line_length = DOM.els(`.line`).length
 
-	if (line_length === App.get_max_line_length()) {
+	if (line_length === App.max_line_length) {
 		return
 	}
 
@@ -343,7 +349,7 @@ App.move_lines_down = (alt = false) => {
 }
 
 App.get_max_line_length = () => {
-	return App.get_var_index(`$zz`) + 1
+	App.max_line_length = App.get_var_index(`$zz`) + 1
 }
 
 App.show_error = (input) => {
@@ -356,6 +362,7 @@ App.show_comment = (input) => {
 
 App.new_sheet = () => {
 	App.remove_all_lines()
+  App.calc()
 }
 
 App.get_result_el = (input = App.focused.input) => {

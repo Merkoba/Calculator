@@ -1,3 +1,5 @@
+App.ls_options = `options_v4`
+
 App.themes = [
 	`lake`,
 	`leaf`,

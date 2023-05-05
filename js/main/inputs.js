@@ -1,3 +1,7 @@
+App.focused = {
+	input: null
+}
+
 App.get_first_input = () => {
 	return DOM.els(`.input`)[0]
 }

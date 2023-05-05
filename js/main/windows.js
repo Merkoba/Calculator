@@ -1,3 +1,5 @@
+App.templates = {}
+
 App.setup_windows = () => {
 	App.msg = Msg.factory({
 		enable_titlebar: true,
@@ -5,6 +7,7 @@ App.setup_windows = () => {
 	})
 
 	App.msg.create()
+  App.setup_templates()
 }
 
 App.show_modal = (title, html, callback = () => {}) => {
