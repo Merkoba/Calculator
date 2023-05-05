@@ -235,7 +235,7 @@ App.move_lines_up = () => {
 
 	let input = App.focused.input
 	let line = App.get_line_el(input)
-	let v = App.get_var(input)
+	let vr = App.get_var(input)
 	let index = DOM.index(line)
 
 	if (index === (line_length - 1)) {
@@ -248,8 +248,10 @@ App.move_lines_up = () => {
 		return
 	}
 
+	let lines = DOM.els(`.line`)
+
 	for (let i=0; i<line_length; i++) {
-		let ln = DOM.els(`.line`)[i]
+		let ln = lines[i]
 		let inp = DOM.el(`.input`, ln)
 		let val = inp.value
 
@@ -258,7 +260,7 @@ App.move_lines_up = () => {
 		}
 
 		val = val.replace(/\$[a-z]+/g, (match) => {
-			if (match === v) {
+			if (match === vr) {
 				return ``
 			}
 
@@ -299,11 +301,15 @@ App.move_lines_down = (alt = false) => {
 
 	let input = App.focused.input
 	let line = App.get_line_el(input)
-	let v = App.get_var(input)
 	let index = DOM.index(line)
+	let lines = DOM.els(`.line`)
 
 	for (let i=0; i<line_length; i++) {
-		let ln = DOM.els(`.line`)[i]
+		if (i <= index) {
+			continue
+		}
+
+		let ln = lines[i]
 		let inp = DOM.el(`.input`, ln)
 		let val = inp.value
 
@@ -312,13 +318,9 @@ App.move_lines_down = (alt = false) => {
 		}
 
 		val = val.replace(/\$[a-z]+/g, (match) => {
-			if (match === v) {
-				return ``
-			}
-
 			let ni = App.get_var_index(match)
 
-			if (ni > index && ni < line_length) {
+			if (ni >= index && ni < line_length) {
 				return App.increase_var(match)
 			}
 
@@ -329,7 +331,6 @@ App.move_lines_down = (alt = false) => {
 	}
 
 	App.add_line()
-
 	line_length = DOM.els(`.line`).length
 
 	for (let i=line_length-1; i>index; i--) {
