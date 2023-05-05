@@ -18,7 +18,7 @@ App.move_line_up = () => {
 	}
 
 	let inp = App.focused.input
-	let ninp = DOM.el(`.input`, App.get_line(inp).previousElementSibling)
+	let ninp = DOM.el(`.input`, App.get_line_el(inp).previousElementSibling)
 
 	let val = inp.value
 	let nval = ninp.value

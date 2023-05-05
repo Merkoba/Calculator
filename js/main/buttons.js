@@ -111,17 +111,8 @@ App.press = (s, aux = false) => {
 		App.undo()
 		return
 	}
-  else if (s === `Space`) {
-    App.insert_text(App.focused.input, ` `)
-    return
-  }
 	else if (s === `Add Line`) {
 		App.focus_next_or_add()
-		App.focus_input()
-		return
-	}
-	else if (s === `Rm Line`) {
-		App.remove_line()
 		App.focus_input()
 		return
 	}
@@ -254,12 +245,6 @@ App.check_aux = (s, aux) => {
 			}
 			else if (aux === 2) {
 				App.go_to_last_input()
-				return false
-			}
-		}
-		else if (s === `Rm Line`) {
-			if (aux === 3) {
-				App.remove_last_line()
 				return false
 			}
 		}
