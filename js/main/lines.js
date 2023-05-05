@@ -350,7 +350,7 @@ App.show_error = (input) => {
 }
 
 App.new_sheet = () => {
-	if (confirm("Are you sure?")) {
+	if (confirm("Start again?")) {
 		App.remove_all_lines()
 		App.calc()
 	}
