@@ -39,7 +39,7 @@ App.get_options = () => {
 	}
 
 	if (App.options.round_places === undefined) {
-		App.options.round_places = 10
+		App.options.round_places = 3
 		mod = true
 	}
 
