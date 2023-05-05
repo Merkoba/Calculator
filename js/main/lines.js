@@ -411,7 +411,7 @@ App.show_menu = (button, input) => {
   })
 
 	items.push({
-    text: `Remove`,
+    text: `Remove Line`,
     action: () => {
 			if (confirm("Remove line?")) {
 				App.remove_line()
@@ -423,7 +423,7 @@ App.show_menu = (button, input) => {
   })
 
   items.push({
-    text: `View`,
+    text: `View Result`,
     action: () => {
       App.view_result(input)
     }
