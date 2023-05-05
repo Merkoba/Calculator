@@ -183,8 +183,9 @@ App.add_line = (value = false) => {
 	})
 
 	DOM.dataset(input, `variable`, vr)
-	App.focus_input(input)
 	App.move_caret_to_end(input)
+  App.show_result(input, `Empty`)
+	App.focus_input(input)
   return vr
 }
 

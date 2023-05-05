@@ -127,6 +127,7 @@ App.get_result = (input) => {
 		}
 
 		if (val.trim().length === 0) {
+			App.show_result(input, `Empty`)
 			return
 		}
 
