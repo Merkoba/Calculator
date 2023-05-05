@@ -239,7 +239,7 @@ App.check_aux = (s, aux) => {
 		}
 		else if (s === `/`) {
 			if (aux === 3) {
-				App.toggle_comment(App.focused.input)
+				App.toggle_comment()
 				return false
 			}
 		}

@@ -174,7 +174,7 @@ App.clear_input = (input) => {
 	App.replace_text(input, ``)
 }
 
-App.toggle_comment = (input) => {
+App.toggle_comment = (input = App.focused.input) => {
 	if (!input.value.trim().startsWith(`//`)) {
 		App.replace_text(input, `// ` + input.value.trim())
 	}

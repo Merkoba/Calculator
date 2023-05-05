@@ -454,6 +454,13 @@ App.show_menu = (button, input) => {
     }
   })
 
+	items.push({
+    text: `Comment`,
+    action: () => {
+      App.toggle_comment(input)
+    }
+  })
+
   items.push({
     text: `View`,
     action: () => {
