@@ -477,19 +477,19 @@ App.view_result = (input) => {
     let items = []
 
     if (results.length > 0) {
-      items.push(results.join("<br>"))
+      items.push(`<b>Variables</b><br>` + results.join("<br>"))
     }
 
     if (form) {
-      items.push(App.make_html_safe(`${form} = ${result}`))
+      items.push(`<b>Normal</b><br>` + App.make_html_safe(`${form} = ${result}`))
     }
 
     if (exp_res) {
-      items.push(App.make_html_safe(`${exp_res} = ${result}`))
+      items.push(`<b>Expanded Results</b><br>` + App.make_html_safe(`${exp_res} = ${result}`))
     }
 
     if (exp_full) {
-      items.push(App.make_html_safe(`${exp_full} = ${result}`))
+      items.push(`<b>Expanded Full</b><br>` + App.make_html_safe(`${exp_full} = ${result}`))
     }
 
     let c = DOM.create(`div`, `view_result`)
