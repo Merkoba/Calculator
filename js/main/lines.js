@@ -23,14 +23,14 @@ App.move_line_up = () => {
 	let val = inp.value
 	let nval = ninp.value
 
-	let v = App.get_var(inp)
-	let nv = App.get_var(ninp)
+	let vr1 = App.get_var(inp)
+	let vr2 = App.get_var(ninp)
 
-	let cv = `$@!#` + App.get_letter(v)
-	let cnv = `$@!#` + App.get_letter(nv)
+	let cv = `$@!#` + App.get_letter(vr1)
+	let cnv = `$@!#` + App.get_letter(vr2)
 
-	let re = new RegExp(`\\$` + App.get_letter(v), `g`)
-	let re2 = new RegExp(`\\$` + App.get_letter(nv), `g`)
+	let re = new RegExp(`\\$` + App.get_letter(vr1), `g`)
+	let re2 = new RegExp(`\\$` + App.get_letter(vr2), `g`)
 
 	for (let input of DOM.els(`.input`)) {
 		let vl = input.value.replace(re, cnv)
@@ -61,14 +61,14 @@ App.move_line_down = () => {
 	let val = inp.value
 	let nval = ninp.value
 
-	let v = App.get_var(inp)
-	let nv = App.get_var(ninp)
+	let vr1 = App.get_var(inp)
+	let vr2 = App.get_var(ninp)
 
-	let cv = `$@!#` + App.get_letter(v)
-	let cnv = `$@!#` + App.get_letter(nv)
+	let cv = `$@!#` + App.get_letter(vr1)
+	let cnv = `$@!#` + App.get_letter(vr2)
 
-	let re = new RegExp(`\\$` + App.get_letter(v), `g`)
-	let re2 = new RegExp(`\\$` + App.get_letter(nv), `g`)
+	let re = new RegExp(`\\$` + App.get_letter(vr1), `g`)
+	let re2 = new RegExp(`\\$` + App.get_letter(vr2), `g`)
 
 	for (let input of DOM.els(`.input`)) {
 		let vl = input.value.replace(re, cnv)

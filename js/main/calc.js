@@ -28,14 +28,13 @@ App.do_calc = () => {
 	let variables = {}
 
 	for (let input of DOM.els(`.input`)) {
-		let v = App.get_var(input)
-		variables[v] = {}
-		let vr = variables[v]
-		vr.edges = []
+		let vr = App.get_var(input)
+		variables[vr] = {}
+		variables[vr].edges = []
 	}
 
 	for (let input of DOM.els(`.input`)) {
-		let v = App.get_var(input)
+		let vr = App.get_var(input)
 
 		if (App.is_empty(input)) {
 			if (input.value.length > 0) {
@@ -48,7 +47,7 @@ App.do_calc = () => {
 		let matches = App.get_vars(input)
 
 		if (matches !== null) {
-			variables[v].edges = matches
+			variables[vr].edges = matches
 		}
 	}
 
