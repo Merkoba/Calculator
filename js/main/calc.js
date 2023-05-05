@@ -477,7 +477,7 @@ App.view_result = (input) => {
     let items = []
 
     if (variables.length > 0) {
-      items.push(`<b>Variables</b><br>` + variables.join("<br>"))
+      items.push(`<b>Variables</b><br>` + variables.join(`<br>`))
     }
 
     if (normal) {
@@ -493,12 +493,6 @@ App.view_result = (input) => {
 				}
 			}
 
-			if (exp_full) {
-				if (exp_full === exp_res) {
-					ok = false
-				}
-			}
-
 			if (ok) {
 				items.push(`<b>Expanded Results</b><br>` + App.make_html_safe(`${exp_res} = ${result}`))
 			}
@@ -506,12 +500,6 @@ App.view_result = (input) => {
 
     if (exp_full) {
 			let ok = true
-
-			if (normal) {
-				if (normal === exp_full) {
-					ok = false
-				}
-			}
 
 			if (exp_res) {
 				if (exp_res === exp_full) {
@@ -525,7 +513,7 @@ App.view_result = (input) => {
     }
 
     let c = DOM.create(`div`, `view_result`)
-    c.innerHTML = items.join("<hr>")
+    c.innerHTML = items.join(`<hr>`)
     App.show_modal(`View Result`, c)
   }
 }

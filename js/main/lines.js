@@ -353,10 +353,10 @@ App.show_error = (input) => {
 }
 
 App.new_sheet = () => {
-	if (confirm("Start again?")) {
+	App.confirm(`Start again?`, () => {
 		App.remove_all_lines()
 		App.calc()
-	}
+	})
 }
 
 App.get_result_el = (input = App.focused.input) => {
@@ -389,7 +389,7 @@ App.show_menu = (button, input) => {
   items.push({
     text: `Expand Results`,
     action: () => {
-			App.confirm("Expand variables (Results)?", () => {
+			App.confirm(`Expand variables (Results)?`, () => {
 				App.expand_value(input, true, false)
 			})
     }
@@ -398,7 +398,7 @@ App.show_menu = (button, input) => {
 	items.push({
     text: `Expand Full`,
     action: () => {
-			App.confirm("Expand variables (Full)?", () => {
+			App.confirm(`Expand variables (Full)?`, () => {
 				App.expand_value(input, true, true)
 			})
     }
@@ -407,7 +407,7 @@ App.show_menu = (button, input) => {
 	items.push({
     text: `Remove Line`,
     action: () => {
-			App.confirm("Remove the line?", () => {
+			App.confirm(`Remove the line?`, () => {
 				App.remove_line()
 			})
     }
