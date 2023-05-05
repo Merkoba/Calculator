@@ -21,6 +21,10 @@ body, html {
 	white-space: nowrap;
 }
 
+.button:hover {
+	font-weight: bold;
+}
+
 .wider {
 	width: 7rem;
 }
@@ -45,6 +49,10 @@ body, html {
 	width: 42rem;
 	text-align: center;
 	cursor: pointer;
+}
+
+#infobar:hover {
+	font-weight: bold;
 }
 
 #lines {
