@@ -389,7 +389,7 @@ App.show_menu = (button, input) => {
   items.push({
     text: `Expand Results`,
     action: () => {
-			App.confirm("Expand variables?", () => {
+			App.confirm("Expand variables (Results)?", () => {
 				App.expand_value(input, true, false)
 			})
     }
@@ -398,7 +398,7 @@ App.show_menu = (button, input) => {
 	items.push({
     text: `Expand Full`,
     action: () => {
-			App.confirm("Expand variables?", () => {
+			App.confirm("Expand variables (Full)?", () => {
 				App.expand_value(input, true, true)
 			})
     }
@@ -407,7 +407,7 @@ App.show_menu = (button, input) => {
 	items.push({
     text: `Remove Line`,
     action: () => {
-			App.confirm("Remove line?", () => {
+			App.confirm("Remove the line?", () => {
 				App.remove_line()
 			})
     }
