@@ -188,3 +188,7 @@ App.focus_if_isnt = (input = App.focused.input) => {
 		App.focus_input(input)
 	}
 }
+
+App.is_comment = (input) => {
+  return input.value.trim().startsWith(`//`)
+}

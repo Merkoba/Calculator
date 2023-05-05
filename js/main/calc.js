@@ -45,7 +45,7 @@ App.do_update_results = () => {
 			continue
 		}
 
-		if (val.trim().startsWith(`//`)) {
+		if (App.is_comment(input)) {
 			continue
 		}
 

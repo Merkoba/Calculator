@@ -173,6 +173,10 @@ App.add_line = (value = false) => {
 	})
 
 	DOM.ev(input, `input`, () => {
+    if (App.is_comment(input)) {
+      return
+    }
+
 		App.calc()
 	})
 
