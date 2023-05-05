@@ -1,16 +1,13 @@
 App.key_detection = () => {
-	DOM.ev(document, `keyup`, (e) => {
-		if (e.key === `Escape`) {
-      App.check_clear()
-		}
-	})
-
-	DOM.ev(document, `keyup`, (e) => {
+	DOM.ev(document, `keydown`, (e) => {
 		if (App.msg.is_open()) {
 			return
 		}
 
-		if (e.key === `Enter`) {
+		if (e.key === `Escape`) {
+      App.check_clear()
+		}
+		else if (e.key === `Enter`) {
 			if (e.shiftKey && e.ctrlKey) {
 				App.expand_value(App.focused.input)
 			}
