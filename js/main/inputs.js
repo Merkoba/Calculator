@@ -137,23 +137,6 @@ App.erase = () => {
   App.calc()
 }
 
-App.format_input = (input) => {
-	let val = input.value
-
-	if (val.trim() === ``) {
-		return
-	}
-
-	try {
-		val = App.format_calc(val)
-	}
-	catch (err) {
-		return
-	}
-
-  return val
-}
-
 App.copy_input_down = () => {
 	let og_var = App.get_var()
 	let og_val = App.focused.input.value
@@ -177,4 +160,9 @@ App.focus_if_isnt = (input = App.focused.input) => {
 	if (input !== document.activeElement) {
 		App.focus_input(input)
 	}
+}
+
+App.get_input = (vr) => {
+  let letter = App.get_letter(vr)
+  return DOM.el(`#${letter}`)
 }

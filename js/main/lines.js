@@ -26,11 +26,11 @@ App.move_line_up = () => {
 	let v = App.get_var(inp)
 	let nv = App.get_var(ninp)
 
-	let cv = `$@!#` + v.substring(1)
-	let cnv = `$@!#` + nv.substring(1)
+	let cv = `$@!#` + App.get_letter(v)
+	let cnv = `$@!#` + App.get_letter(nv)
 
-	let re = new RegExp(`\\$` + v.substring(1), `g`)
-	let re2 = new RegExp(`\\$` + nv.substring(1), `g`)
+	let re = new RegExp(`\\$` + App.get_letter(v), `g`)
+	let re2 = new RegExp(`\\$` + App.get_letter(nv), `g`)
 
 	for (let input of DOM.els(`.input`)) {
 		let vl = input.value.replace(re, cnv)
@@ -64,11 +64,11 @@ App.move_line_down = () => {
 	let v = App.get_var(inp)
 	let nv = App.get_var(ninp)
 
-	let cv = `$@!#` + v.substring(1)
-	let cnv = `$@!#` + nv.substring(1)
+	let cv = `$@!#` + App.get_letter(v)
+	let cnv = `$@!#` + App.get_letter(nv)
 
-	let re = new RegExp(`\\$` + v.substring(1), `g`)
-	let re2 = new RegExp(`\\$` + nv.substring(1), `g`)
+	let re = new RegExp(`\\$` + App.get_letter(v), `g`)
+	let re2 = new RegExp(`\\$` + App.get_letter(nv), `g`)
 
 	for (let input of DOM.els(`.input`)) {
 		let vl = input.value.replace(re, cnv)
@@ -139,7 +139,7 @@ App.add_line = (value = false) => {
 	}
 	else {
 		let last_var = App.get_var(App.get_last_input())
-		letter = App.increase_var(last_var).substring(1)
+		letter = App.get_letter(App.increase_var(last_var))
 	}
 
 	if (!value) {
@@ -382,53 +382,26 @@ App.focus_prev = () => {
 	}
 }
 
-App.view_result = (input) => {
-  let value = input.value.trim()
-
-  if (!value) {
-    return
-  }
-
-  let v = App.get_var(input)
-  let result = App.get_result_string(v)
-
-  if (value && result) {
-    let form = App.format_input(input)
-    let exp_res = App.expand_value(input, false, false)
-    let exp_full = App.expand_value(input, false, true)
-    let vr = App.get_vars_results(input)
-    let items = []
-
-    if (vr.length > 0) {
-      items.push(vr.join("<br>"))
-    }
-
-    if (form) {
-      items.push(App.make_html_safe(`${form} = ${result}`))
-    }
-
-    if (exp_res) {
-      items.push(App.make_html_safe(`${exp_res} = ${result}`))
-    }
-
-    if (exp_full) {
-      items.push(App.make_html_safe(`${exp_full} = ${result}`))
-    }
-
-    let c = DOM.create(`div`, `view_result`)
-    c.innerHTML = items.join("<hr>")
-    App.show_modal(`View Result`, c)
-  }
-}
-
 App.show_menu = (button, input) => {
   let items = []
 
   items.push({
-    text: `Expand`,
+    text: `Expand Results`,
     action: () => {
 			if (confirm("Expand variables?")) {
-				App.expand_value(input)
+				App.expand_value(input, true, false)
+			}
+			else {
+				App.focus_if_isnt(input)
+			}
+    }
+  })
+
+	items.push({
+    text: `Expand Full`,
+    action: () => {
+			if (confirm("Expand variables?")) {
+				App.expand_value(input, true, true)
 			}
 			else {
 				App.focus_if_isnt(input)

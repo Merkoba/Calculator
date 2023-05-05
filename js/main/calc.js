@@ -81,10 +81,10 @@ App.do_calc = () => {
 
 		if (!acyclic) {
 			for (let input of DOM.els(`.input`)) {
-				let v = App.get_var(input)
-				let letter = v.substring(1)
+				let vr = App.get_var(input)
+				let letter = App.get_letter(vr)
 
-				if (sorted.indexOf(v) !== -1) {
+				if (sorted.indexOf(vr) !== -1) {
 					App.get_result(DOM.el(`#` + letter))
 				}
 				else {
@@ -101,7 +101,7 @@ App.do_calc = () => {
 	}
 
 	for (let i=0; i<sorted.length; i++) {
-		let letter = sorted[i].substring(1)
+		let letter = App.get_letter(sorted[i])
 		App.get_result(DOM.el(`#` + letter))
 	}
 
@@ -208,8 +208,8 @@ App.format_result = (n, f = false) => {
 	}
 }
 
-App.decrease_var = (v) => {
-	let letter = v.substring(1)
+App.decrease_var = (vr) => {
+	let letter = App.get_letter(vr)
 	let res = ``
 	let decrease_next = true
 
@@ -237,8 +237,8 @@ App.decrease_var = (v) => {
 	return `$` + res.split(``).reverse().join(``)
 }
 
-App.increase_var = (v) => {
-	let letter = v.substring(1)
+App.increase_var = (vr) => {
+	let letter = App.get_letter(vr)
 	let res = ``
 	let increase_next = true
 
@@ -265,8 +265,8 @@ App.increase_var = (v) => {
 	return `$` + res.split(``).reverse().join(``)
 }
 
-App.get_var_index = (v) => {
-	let letter = v.substring(1)
+App.get_var_index = (vr) => {
+	let letter = App.get_letter(vr)
 	let n = letter.length - 1
 	let index = 0
 
@@ -318,7 +318,7 @@ App.expand_value = (input, replace = true, full = true) => {
 			let v
 
 			if (full) {
-				v = DOM.el(`#` + match.substring(1)).value
+				v = DOM.el(`#` + App.get_letter(match)).value
 			}
 			else {
 				v = App.get_result_string(match)
@@ -348,7 +348,7 @@ App.expand_value = (input, replace = true, full = true) => {
 	}
 
 	try {
-		val = App.format_calc(val)
+		val = App.format_input_string(val)
 	}
 	catch (err) {
 		return
@@ -411,17 +411,13 @@ App.get_result_text = (el) => {
 	return s
 }
 
-App.format_calc = (val) => {
-  return App.math_normal.parse(val).toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
-}
-
 App.get_vars = (input) => {
 	let vars = input.value.match(/\$[a-z]+/g)
 	vars = [...new Set(vars)].sort()
 	return vars
 }
 
-App.get_vars_results = (input) => {
+App.get_var_results = (input) => {
 	let vars = App.get_vars(input)
 
 	if (!vars) {
@@ -430,16 +426,26 @@ App.get_vars_results = (input) => {
 
 	let items = []
 
-	for (let v of vars) {
-		let r = App.get_result_string(v)
-		items.push(`${v} = ${r}`)
+	for (let vr of vars) {
+		let val = App.get_input_string(vr)
+		let res = App.get_result_string(vr)
+		items.push(`${vr} = ${val} = ${res}`)
 	}
 
 	return items
 }
 
-App.get_result_string = (v) => {
-	let result = App.math_normal.bignumber(App.linevars[v])
+App.get_input_string = (vr) => {
+	let value = App.get_input(vr).value
+  return App.format_input_string(value)
+}
+
+App.format_input_string = (value) => {
+	return App.math_normal.parse(value).toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
+}
+
+App.get_result_string = (vr) => {
+	let result = App.math_normal.bignumber(App.linevars[vr])
 
 	if (App.options.round) {
 		result = App.math_normal.round(result, App.options.round_places)
@@ -451,4 +457,43 @@ App.get_result_string = (v) => {
 
 App.get_var = (input = App.focused.input) => {
 	return DOM.dataset(input, `variable`)
+}
+
+App.view_result = (input) => {
+  let value = input.value.trim()
+
+  if (!value) {
+    return
+  }
+
+  let vr = App.get_var(input)
+  let result = App.get_result_string(vr)
+
+  if (value && result) {
+    let form = App.get_input_string(vr)
+    let exp_res = App.expand_value(input, false, false)
+    let exp_full = App.expand_value(input, false, true)
+    let results = App.get_var_results(input)
+    let items = []
+
+    if (results.length > 0) {
+      items.push(results.join("<br>"))
+    }
+
+    if (form) {
+      items.push(App.make_html_safe(`${form} = ${result}`))
+    }
+
+    if (exp_res) {
+      items.push(App.make_html_safe(`${exp_res} = ${result}`))
+    }
+
+    if (exp_full) {
+      items.push(App.make_html_safe(`${exp_full} = ${result}`))
+    }
+
+    let c = DOM.create(`div`, `view_result`)
+    c.innerHTML = items.join("<hr>")
+    App.show_modal(`View Result`, c)
+  }
 }
