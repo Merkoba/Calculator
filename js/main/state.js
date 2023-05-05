@@ -53,7 +53,7 @@ App.apply_state = () => {
   catch (err) {
     console.error(err)
     App.restore_state()
-    App.add_line()
+    App.new_sheet()
   }
 }
 
