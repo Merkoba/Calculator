@@ -57,3 +57,7 @@ App.create_debouncer = (func, delay) => {
 
   return obj
 }
+
+App.make_html_safe = (s) => {
+  return s.replace(/\</g, `&lt;`).replace(/\>/g, `&gt;`)
+}

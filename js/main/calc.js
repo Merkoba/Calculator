@@ -418,7 +418,7 @@ App.format_calc = (val) => {
 
 App.get_vars = (input) => {
 	let vars = input.value.match(/\$[a-z]+/g)
-	vars = [...new Set(vars)]
+	vars = [...new Set(vars)].sort()
 	return vars
 }
 
@@ -440,7 +440,14 @@ App.get_vars_results = (input) => {
 }
 
 App.get_result_string = (v) => {
-	return App.linevars[v].toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
+	let result = App.math_normal.bignumber(App.linevars[v])
+
+	if (App.options.round) {
+		result = App.math_normal.round(result, App.options.round_places)
+	}
+
+	result = App.math_normal.format(result, {notation: 'fixed'})
+	return result
 }
 
 App.get_var = (input = App.focused.input) => {

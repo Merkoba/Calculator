@@ -173,3 +173,7 @@ sup {
 .ps__rail-y {
 	width: 8px !important;
 }
+
+.view_result {
+	text-align: left;
+}

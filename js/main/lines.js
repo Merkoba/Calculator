@@ -383,9 +383,13 @@ App.focus_prev = () => {
 }
 
 App.view_line = (input) => {
-  let calc = input.value
+  let calc = input.value.trim()
 
   if (!calc) {
+    return
+  }
+
+  if (calc.startsWith(`//`)) {
     return
   }
 
@@ -403,14 +407,16 @@ App.view_line = (input) => {
     }
 
     if (form) {
-      items.push(`${form} = ${result}`)
+      items.push(App.make_html_safe(`${form} = ${result}`))
     }
 
     if (exp) {
-      items.push(`${exp} = ${result}`)
+      items.push(App.make_html_safe(`${exp} = ${result}`))
     }
 
-    App.show_modal(`View Result`, items.join("<br>"))
+    let c = DOM.create(`div`, `view_result`)
+    c.innerHTML = items.join("<hr>")
+    App.show_modal(`View Result`, c)
   }
 }
 
