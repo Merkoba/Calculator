@@ -13,16 +13,16 @@ App.math_fraction = math.create({
 App.update_delay = 200
 
 App.setup_calc = () => {
-  App.update_results = App.create_debouncer(() => {
-    App.do_update_results()
+  App.calc_debouncer = App.create_debouncer(() => {
+    App.do_calc()
   }, App.update_delay)
 }
 
 App.calc = () => {
-  App.update_results.call()
+  App.calc_debouncer.call()
 }
 
-App.do_update_results = () => {
+App.do_calc = () => {
 	App.undefine_variables()
 	let variables = {}
 
@@ -39,13 +39,9 @@ App.do_update_results = () => {
 
 		if (val.trim() === ``) {
 			if (val.length > 0) {
-				input.value = ``
+				App.set_input(input, ``)
 			}
 
-			continue
-		}
-
-		if (App.is_comment(input)) {
 			continue
 		}
 
@@ -120,11 +116,6 @@ App.get_result = (input) => {
 
 	try {
 		let val = input.value
-
-		if (App.is_comment(input)) {
-			App.show_comment(input)
-			return
-		}
 
 		if (val.trim().length === 0) {
 			App.show_result(input, `Empty`)
@@ -305,10 +296,6 @@ App.expand_value = (input, replace = true, full = true) => {
 	let val = input.value
 
 	if (val.trim() === ``) {
-		return
-	}
-
-	if (App.is_comment(input)) {
 		return
 	}
 

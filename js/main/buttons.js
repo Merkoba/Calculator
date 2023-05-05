@@ -17,7 +17,7 @@ App.draw_buttons = () => {
 	App.place_button(`+`)
 	App.place_button(`-`)
 	App.place_button(`*`)
-	App.place_button(`/`, `Right Click: Toggle Comment`)
+	App.place_button(`/`)
 	App.place_button(`(`)
 	App.place_button(`)`)
 	App.place_button(`^`, `Right Click: ^2 | Middle Click: ^3`)
@@ -31,8 +31,8 @@ App.draw_buttons = () => {
 
 	App.place_button_wider(`Add Line`, `Right Click: Add Line After | Middle Click: Add Line Before`)
 	App.place_button_wider(`Clear`)
-	App.place_button_wider(`Format`)
 	App.place_button_wider(`Erase`)
+	App.place_button_wider(`Undo`)
 	App.place_button(`log`, `Right Click: log2 | Middle Click: log10`)
 	App.place_button(`LN2`, `Right Click: LN10`)
 	App.place_button(`e`, `Right Click: LOG2E | Middle Click: LOG10E`)
@@ -100,19 +100,19 @@ App.press = (s, aux = false) => {
 	}
 
 	if (s === `Clear`) {
-    App.check_clear()
+    App.clear_input()
 		return
 	}
 	else if (s === `Erase`) {
 		App.erase()
 		return
 	}
+  else if (s === `Undo`) {
+		App.undo()
+		return
+	}
   else if (s === `Space`) {
     App.insert_text(App.focused.input, ` `)
-    return
-  }
-  else if (s === `Format`) {
-    App.format_all()
     return
   }
 	else if (s === `Add Line`) {
@@ -237,12 +237,6 @@ App.check_aux = (s, aux) => {
 				return `tau`
 			}
 		}
-		else if (s === `/`) {
-			if (aux === 3) {
-				App.toggle_comment()
-				return false
-			}
-		}
 		else if (s === `Up`) {
 			if (aux === 3) {
 				App.move_line_up()
@@ -276,16 +270,6 @@ App.check_aux = (s, aux) => {
 			}
 			else if (aux === 2) {
 				App.add_line_before()
-				return false
-			}
-		}
-		else if (s === `Clear`) {
-			if (aux === 3) {
-				App.format_input(App.focused.input)
-				return false
-			}
-			else if (aux === 2) {
-				App.format_all()
 				return false
 			}
 		}

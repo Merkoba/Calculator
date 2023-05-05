@@ -5,7 +5,7 @@ App.key_detection = () => {
 		}
 
 		if (e.key === `Escape`) {
-      App.check_clear()
+      App.clear_input()
 		}
 		else if (e.key === `Enter`) {
 			if (e.shiftKey && e.ctrlKey) {
@@ -50,10 +50,6 @@ App.key_detection = () => {
 			}
 
 			e.preventDefault()
-		}
-
-		if (!e.ctrlKey) {
-			App.focus_if_isnt(App.focused.input)
 		}
 	})
 }

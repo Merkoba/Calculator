@@ -64,12 +64,36 @@ App.change_borders = () => {
 	App.focused.input.classList.add(`input_focus`)
 }
 
+App.set_input = (input, value) => {
+  App.save_backup(input)
+  input.value = value
+}
+
+App.save_backup = (input) => {
+  DOM.dataset(input, `backup`, input.value)
+}
+
+App.clean_backup = (input) => {
+  DOM.dataset(input, `backup`, ``)
+}
+
+App.undo = (input = App.focused.input) => {
+  let backup = DOM.dataset(input, `backup`)
+
+  if (backup) {
+    input.value = backup
+    App.clean_backup(input)
+  }
+
+  App.focus_if_isnt(input)
+}
+
 App.insert_text = (input, text) => {
 	let ss = input.selectionStart
 	let se = input.selectionEnd
 	let value = input.value
 	let new_value = value.substring(0, ss) + text + value.substring(se, value.length)
-	input.value = new_value
+  App.set_input(input, new_value)
 	input.selectionStart = ss + text.length
 	input.selectionEnd = ss + text.length
 	App.focus_if_isnt(input)
@@ -77,7 +101,7 @@ App.insert_text = (input, text) => {
 }
 
 App.replace_text = (input, s, focus = true) => {
-	input.value = s
+  App.set_input(input, s)
 
   if (focus) {
     App.focus_if_isnt(input)
@@ -99,12 +123,12 @@ App.erase = () => {
 		}
 
 		let new_value = value.substring(0, ss - 1) + value.substring(se, value.length)
-		input.value = new_value
+    App.set_input(input, new_value)
 	}
   else {
-    let bt = input.value.slice(0, input.selectionStart);
-    let at = input.value.slice(input.selectionEnd);
-    input.value = bt + `` + at;
+    let bt = input.value.slice(0, input.selectionStart)
+    let at = input.value.slice(input.selectionEnd)
+    App.set_input(input, bt + `` + at)
   }
 
   App.focus_if_isnt(input)
@@ -113,14 +137,10 @@ App.erase = () => {
   App.calc()
 }
 
-App.format_input = (input, replace = true) => {
+App.format_input = (input) => {
 	let val = input.value
 
 	if (val.trim() === ``) {
-		return
-	}
-
-	if (App.is_comment(input)) {
 		return
 	}
 
@@ -131,19 +151,7 @@ App.format_input = (input, replace = true) => {
 		return
 	}
 
-  if (replace) {
-    App.replace_text(input, val, false)
-    App.focus_if_isnt()
-  }
-  else {
-    return val
-  }
-}
-
-App.format_all = () => {
-	for (let input of DOM.els(`.input`)) {
-		App.format_input(input)
-	}
+  return val
 }
 
 App.copy_input_down = () => {
@@ -157,16 +165,7 @@ App.copy_input_down = () => {
 	}
 }
 
-App.check_clear = () => {
-  if (App.focused.input.value === ``) {
-    App.remove_line()
-  }
-  else {
-    App.clear_input(App.focused.input)
-  }
-}
-
-App.clear_input = (input) => {
+App.clear_input = (input = App.focused.input) => {
 	if (input.value === ``) {
 		return
 	}
@@ -174,21 +173,8 @@ App.clear_input = (input) => {
 	App.replace_text(input, ``)
 }
 
-App.toggle_comment = (input = App.focused.input) => {
-	if (App.is_comment(input)) {
-    App.replace_text(input, input.value.replace(`//`, ``).trim())
-	}
-	else {
-    App.replace_text(input, `// ` + input.value.trim())
-	}
-}
-
 App.focus_if_isnt = (input = App.focused.input) => {
 	if (input !== document.activeElement) {
 		App.focus_input(input)
 	}
-}
-
-App.is_comment = (input) => {
-  return input.value.trim().startsWith(`//`)
 }

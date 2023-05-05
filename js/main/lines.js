@@ -35,14 +35,14 @@ App.move_line_up = () => {
 	for (let input of DOM.els(`.input`)) {
 		let vl = input.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
-		input.value = vl.replace(/@!#/g, ``)
+		App.set_input(input, vl.replace(/@!#/g, ``))
 	}
 
 	val = inp.value
 	nval = ninp.value
 
-	inp.value = nval
-	ninp.value = val
+	App.set_input(inp, nval)
+	App.set_input(ninp, val)
 
 	App.focus_if_isnt(ninp)
 	App.calc()
@@ -73,14 +73,14 @@ App.move_line_down = () => {
 	for (let input of DOM.els(`.input`)) {
 		let vl = input.value.replace(re, cnv)
 		vl = vl.replace(re2, cv)
-		input.value = vl.replace(/@!#/g, ``)
+		App.set_input(input, vl.replace(/@!#/g, ``))
 	}
 
 	val = inp.value
 	nval = ninp.value
 
-	inp.value = nval
-	ninp.value = val
+	App.set_input(inp, nval)
+	App.set_input(ninp, val)
 
 	App.focus_if_isnt(ninp)
 	App.calc()
@@ -173,10 +173,7 @@ App.add_line = (value = false) => {
 	})
 
 	DOM.ev(input, `input`, () => {
-    if (App.is_comment(input)) {
-      return
-    }
-
+		App.clean_backup(input)
 		App.calc()
 	})
 
@@ -259,10 +256,6 @@ App.move_lines_up = () => {
 			continue
 		}
 
-		if (App.is_comment(inp)) {
-			continue
-		}
-
 		val = val.replace(/\$[a-z]+/g, (match) => {
 			if (match === v) {
 				return ``
@@ -277,15 +270,15 @@ App.move_lines_up = () => {
 			return match
 		})
 
-		inp.value = val
+		App.set_input(inp, val)
 	}
 
 	for (let i=index+1; i<line_length; i++) {
 		let inp = DOM.el(`.input`, DOM.els(`.line`)[i])
 		let ninp = DOM.el(`.input`, App.get_line_el(inp).previousElementSibling)
 
-		ninp.value = inp.value
-		inp.value = ``
+		App.set_input(ninp, inp.value)
+		App.set_input(inp, ``)
 	}
 
 	App.get_last_line().remove()
@@ -317,10 +310,6 @@ App.move_lines_down = (alt = false) => {
 			continue
 		}
 
-		if (App.is_comment(inp)) {
-			continue
-		}
-
 		val = val.replace(/\$[a-z]+/g, (match) => {
 			if (match === v) {
 				return ``
@@ -335,7 +324,7 @@ App.move_lines_down = (alt = false) => {
 			return match
 		})
 
-		inp.value = val
+		App.set_input(inp, val)
 	}
 
 	App.add_line()
@@ -345,10 +334,10 @@ App.move_lines_down = (alt = false) => {
 	for (let i=line_length-1; i>index; i--) {
 		let inp = DOM.el(`.input`, DOM.els(`.line`)[i])
 		let ninp = DOM.el(`.input`, App.get_line_el(inp).previousElementSibling)
-		inp.value = ninp.value
+		App.set_input(inp, ninp.value)
 	}
 
-	input.value = ``
+	App.set_input(input, ``)
 	App.focus_input(input)
 	App.calc()
 }
@@ -361,13 +350,11 @@ App.show_error = (input) => {
 	App.show_result(input, `Error`)
 }
 
-App.show_comment = (input) => {
-	App.show_result(input, `Comment`)
-}
-
 App.new_sheet = () => {
-	App.remove_all_lines()
-  App.calc()
+	if (confirm("Are you sure?")) {
+		App.remove_all_lines()
+		App.calc()
+	}
 }
 
 App.get_result_el = (input = App.focused.input) => {
@@ -401,15 +388,11 @@ App.view_result = (input) => {
     return
   }
 
-  if (App.is_comment(input)) {
-    return
-  }
-
   let v = App.get_var(input)
   let result = App.get_result_string(v)
 
   if (value && result) {
-    let form = App.format_input(input, false)
+    let form = App.format_input(input)
     let exp_res = App.expand_value(input, false, false)
     let exp_full = App.expand_value(input, false, true)
     let vr = App.get_vars_results(input)
@@ -441,23 +424,20 @@ App.show_menu = (button, input) => {
   let items = []
 
   items.push({
-    text: `Format`,
-    action: () => {
-      App.format_input(input)
-    }
-  })
-
-  items.push({
     text: `Expand`,
     action: () => {
-      App.expand_value(input)
+			if (confirm("Are you sure?")) {
+				App.expand_value(input)
+			}
     }
   })
 
 	items.push({
-    text: `Comment`,
+    text: `Remove`,
     action: () => {
-      App.toggle_comment(input)
+			if (confirm("Are you sure?")) {
+				App.expand_value(input)
+			}
     }
   })
 
