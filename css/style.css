@@ -230,17 +230,17 @@ a:hover, a:visited, a:link {
 }
 
 #confirm_message {
-	font-size: 1.2rem;
+	font-size: 1.1rem;
 	margin-bottom: 1rem;
 }
 
 #confirm_ok {
 	background-color: #3ab87b;
 	color: rgb(255, 255, 255);
-	font-size: 1.2rem;
+	font-size: 1.1rem;
 }
 
 #confirm_cancel {
-	font-size: 1.2rem;
+	font-size: 1.1rem;
 	border: none;
 }
