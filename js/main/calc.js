@@ -507,14 +507,14 @@ App.view_result = (input) => {
     if (exp_full) {
 			let ok = true
 
-			if (exp_res) {
-				if (exp_res === exp_full) {
+			if (normal) {
+				if (normal === exp_full) {
 					ok = false
 				}
 			}
 
-			if (normal) {
-				if (normal === exp_full) {
+			if (exp_res) {
+				if (exp_res === exp_full) {
 					ok = false
 				}
 			}
