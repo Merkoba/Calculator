@@ -121,7 +121,7 @@ App.get_result = (input) => {
 	try {
 		let val = input.value
 
-		if (val.trim().startsWith(`//`)) {
+		if (App.is_comment(input)) {
 			App.show_comment(input)
 			return
 		}
@@ -308,7 +308,7 @@ App.expand_value = (input, replace = true, full = true) => {
 		return
 	}
 
-	if (val.trim().startsWith(`//`)) {
+	if (App.is_comment(input)) {
 		return
 	}
 

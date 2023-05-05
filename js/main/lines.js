@@ -259,7 +259,7 @@ App.move_lines_up = () => {
 			continue
 		}
 
-		if (val.trim().startsWith(`//`)) {
+		if (App.is_comment(inp)) {
 			continue
 		}
 
@@ -317,7 +317,7 @@ App.move_lines_down = (alt = false) => {
 			continue
 		}
 
-		if (val.trim().startsWith(`//`)) {
+		if (App.is_comment(inp)) {
 			continue
 		}
 
@@ -395,20 +395,20 @@ App.focus_prev = () => {
 }
 
 App.view_result = (input) => {
-  let calc = input.value.trim()
+  let value = input.value.trim()
 
-  if (!calc) {
+  if (!value) {
     return
   }
 
-  if (calc.startsWith(`//`)) {
+  if (App.is_comment(input)) {
     return
   }
 
   let v = App.get_var(input)
   let result = App.get_result_string(v)
 
-  if (calc && result) {
+  if (value && result) {
     let form = App.format_input(input, false)
     let exp_res = App.expand_value(input, false, false)
     let exp_full = App.expand_value(input, false, true)

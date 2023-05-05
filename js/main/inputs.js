@@ -120,7 +120,7 @@ App.format_input = (input, replace = true) => {
 		return
 	}
 
-	if (val.trim().startsWith(`//`)) {
+	if (App.is_comment(input)) {
 		return
 	}
 
@@ -175,11 +175,11 @@ App.clear_input = (input) => {
 }
 
 App.toggle_comment = (input = App.focused.input) => {
-	if (!input.value.trim().startsWith(`//`)) {
-		App.replace_text(input, `// ` + input.value.trim())
+	if (App.is_comment(input)) {
+    App.replace_text(input, input.value.replace(`//`, ``).trim())
 	}
 	else {
-		App.replace_text(input, input.value.replace(`//`, ``).trim())
+    App.replace_text(input, `// ` + input.value.trim())
 	}
 }
 
