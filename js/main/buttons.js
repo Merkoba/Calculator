@@ -104,7 +104,7 @@ App.press = (s, aux = false) => {
 		return
 	}
 	else if (s === `Erase`) {
-		App.erase_character()
+		App.erase()
 		return
 	}
   else if (s === `Space`) {

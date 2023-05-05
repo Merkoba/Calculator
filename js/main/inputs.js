@@ -86,10 +86,11 @@ App.replace_text = (input, s, focus = true) => {
 	App.calc()
 }
 
-App.erase_character = () => {
-	let ss = App.focused.input.selectionStart
-	let se = App.focused.input.selectionEnd
-	let value = App.focused.input.value
+App.erase = () => {
+  let input = App.focused.input
+	let ss = input.selectionStart
+	let se = input.selectionEnd
+	let value = input.value
 
 	if (ss === se) {
 		if (ss === 0) {
@@ -98,12 +99,18 @@ App.erase_character = () => {
 		}
 
 		let new_value = value.substring(0, ss - 1) + value.substring(se, value.length)
-		App.focused.input.value = new_value
-		App.focused.input.selectionStart = ss - 1
-		App.focused.input.selectionEnd = ss - 1
-		App.focus_if_isnt(App.focused.input)
-		App.calc()
+		input.value = new_value
 	}
+  else {
+    let bt = input.value.slice(0, input.selectionStart);
+    let at = input.value.slice(input.selectionEnd);
+    input.value = bt + `` + at;
+  }
+
+  App.focus_if_isnt(input)
+  input.selectionStart = ss
+  input.selectionEnd = ss
+  App.calc()
 }
 
 App.format_input = (input, replace = true) => {
