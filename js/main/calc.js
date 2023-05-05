@@ -300,7 +300,7 @@ App.get_var_index = (v) => {
 	return index
 }
 
-App.expand_value = (input, replace = true) => {
+App.expand_value = (input, replace = true, full = true) => {
 	let val = input.value
 
 	if (val.trim() === ``) {
@@ -326,7 +326,14 @@ App.expand_value = (input, replace = true) => {
 				return match
 			}
 
-			let v = DOM.el(`#` + match.substring(1)).value
+			let v
+
+			if (full) {
+				v = DOM.el(`#` + match.substring(1)).value
+			}
+			else {
+				v = App.get_result_string(match)
+			}
 
 			if (v !== undefined && v.trim() !== ``) {
 				return `(${v})`
@@ -334,7 +341,6 @@ App.expand_value = (input, replace = true) => {
 			else {
 				return match
 			}
-
 		})
 
 		if (og_val === val) {

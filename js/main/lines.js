@@ -389,7 +389,7 @@ App.focus_prev = () => {
 	}
 }
 
-App.view_line = (input) => {
+App.view_result = (input) => {
   let calc = input.value.trim()
 
   if (!calc) {
@@ -405,7 +405,8 @@ App.view_line = (input) => {
 
   if (calc && result) {
     let form = App.format_input(input, false)
-    let exp = App.expand_value(input, false)
+    let exp_res = App.expand_value(input, false, false)
+    let exp_full = App.expand_value(input, false, true)
     let vr = App.get_vars_results(input)
     let items = []
 
@@ -417,8 +418,12 @@ App.view_line = (input) => {
       items.push(App.make_html_safe(`${form} = ${result}`))
     }
 
-    if (exp) {
-      items.push(App.make_html_safe(`${exp} = ${result}`))
+    if (exp_res) {
+      items.push(App.make_html_safe(`${exp_res} = ${result}`))
+    }
+
+    if (exp_full) {
+      items.push(App.make_html_safe(`${exp_full} = ${result}`))
     }
 
     let c = DOM.create(`div`, `view_result`)
@@ -447,7 +452,7 @@ App.show_menu = (button, input) => {
   items.push({
     text: `View`,
     action: () => {
-      App.view_line(input)
+      App.view_result(input)
     }
   })
 
