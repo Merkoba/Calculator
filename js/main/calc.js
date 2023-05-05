@@ -198,7 +198,7 @@ App.format_result = (n, f = false) => {
 			n = App.math_normal.round(n, App.options.round_places)
 		}
 
-    let ns = App.math_normal.format(n, {notation: 'fixed'})
+    let ns = App.math_normal.format(n, {notation: `fixed`})
 		let whole, decimal
 
 		if (ns.indexOf(`.`) !== -1) {
@@ -450,7 +450,7 @@ App.get_result_string = (v) => {
 		result = App.math_normal.round(result, App.options.round_places)
 	}
 
-	result = App.math_normal.format(result, {notation: 'fixed'})
+	result = App.math_normal.format(result, {notation: `fixed`})
 	return result
 }
 
