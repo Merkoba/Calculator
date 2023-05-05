@@ -413,7 +413,7 @@ App.show_menu = (button, input) => {
 	items.push({
     text: `Remove`,
     action: () => {
-			if (App.is_empty() || confirm("Remove line?")) {
+			if (confirm("Remove line?")) {
 				App.remove_line()
 			}
 			else {
