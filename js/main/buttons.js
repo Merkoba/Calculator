@@ -44,7 +44,7 @@ App.draw_buttons = () => {
 		})
 
 		DOM.ev(btn, `auxclick`, (e) => {
-			App.press(e.target.textContent, e.which)
+      App.button_context(e.target)
 		})
 
 		App.disable_context_menu(btn)
@@ -73,7 +73,7 @@ App.buttons_br = () => {
 	DOM.el(`#buttons`).appendChild(el)
 }
 
-App.press = (s, aux = false) => {
+App.press = (s) => {
 	if (s === `sin`) {
 		s = `sin(`
 	}
@@ -89,17 +89,7 @@ App.press = (s, aux = false) => {
 	else if (s === `log`) {
 		s = `log(`
 	}
-
-	if (aux) {
-		s = App.check_aux(s, aux)
-
-		if (!s) {
-			App.focus_input()
-			return
-		}
-	}
-
-	if (s === `Clear`) {
+	else if (s === `Clear`) {
     App.clear_input()
 		return
 	}
@@ -141,124 +131,89 @@ App.press = (s, aux = false) => {
 	App.insert_text(App.focused.input, s)
 }
 
-App.check_aux = (s, aux) => {
-	if (aux) {
-		for (let i=1; i<10; i++) {
-			if (s == i) {
-				if (aux === 3) {
-					return `0.` + i
-				}
-				else if (aux === 2) {
-					return `1/` + i
-				}
-			}
-		}
+App.button_context = (button) => {
+  let value = button.textContent
+  let num = parseInt(value)
 
-		if (s == 0) {
-			if (aux === 3) {
-				return `0.`
-			}
-			else if (aux === 2) {
-				return `000`
-			}
-		}
-		else if (s === `cos(`) {
-			if (aux === 3) {
-				return `acos(`
-			}
-			else if (aux === 2) {
-				return `acosh(`
-			}
-		}
-		else if (s === `tan(`) {
-			if (aux === 3) {
-				return `atan(`
-			}
-			else if (aux === 2) {
-				return `atanh(`
-			}
-		}
-		else if (s === `sin(`) {
-			if (aux === 3) {
-				return `asin(`
-			}
-			else if (aux === 2) {
-				return `asinh(`
-			}
-		}
-		else if (s === `^`) {
-			if (aux === 3) {
-				return `^2`
-			}
-			else if (aux === 2) {
-				return `^3`
-			}
-		}
-		else if (s === `sqrt(`) {
-			if (aux === 3) {
-				return `cbrt(`
-			}
-			else if (aux === 2) {
-				return `nthRoot(`
-			}
-		}
-    else if (s === `log(`) {
-			if (aux === 3) {
-				return `log2(`
-			}
-			else if (aux === 2) {
-				return `log10(`
-			}
-		}
-    else if (s === `LN2`) {
-			if (aux === 3) {
-				return `LN10`
-			}
-		}
-    else if (s === `e`) {
-			if (aux === 3) {
-				return `LOG2E`
-			}
-			else if (aux === 2) {
-				return `LOG10E`
-			}
-		}
-		else if (s === `pi`) {
-			if (aux === 3) {
-				return `tau`
-			}
-		}
-		else if (s === `Up`) {
-			if (aux === 3) {
-				App.move_line_up()
-				return false
-			}
-			else if (aux === 2) {
-				App.go_to_first_input()
-				return false
-			}
-		}
-		else if (s === `Down`) {
-			if (aux === 3) {
-				App.move_line_down()
-				return false
-			}
-			else if (aux === 2) {
-				App.go_to_last_input()
-				return false
-			}
-		}
-		else if (s === `Add Line`) {
-			if (aux === 3) {
-				App.add_line_after()
-				return false
-			}
-			else if (aux === 2) {
-				App.add_line_before()
-				return false
-			}
-		}
-	}
+  function insert (opts) {
+    let items = []
 
-	return false
+    for (let opt of opts) {
+      items.push({
+        text: opt,
+        action: () => {
+          App.insert_text(App.focused.input, opt)
+        },
+      })
+    }
+
+    NeedContext.show_on_element(button, items)
+  }
+
+  function action (opts) {
+    let items = []
+
+    for (let opt of opts) {
+      items.push({
+        text: opt[0],
+        action: opt[1],
+      })
+    }
+
+    NeedContext.show_on_element(button, items)
+  }
+
+  if (!isNaN(num)) {
+    if (num === 0) {
+      insert([`0.`, `000`])
+    }
+    else {
+      for (let i=1; i<10; i++) {
+        if (num === i) {
+          insert([`0.${i}`, `1/${i}`])
+          break
+        }
+      }
+    }
+
+    return
+  }
+
+  if (value === `cos`) {
+    insert([`acos(`, `acosh(`])
+  }
+  else if (value === `tan`) {
+    insert([`atan(`, `atanh(`])
+  }
+  else if (value === `sin`) {
+    insert([`asin(`, `asinh(`])
+  }
+  else if (value === `^`) {
+    insert([`^2`, `^3`])
+  }
+  else if (value === `sqrt`) {
+    insert([`cbrt(`, `nthRoot(`])
+  }
+  else if (value === `log`) {
+    insert([`log2(`, `log10(`])
+  }
+  else if (value === `LN2`) {
+    insert([`LN10`])
+  }
+  else if (value === `e`) {
+    insert([`LOG2E`, `LOG10E`])
+  }
+  else if (value === `pi`) {
+    insert([`tau`])
+  }
+  else if (value === `Add Line`) {
+    action([
+      [`Add Line Before`, () => {
+        App.add_line_before()
+      }],
+      [`Add Line After`, () => {
+        App.add_line_after()
+      }],
+    ])
+  }
 }
