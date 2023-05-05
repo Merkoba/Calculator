@@ -173,7 +173,6 @@ App.add_line = (value = false) => {
 	})
 
 	DOM.ev(input, `input`, () => {
-		App.clean_backup(input)
 		App.calc()
 	})
 

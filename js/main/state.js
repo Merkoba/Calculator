@@ -45,7 +45,7 @@ App.apply_state = () => {
 
     for (let i=0; i<=last_index; i++) {
       let vr = App.add_line()
-      App.focused.input.value = App.state.lines[vr] || ``
+      App.set_input(App.focused.input, App.state.lines[vr] || ``)
     }
 
     App.calc()

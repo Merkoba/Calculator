@@ -65,24 +65,23 @@ App.change_borders = () => {
 }
 
 App.set_input = (input, value) => {
-  App.save_backup(input)
+  App.save_backup(input, value)
   input.value = value
 }
 
-App.save_backup = (input) => {
-  DOM.dataset(input, `backup`, input.value)
+App.save_backup = (input, value) => {
+  DOM.dataset(input, `backup`, input.value || value)
 }
 
-App.clean_backup = (input) => {
-  DOM.dataset(input, `backup`, ``)
+App.get_backup = (input = App.focused.input) => {
+  return DOM.dataset(input, `backup`)
 }
 
 App.undo = (input = App.focused.input) => {
-  let backup = DOM.dataset(input, `backup`)
+  let backup = App.get_backup(input)
 
   if (backup) {
     input.value = backup
-    App.clean_backup(input)
   }
 
   App.focus_if_isnt(input)
