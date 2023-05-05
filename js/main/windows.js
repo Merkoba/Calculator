@@ -4,6 +4,7 @@ App.setup_windows = () => {
 	App.msg = Msg.factory({
 		enable_titlebar: true,
 		center_titlebar: true,
+    close_on_escape: false,
 	})
 
 	App.msg.create()

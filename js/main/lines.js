@@ -425,7 +425,7 @@ App.show_menu = (button, input) => {
   items.push({
     text: `Expand`,
     action: () => {
-			if (confirm("Are you sure?")) {
+			if (confirm("Expand variables?")) {
 				App.expand_value(input)
 			}
     }
@@ -434,7 +434,7 @@ App.show_menu = (button, input) => {
 	items.push({
     text: `Remove`,
     action: () => {
-			if (confirm("Are you sure?")) {
+			if (confirm("Remove the line?")) {
 				App.remove_line()
 			}
     }
