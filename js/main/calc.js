@@ -35,10 +35,9 @@ App.do_calc = () => {
 
 	for (let input of DOM.els(`.input`)) {
 		let v = App.get_var(input)
-		let val = input.value
 
-		if (val.trim() === ``) {
-			if (val.length > 0) {
+		if (App.is_empty(input)) {
+			if (input.value.length > 0) {
 				App.set_input(input, ``)
 			}
 
@@ -115,18 +114,16 @@ App.get_result = (input) => {
 	result.innerHTML = ``
 
 	try {
-		let val = input.value
-
-		if (val.trim().length === 0) {
+		if (App.is_empty(input)) {
 			App.show_result(input, `Empty`)
 			return
 		}
 
 		if (App.options.fraction) {
-			result = App.math_fraction.evaluate(val + `*1`, App.linevars)
+			result = App.math_fraction.evaluate(input.value + `*1`, App.linevars)
 		}
 		else {
-			result = App.math_normal.evaluate(val + `*1`, App.linevars)
+			result = App.math_normal.evaluate(input.value + `*1`, App.linevars)
 		}
 
 		App.update_variable(input, result)
@@ -292,10 +289,14 @@ App.get_var_index = (v) => {
 	return index
 }
 
+App.is_empty = (input = App.focused.input) => {
+	return input.value.trim() === ``
+}
+
 App.expand_value = (input, replace = true, full = true) => {
 	let val = input.value
 
-	if (val.trim() === ``) {
+	if (App.is_empty(input)) {
 		return
 	}
 
