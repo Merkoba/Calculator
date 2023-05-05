@@ -228,3 +228,19 @@ body, html {
 a:hover, a:visited, a:link {
 	color: #153c50;
 }
+
+#confirm_message {
+	font-size: 1.2rem;
+	margin-bottom: 1rem;
+}
+
+#confirm_ok {
+	background-color: #3ab87b;
+	color: rgb(255, 255, 255);
+	font-size: 1.2rem;
+}
+
+#confirm_cancel {
+	font-size: 1.2rem;
+	border: none;
+}

@@ -1,6 +1,9 @@
 App.templates = {}
+App.confirm_action = () => {}
 
 App.setup_windows = () => {
+  App.setup_templates()
+
 	App.msg = Msg.factory({
 		enable_titlebar: true,
 		center_titlebar: true,
@@ -11,7 +14,33 @@ App.setup_windows = () => {
 	})
 
 	App.msg.create()
-  App.setup_templates()
+
+	App.msg_confirm = Msg.factory({
+		enable_titlebar: false,
+    close_on_escape: false,
+    after_close: (instance) => {
+      App.confirm_action = () => {}
+      App.focus_if_isnt()
+    },
+	})
+
+  let c = DOM.create(`div`, `confirm`)
+  c.innerHTML = App.templates[`template_confirm`]()
+
+  DOM.ev(DOM.el(`#confirm_ok`, c), `click`, () => {
+    App.on_confirm()
+  })
+
+  DOM.ev(DOM.el(`#confirm_cancel`, c), `click`, () => {
+    App.msg_confirm.close()
+  })
+
+  App.msg_confirm.set(c)
+}
+
+App.on_confirm = () => {
+  App.confirm_action()
+  App.msg_confirm.close()
 }
 
 App.show_modal = (title, html, callback = () => {}) => {
@@ -44,4 +73,10 @@ App.title_click_events = () => {
 	DOM.ev(DOM.el(`#lnk_about`), `click`, () => {
 		App.show_about()
 	})
+}
+
+App.confirm = (message, action) => {
+  DOM.el(`#confirm_message`).textContent = message
+  App.confirm_action = action
+  App.msg_confirm.show()
 }

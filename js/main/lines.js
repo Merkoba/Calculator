@@ -389,36 +389,27 @@ App.show_menu = (button, input) => {
   items.push({
     text: `Expand Results`,
     action: () => {
-			if (confirm("Expand variables?")) {
+			App.confirm("Expand variables?", () => {
 				App.expand_value(input, true, false)
-			}
-			else {
-				App.focus_if_isnt(input)
-			}
+			})
     }
   })
 
 	items.push({
     text: `Expand Full`,
     action: () => {
-			if (confirm("Expand variables?")) {
+			App.confirm("Expand variables?", () => {
 				App.expand_value(input, true, true)
-			}
-			else {
-				App.focus_if_isnt(input)
-			}
+			})
     }
   })
 
 	items.push({
     text: `Remove Line`,
     action: () => {
-			if (confirm("Remove line?")) {
+			App.confirm("Remove line?", () => {
 				App.remove_line()
-			}
-			else {
-				App.focus_if_isnt(input)
-			}
+			})
     }
   })
 
