@@ -7,6 +7,46 @@ body, html {
 	font-size: 17px;
 }
 
+/* Color Theme */
+
+body, html {
+	background-color: #c1c1c1;
+	color: black;
+}
+
+.button {
+	background-color: #bdbdbd;
+	border-color: #c5c5c5;
+	color: black;
+}
+
+#infobar {
+	background-color: #adadad;
+	color: black;
+}
+
+#title {
+	color: black;
+}
+
+.input {
+	box-shadow: 0 0 0 2px #4E4E4E;
+}
+
+.input_focus {
+	box-shadow: 0 0 0 6px #7c7c7c !important;
+}
+
+.ps__thumb-y {
+	background-color: black !important;
+}
+
+a:hover, a:visited, a:link {
+	color: #153c50;
+}
+
+/* End of color theme */
+
 #buttons {
 	user-select: none;
 }
@@ -191,44 +231,6 @@ sup {
 	text-align: left;
 }
 
-/* Color Theme */
-
-body, html {
-	background-color: #c1c1c1;
-	color: black;
-}
-
-.button {
-	background-color: #bdbdbd;
-	border-color: #c5c5c5;
-	color: black;
-}
-
-#infobar {
-	background-color: #adadad;
-	color: black;
-}
-
-#title {
-	color: black;
-}
-
-.input {
-	box-shadow: 0 0 0 2px #4E4E4E;
-}
-
-.input_focus {
-	box-shadow: 0 0 0 6px #7c7c7c !important;
-}
-
-.ps__thumb-y {
-	background-color: black !important;
-}
-
-a:hover, a:visited, a:link {
-	color: #153c50;
-}
-
 #confirm_message {
 	font-size: 1.1rem;
 	margin-bottom: 1rem;
@@ -238,9 +240,15 @@ a:hover, a:visited, a:link {
 	background-color: #3ab87b;
 	color: rgb(255, 255, 255);
 	font-size: 1.1rem;
+	cursor: pointer;
+}
+
+#confirm_ok:hover {
+	background-color: rgb(53, 177, 199);
 }
 
 #confirm_cancel {
 	font-size: 1.1rem;
 	border: none;
+	cursor: pointer;
 }

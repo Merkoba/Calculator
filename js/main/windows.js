@@ -18,6 +18,7 @@ App.setup_windows = () => {
 	App.msg_confirm = Msg.factory({
 		enable_titlebar: false,
     close_on_escape: false,
+    window_x: `none`,
     after_close: (instance) => {
       App.confirm_action = () => {}
       App.focus_if_isnt()
