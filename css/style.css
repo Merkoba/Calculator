@@ -152,6 +152,7 @@ input[type="checkbox"] {
 	display: inline-flex;
 	flex-direction: column;
 	vertical-align: middle;
+	align-items: center;
 }
 
 sup, sub {
