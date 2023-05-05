@@ -3,7 +3,6 @@ App.key_detection = () => {
 		if (e.key === `Escape`) {
       if (App.msg.is_open()) {
         App.msg.close()
-        App.focus_if_isnt()
       }
       else {
         App.clear_input()

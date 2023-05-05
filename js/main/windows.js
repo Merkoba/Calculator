@@ -5,6 +5,9 @@ App.setup_windows = () => {
 		enable_titlebar: true,
 		center_titlebar: true,
     close_on_escape: false,
+    after_close: (instance) => {
+      App.focus_if_isnt()
+    },
 	})
 
 	App.msg.create()

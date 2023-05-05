@@ -92,7 +92,7 @@ App.get_last_line = () => {
 
 App.remove_last_line = () => {
 	if (DOM.els(`.line`).length === 1) {
-		App.clear_input(App.focused.input)
+		App.clear_input()
 		return
 	}
 
@@ -208,7 +208,7 @@ App.remove_line = () => {
 	let index = DOM.index(App.get_line_el())
 
 	if (DOM.els(`.line`).length === 1) {
-		App.clear_input(App.focused.input)
+		App.clear_input()
 	}
 	else if (index === DOM.els(`.line`).length - 1) {
 		App.remove_last_line()
@@ -216,6 +216,8 @@ App.remove_line = () => {
 	else {
 		App.move_lines_up()
 	}
+
+	App.focus_if_isnt()
 }
 
 App.remove_all_lines = () => {
@@ -428,6 +430,9 @@ App.show_menu = (button, input) => {
 			if (confirm("Expand variables?")) {
 				App.expand_value(input)
 			}
+			else {
+				App.focus_if_isnt(input)
+			}
     }
   })
 
@@ -436,6 +441,9 @@ App.show_menu = (button, input) => {
     action: () => {
 			if (App.is_empty() || confirm("Remove the line?")) {
 				App.remove_line()
+			}
+			else {
+				App.focus_if_isnt(input)
 			}
     }
   })
