@@ -136,11 +136,11 @@ App.press = (s, aux = false) => {
 		return
 	}
 
-	let v = DOM.dataset(App.focused.input, `variable`)
+	let v = App.get_var()
 
 	if (s === v) {
 		App.focus_next_or_add()
-		v = DOM.dataset(App.focused.input, `variable`)
+		v = App.get_var()
 
 		if (s === v) {
 			return

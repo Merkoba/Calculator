@@ -136,12 +136,12 @@ App.format_all = () => {
 }
 
 App.copy_input_down = () => {
-	let og_var = DOM.dataset(App.focused.input, `variable`)
+	let og_var = App.get_var()
 	let og_val = App.focused.input.value
 
 	App.focus_next_or_add()
 
-	if (og_var !== DOM.dataset(App.focused.input, `variable`)) {
+	if (og_var !== App.get_var()) {
 		App.replace_text(App.focused.input, og_val)
 	}
 }

@@ -19,8 +19,8 @@ App.move_line_up = () => {
 	let val = inp.value
 	let nval = ninp.value
 
-	let v = DOM.dataset(inp, `variable`)
-	let nv = DOM.dataset(ninp, `variable`)
+	let v = App.get_var(inp)
+	let nv = App.get_var(ninp)
 
 	let cv = `$@!#` + v.substring(1)
 	let cnv = `$@!#` + nv.substring(1)
@@ -57,8 +57,8 @@ App.move_line_down = () => {
 	let val = inp.value
 	let nval = ninp.value
 
-	let v = DOM.dataset(inp, `variable`)
-	let nv = DOM.dataset(ninp, `variable`)
+	let v = App.get_var(inp)
+	let nv = App.get_var(ninp)
 
 	let cv = `$@!#` + v.substring(1)
 	let cnv = `$@!#` + nv.substring(1)
@@ -134,7 +134,7 @@ App.add_line = (value = false) => {
 		letter = `a`
 	}
 	else {
-		let last_var = DOM.dataset(App.get_last_input(), `variable`)
+		let last_var = App.get_var(App.get_last_input())
 		letter = App.increase_var(last_var).substring(1)
 	}
 
@@ -226,7 +226,7 @@ App.move_lines_up = () => {
 
 	let input = App.focused.input
 	let line = App.get_line_el(input)
-	let v = DOM.dataset(input, `variable`)
+	let v = App.get_var(input)
 	let index = DOM.index(line)
 
 	if (index === (line_length - 1)) {
@@ -294,7 +294,7 @@ App.move_lines_down = (alt = false) => {
 
 	let input = App.focused.input
 	let line = App.get_line_el(input)
-	let v = DOM.dataset(input, `variable`)
+	let v = App.get_var(input)
 	let index = DOM.index(line)
 
 	for (let i=0; i<line_length; i++) {
@@ -384,23 +384,33 @@ App.focus_prev = () => {
 
 App.view_line = (input) => {
   let calc = input.value
-  let result = App.linevars[DOM.dataset(input, `variable`)]
+
+  if (!calc) {
+    return
+  }
+
+  let v = App.get_var(input)
+  let result = App.get_result_string(v)
 
   if (calc && result) {
+    let form = App.format_input(input, false)
     let exp = App.expand_value(input, false)
+    let vr = App.get_vars_results(input)
+    let items = []
+
+    if (vr.length > 0) {
+      items.push(vr.join("<br>"))
+    }
+
+    if (form) {
+      items.push(`${form} = ${result}`)
+    }
 
     if (exp) {
-      calc = exp
-    }
-    else {
-      calc = App.format_input(input, false)
+      items.push(`${exp} = ${result}`)
     }
 
-    result = App.math_normal.bignumber(result)
-    result = App.math_normal.round(result, App.options.round_places)
-    result = App.math_normal.format(result, {notation: 'fixed'})
-    let text = `${calc} = ${result}`
-    App.show_modal(`View Result`, text)
+    App.show_modal(`View Result`, items.join("<br>"))
   }
 }
 

@@ -24,14 +24,14 @@ App.do_update_results = () => {
 	let variables = {}
 
 	for (let input of DOM.els(`.input`)) {
-		let v = DOM.dataset(input, `variable`)
+		let v = App.get_var(input)
 		variables[v] = {}
 		let vr = variables[v]
 		vr.edges = []
 	}
 
 	for (let input of DOM.els(`.input`)) {
-		let v = DOM.dataset(input, `variable`)
+		let v = App.get_var(input)
 		let val = input.value
 
 		if (val.trim() === ``) {
@@ -46,7 +46,7 @@ App.do_update_results = () => {
 			continue
 		}
 
-		let matches = val.match(/\$[a-z]+/g)
+		let matches = App.get_vars(input)
 
 		if (matches !== null) {
 			variables[v].edges = matches
@@ -83,7 +83,7 @@ App.do_update_results = () => {
 
 		if (!acyclic) {
 			for (let input of DOM.els(`.input`)) {
-				let v = DOM.dataset(input, `variable`)
+				let v = App.get_var(input)
 				let letter = v.substring(1)
 
 				if (sorted.indexOf(v) !== -1) {
@@ -147,7 +147,7 @@ App.show_result = (input, s) => {
 }
 
 App.update_variable = (input, val) => {
-	App.linevars[DOM.dataset(input, `variable`)] = val
+	App.linevars[App.get_var(input)] = val
 }
 
 App.improper_to_mixed = (n, d) => {
@@ -311,7 +311,7 @@ App.expand_value = (input, replace = true) => {
 		return
 	}
 
-	let vr = DOM.dataset(input, `variable`)
+	let vr = App.get_var(input)
 	let n = 0
 
 	while (true) {
@@ -388,8 +388,8 @@ App.toggle_infobar = () => {
 }
 
 App.undefine_variables = () => {
-	for (let varName in App.linevars) {
-		App.linevars[varName] = undefined
+	for (let v in App.linevars) {
+		App.linevars[v] = undefined
 	}
 }
 
@@ -414,4 +414,35 @@ App.get_result_text = (el) => {
 
 App.format_calc = (val) => {
   return App.math_normal.parse(val).toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
+}
+
+App.get_vars = (input) => {
+	let vars = input.value.match(/\$[a-z]+/g)
+	vars = [...new Set(vars)]
+	return vars
+}
+
+App.get_vars_results = (input) => {
+	let vars = App.get_vars(input)
+
+	if (!vars) {
+		return []
+	}
+
+	let items = []
+
+	for (let v of vars) {
+		let r = App.get_result_string(v)
+		items.push(`${v} = ${r}`)
+	}
+
+	return items
+}
+
+App.get_result_string = (v) => {
+	return App.linevars[v].toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
+}
+
+App.get_var = (input = App.focused.input) => {
+	return DOM.dataset(input, `variable`)
 }

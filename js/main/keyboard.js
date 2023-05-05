@@ -15,7 +15,7 @@ App.key_detection = () => {
 				App.expand_value(App.focused.input)
 			}
 			else if (e.shiftKey) {
-				App.press(DOM.dataset(App.focused.input, `variable`))
+				App.press(App.get_var())
 			}
 			else if (e.ctrlKey) {
 				App.copy_input_down()
