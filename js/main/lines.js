@@ -451,6 +451,7 @@ App.show_menu = (button, input) => {
     }
   })
 
+  App.focus_input(input)
   NeedContext.show_on_element(button, items)
 }
 
