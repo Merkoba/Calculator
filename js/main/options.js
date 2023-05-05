@@ -1,19 +1,4 @@
 App.ls_options = `options_v4`
-
-App.themes = [
-	`lake`,
-	`leaf`,
-	`bulb`,
-	`wine`,
-	`bubble`,
-	`vapor`,
-	`clouds`,
-	`paper`,
-	`cobalt`,
-	`carbon`
-]
-
-App.default_theme = `cobalt`
 App.max_decimals = 15
 
 App.get_options = () => {
@@ -55,17 +40,6 @@ App.get_options = () => {
 		mod = true
 	}
 
-	if (App.options.theme === undefined) {
-		App.options.theme = App.default_theme
-		mod = true
-	}
-	else {
-		if (App.themes.indexOf(App.options.theme) === -1) {
-			App.options.theme = App.default_theme
-			mod = true
-		}
-	}
-
 	if (mod) {
 		App.update_options()
 	}
@@ -78,35 +52,17 @@ App.show_options = () => {
 		places.push(i)
 	}
 
-	let themelist = []
-
-	for (let theme of App.themes) {
-		let obj = {}
-		obj.lowercase = theme
-		obj.capitalized = App.capitalize_string(theme)
-		themelist.push(obj)
-	}
-
 	App.show_modal(`Options`, App.templates[`template_options`]({
 		commas: App.options.commas,
 		mixed: App.options.mixed,
 		round: App.options.round,
 		places: places,
-		themes: themelist
 	}))
 
 	let els = DOM.els(`option`, DOM.el(`#sel_round_places`))
 
 	for (let el of els) {
 		if (el.value == App.options.round_places) {
-			el.selected = true
-		}
-	}
-
-	els = DOM.els(`option`, DOM.el(`#sel_theme`))
-
-	for (let el of els) {
-		if (el.value == App.options.theme) {
 			el.selected = true
 		}
 	}
@@ -134,21 +90,8 @@ App.show_options = () => {
 		App.calc()
 		App.update_options()
 	})
-
-	DOM.ev(DOM.el(`#sel_theme`), `change`, (e) => {
-		App.options.theme = e.target.value
-		App.apply_theme(App.options.theme)
-		App.update_options()
-	})
 }
 
 App.update_options = () => {
 	localStorage.setItem(App.ls_options, JSON.stringify(App.options))
-}
-
-App.apply_theme = (theme) => {
-	let stylesheet = DOM.create(`link`)
-	stylesheet.rel = `stylesheet`
-	stylesheet.href = `css/themes/` + theme + `.css`
-	DOM.el(`head`).appendChild(stylesheet)
 }

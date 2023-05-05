@@ -4,7 +4,6 @@
 - Multi-line, simulataneous, linked, operations.
 - Instant results.
 - Acyclicity check.
-- Various color themes to choose from.
 - Over 700 lines of calculations (Arbitrary limit that can be increased later).
 - Input using on screen buttons or keyboard.
 - Keyboard and mouse shortcuts.
