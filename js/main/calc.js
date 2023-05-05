@@ -301,7 +301,7 @@ App.expand_value = (input, replace = true, full = true) => {
 	}
 
 	if (val.indexOf(`$`) === -1) {
-		return
+		return App.format_input_string(val)
 	}
 
 	let vr = App.get_var(input)
@@ -427,7 +427,7 @@ App.get_var_results = (input) => {
 	let items = []
 
 	for (let vr of vars) {
-		let val = App.get_input_string(vr)
+		let val = App.expand_value(App.get_input(vr), false)
 		let res = App.get_result_string(vr)
 		items.push(`${vr} = ${val} = ${res}`)
 	}
@@ -470,18 +470,18 @@ App.view_result = (input) => {
   let result = App.get_result_string(vr)
 
   if (value && result) {
-    let form = App.get_input_string(vr)
+    let normal = App.get_input_string(vr)
     let exp_res = App.expand_value(input, false, false)
-    let exp_full = App.expand_value(input, false, true)
-    let results = App.get_var_results(input)
+    let exp_full = App.expand_value(input, false)
+    let variables = App.get_var_results(input)
     let items = []
 
-    if (results.length > 0) {
-      items.push(`<b>Variables</b><br>` + results.join("<br>"))
+    if (variables.length > 0) {
+      items.push(`<b>Variables</b><br>` + variables.join("<br>"))
     }
 
-    if (form) {
-      items.push(`<b>Normal</b><br>` + App.make_html_safe(`${form} = ${result}`))
+    if (normal) {
+      items.push(`<b>Normal</b><br>` + App.make_html_safe(`${normal} = ${result}`))
     }
 
     if (exp_res) {
