@@ -485,11 +485,43 @@ App.view_result = (input) => {
     }
 
     if (exp_res) {
-      items.push(`<b>Expanded Results</b><br>` + App.make_html_safe(`${exp_res} = ${result}`))
+			let ok = true
+
+			if (normal) {
+				if (normal === exp_res) {
+					ok = false
+				}
+			}
+
+			if (exp_full) {
+				if (exp_full === exp_res) {
+					ok = false
+				}
+			}
+
+			if (ok) {
+				items.push(`<b>Expanded Results</b><br>` + App.make_html_safe(`${exp_res} = ${result}`))
+			}
     }
 
     if (exp_full) {
-      items.push(`<b>Expanded Full</b><br>` + App.make_html_safe(`${exp_full} = ${result}`))
+			let ok = true
+
+			if (exp_res) {
+				if (exp_res === exp_full) {
+					ok = false
+				}
+			}
+
+			if (normal) {
+				if (normal === exp_full) {
+					ok = false
+				}
+			}
+
+			if (ok) {
+				items.push(`<b>Expanded Full</b><br>` + App.make_html_safe(`${exp_full} = ${result}`))
+			}
     }
 
     let c = DOM.create(`div`, `view_result`)
