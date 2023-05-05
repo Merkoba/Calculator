@@ -435,7 +435,7 @@ App.show_menu = (button, input) => {
     text: `Remove`,
     action: () => {
 			if (confirm("Are you sure?")) {
-				App.expand_value(input)
+				App.remove_line()
 			}
     }
   })

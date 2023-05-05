@@ -82,6 +82,7 @@ App.undo = (input = App.focused.input) => {
 
   if (backup) {
     input.value = backup
+    App.calc()
   }
 
   App.focus_if_isnt(input)
