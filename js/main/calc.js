@@ -23,6 +23,7 @@ App.calc = () => {
 }
 
 App.do_calc = () => {
+	console.info(`Calculating`)
 	App.undefine_variables()
 	let variables = {}
 
