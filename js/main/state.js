@@ -1,3 +1,5 @@
+App.ls_state = `state_v1`
+
 App.get_state = () => {
 	App.state = JSON.parse(localStorage.getItem(App.ls_state))
 	let mod = false
