@@ -26,7 +26,7 @@ App.setup_windows = () => {
 	})
 
   let c = DOM.create(`div`, `confirm`)
-  c.innerHTML = App.templates[`template_confirm`]()
+  c.innerHTML = App.template_confirm()
 
   DOM.ev(DOM.el(`#confirm_ok`, c), `click`, () => {
     App.on_confirm()
@@ -52,12 +52,12 @@ App.setup_templates = () => {
 	Handlebars.registerHelper(`eq`, (a, b) => a == b)
 
   for (let el of DOM.els(`.template`)) {
-    App.templates[el.id] = Handlebars.compile(DOM.el(`#${el.id}`).innerHTML)
+    App[el.id] = Handlebars.compile(DOM.el(`#${el.id}`).innerHTML)
   }
 }
 
 App.show_about = () => {
-	App.show_modal(`About`, App.templates[`template_about`]({
+	App.show_modal(`About`, App.template_about({
 		version: App.version
 	}))
 }

@@ -52,7 +52,7 @@ App.show_options = () => {
 		places.push(i)
 	}
 
-	App.show_modal(`Options`, App.templates[`template_options`]({
+	App.show_modal(`Options`, App.template_options({
 		commas: App.options.commas,
 		mixed: App.options.mixed,
 		round: App.options.round,

@@ -161,7 +161,7 @@ App.add_line = (value = false) => {
 	let line = DOM.create(`div`, `line`)
   let vr = `$` + letter
 
-  line.innerHTML = App.templates[`template_line`]({
+  line.innerHTML = App.template_line({
     letter: letter,
     value: value,
   })
@@ -169,11 +169,8 @@ App.add_line = (value = false) => {
 	DOM.el(`#lines`).appendChild(line)
 	let input = DOM.el(`.input`, line)
 	let comment = DOM.el(`.comment`, line)
+	let variable = DOM.el(`.variable`, line)
 	App.focused.input = input
-
-	DOM.ev(DOM.el(`.variable`, line), `click`, () => {
-		App.press(vr)
-	})
 
 	DOM.ev(DOM.el(`.menu`, line), `click`, (e) => {
 		App.show_menu(e.target, input)
@@ -197,6 +194,15 @@ App.add_line = (value = false) => {
 
 	DOM.ev(comment, `input`, () => {
 		App.save_state()
+	})
+
+	DOM.ev(variable, `click`, () => {
+		App.press(vr)
+	})
+
+	DOM.ev(variable, `contextmenu`, (e) => {
+		App.show_var_menu(variable)
+		e.preventDefault()
 	})
 
 	DOM.ev(input, `keydown`, (e) => {
@@ -334,10 +340,6 @@ App.move_lines_down = (alt = false) => {
 	let lines = DOM.els(`.line`)
 
 	for (let i=0; i<line_length; i++) {
-		if (i <= index) {
-			continue
-		}
-
 		let ln = lines[i]
 		let inp = DOM.el(`.input`, ln)
 		let val = inp.value
@@ -547,4 +549,39 @@ App.set_comment = (comment, value) => {
 
 App.get_var = (el = App.focused.input) => {
 	return DOM.dataset(el.closest(`.line`), `variable`)
+}
+
+App.show_var_menu = (button) => {
+	let items = []
+	let vr = App.get_var(button)
+
+	items.push({
+    text: `+ (Add)`,
+    action: () => {
+			App.press(`+${vr}`)
+    }
+  })
+
+	items.push({
+    text: `- (Subtract)`,
+    action: () => {
+			App.press(`-${vr}`)
+    }
+  })
+
+	items.push({
+    text: `* (Multiply)`,
+    action: () => {
+			App.press(`*${vr}`)
+    }
+  })
+
+	items.push({
+    text: `/ (Divide)`,
+    action: () => {
+			App.press(`/${vr}`)
+    }
+  })
+
+	NeedContext.show_on_element(button, items)
 }
