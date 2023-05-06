@@ -17,14 +17,14 @@ App.move_line_up = () => {
 		return
 	}
 
-	let inp = App.focused.input
-	let ninp = DOM.el(`.input`, App.get_line_el(inp).previousElementSibling)
+	let line = App.get_line_el(App.focused.input)
+	let inp1 = DOM.el(`.input`, line)
+	let inp2 = DOM.el(`.input`, line.previousElementSibling)
+	let cmt1 = DOM.el(`.comment`, line)
+	let cmt2 = DOM.el(`.comment`, line.previousElementSibling)
 
-	let val = inp.value
-	let nval = ninp.value
-
-	let vr1 = App.get_var(inp)
-	let vr2 = App.get_var(ninp)
+	let vr1 = App.get_var(inp1)
+	let vr2 = App.get_var(inp2)
 
 	let cv = `$@!#` + App.get_letter(vr1)
 	let cnv = `$@!#` + App.get_letter(vr2)
@@ -38,13 +38,19 @@ App.move_line_up = () => {
 		App.set_input(input, vl.replace(/@!#/g, ``))
 	}
 
-	val = inp.value
-	nval = ninp.value
+	let val = inp1.value
+	let nval = inp2.value
 
-	App.set_input(inp, nval)
-	App.set_input(ninp, val)
+	App.set_input(inp1, nval)
+	App.set_input(inp2, val)
 
-	App.focus_if_isnt(ninp)
+	val = cmt1.value
+	nval = cmt2.value
+
+	App.set_comment(cmt1, nval)
+	App.set_comment(cmt2, val)
+
+	App.focus_if_isnt(inp2)
 	App.calc()
 }
 
@@ -55,14 +61,14 @@ App.move_line_down = () => {
 		return
 	}
 
-	let inp = App.focused.input
-	let ninp = DOM.el(`.input`, App.get_line_el(inp).nextElementSibling)
+	let line = App.get_line_el(App.focused.input)
+	let inp1 = DOM.el(`.input`, line)
+	let inp2 = DOM.el(`.input`, line.nextElementSibling)
+	let cmt1 = DOM.el(`.comment`, line)
+	let cmt2 = DOM.el(`.comment`, line.nextElementSibling)
 
-	let val = inp.value
-	let nval = ninp.value
-
-	let vr1 = App.get_var(inp)
-	let vr2 = App.get_var(ninp)
+	let vr1 = App.get_var(inp1)
+	let vr2 = App.get_var(inp2)
 
 	let cv = `$@!#` + App.get_letter(vr1)
 	let cnv = `$@!#` + App.get_letter(vr2)
@@ -76,13 +82,19 @@ App.move_line_down = () => {
 		App.set_input(input, vl.replace(/@!#/g, ``))
 	}
 
-	val = inp.value
-	nval = ninp.value
+	let val = inp1.value
+	let nval = inp2.value
 
-	App.set_input(inp, nval)
-	App.set_input(ninp, val)
+	App.set_input(inp1, nval)
+	App.set_input(inp2, val)
 
-	App.focus_if_isnt(ninp)
+	val = cmt1.value
+	nval = cmt2.value
+
+	App.set_comment(cmt1, nval)
+	App.set_comment(cmt2, val)
+
+	App.focus_if_isnt(inp2)
 	App.calc()
 }
 
@@ -452,10 +464,6 @@ App.focus_line = (input = App.focused.input) => {
 }
 
 App.cycle = (direction) => {
-	if (DOM.els(`.input`).length === 1) {
-		return
-	}
-
   let line = App.get_line_el()
 	let index = DOM.index(line)
   let is_input = document.activeElement.classList.contains(`input`)
