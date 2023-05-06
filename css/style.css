@@ -240,6 +240,8 @@ sup {
 	display: flex;
 	flex-direction: row;
 	gap: 0.7rem;
+	align-items: center;
+	justify-content: center;
 }
 
 #confirm_ok {
