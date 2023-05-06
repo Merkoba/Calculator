@@ -80,7 +80,7 @@ App.do_calc = () => {
 		}
 
 		if (!acyclic) {
-			for (let line of DOM.els(`.lines`)) {
+			for (let line of DOM.els(`.line`)) {
 				let vr = App.get_var(line)
 
 				if (sorted.indexOf(vr) !== -1) {
