@@ -1,8 +1,9 @@
 App.key_detection = () => {
-  DOM.ev(document, `keydown`, (e) => {
-  })
-
 	DOM.ev(document, `keydown`, (e) => {
+    if (NeedContext.open) {
+      return
+    }
+
     let modal_open = App.msg.any_open()
 
 		if (e.key === `Escape`) {
