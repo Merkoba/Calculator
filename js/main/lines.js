@@ -213,7 +213,7 @@ App.add_line = (value = false) => {
 
 	DOM.dataset(line, `variable`, vr)
 	App.move_caret_to_end(input)
-  App.show_result(input, `Empty`)
+  App.show_result(line, `Empty`)
 	App.focus_input(input)
 
   return line
@@ -384,10 +384,6 @@ App.get_max_line_length = () => {
 	App.max_line_length = App.get_var_index(`$zz`) + 1
 }
 
-App.show_error = (input) => {
-	App.show_result(input, `Error`)
-}
-
 App.new_sheet = () => {
 	App.confirm(`Start again?`, () => {
 		App.remove_all_lines()
@@ -395,8 +391,8 @@ App.new_sheet = () => {
 	})
 }
 
-App.get_result_el = (input = App.get_input()) => {
-  return DOM.el(`.result`, input.closest(`.line`))
+App.get_result_el = (line = App.line) => {
+  return DOM.el(`.result`, line)
 }
 
 App.get_line = (el = App.line) => {
@@ -546,7 +542,7 @@ App.set_comment = (comment, value) => {
 	comment.value = value
 }
 
-App.get_var = (el = App.get_input()) => {
+App.get_var = (el = App.line) => {
 	return DOM.dataset(el.closest(`.line`), `variable`)
 }
 

@@ -80,15 +80,14 @@ App.do_calc = () => {
 		}
 
 		if (!acyclic) {
-			for (let input of DOM.els(`.input`)) {
-				let vr = App.get_var(input)
-				let letter = App.get_letter(vr)
+			for (let line of DOM.els(`.lines`)) {
+				let vr = App.get_var(line)
 
 				if (sorted.indexOf(vr) !== -1) {
-					App.get_result(DOM.el(`#` + letter))
+					App.get_result(line)
 				}
 				else {
-					App.show_result(DOM.el(`#` + letter), `Not Acyclical`)
+					App.show_result(line, `Not Acyclical`)
 				}
 			}
 
@@ -101,21 +100,22 @@ App.do_calc = () => {
 	}
 
 	for (let i=0; i<sorted.length; i++) {
-		let letter = App.get_letter(sorted[i])
-		App.get_result(DOM.el(`#` + letter))
+		let line = App.get_line_by_var(sorted[i])
+		App.get_result(line)
 	}
 
   App.focus_input()
 	App.save_state()
 }
 
-App.get_result = (input) => {
-	let result = App.get_result_el(input)
+App.get_result = (line) => {
+	let input = App.get_input(line)
+	let result = App.get_result_el(line)
 	result.innerHTML = ``
 
 	try {
 		if (App.is_empty(input)) {
-			App.show_result(input, `Empty`)
+			App.show_result(line, `Empty`)
 			return
 		}
 
@@ -127,16 +127,16 @@ App.get_result = (input) => {
 		}
 
 		App.update_variable(input, result)
-		App.show_result(input, App.format_result(result))
+		App.show_result(line, App.format_result(result))
 	}
 	catch (err) {
     // App.log(err, `error`)
-		App.show_error(input)
+		App.show_error(line)
 	}
 }
 
-App.show_result = (input, s) => {
-	App.get_result_el(input).innerHTML = s
+App.show_result = (line, s) => {
+	App.get_result_el(line).innerHTML = s
 }
 
 App.update_variable = (input, val) => {
@@ -513,4 +513,8 @@ App.view_result = (input) => {
     c.innerHTML = items.join(`<hr>`)
     App.show_modal(`View Result`, c)
   }
+}
+
+App.show_error = (line) => {
+	App.show_result(line, `Error`)
 }
