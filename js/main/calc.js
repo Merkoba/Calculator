@@ -318,7 +318,7 @@ App.expand_value = (input, replace = true, full = true) => {
 			let v
 
 			if (full) {
-				v = DOM.el(`#` + App.get_letter(match)).value
+				v = DOM.el(`#input_` + App.get_letter(match)).value
 			}
 			else {
 				v = App.get_result_string(match)
@@ -436,11 +436,6 @@ App.get_var_results = (input) => {
 	return items
 }
 
-App.get_input_string = (vr) => {
-	let value = App.get_input(vr).value
-  return App.format_input_string(value)
-}
-
 App.format_input_string = (value) => {
 	return App.math_normal.parse(value).toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
 }
@@ -467,7 +462,7 @@ App.view_result = (input) => {
   let result = App.get_result_string(vr)
 
   if (value && result) {
-    let normal = App.get_input_string(vr)
+    let normal = App.format_input_string(input.value)
     let exp_res = App.expand_value(input, false, false)
     let exp_full = App.expand_value(input, false)
     let variables = App.get_var_results(input)
