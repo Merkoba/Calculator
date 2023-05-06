@@ -28,7 +28,7 @@ App.key_detection = () => {
 
 		if (e.key === `Enter`) {
 			if (e.shiftKey && e.ctrlKey) {
-				App.expand_value(App.focused.input)
+				App.expand_value(App.get_input())
         e.preventDefault()
         return
 			}

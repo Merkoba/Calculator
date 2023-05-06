@@ -75,7 +75,7 @@ App.apply_state = () => {
     App.calc()
   }
   catch (err) {
-    App.error(err, `error`)
+    console.error(err)
     App.restore_state()
     App.new_sheet()
   }

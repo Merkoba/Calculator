@@ -126,7 +126,7 @@ App.press = (value) => {
 		}
 	}
 
-	App.insert_text(App.focused.input, value)
+	App.insert_text(App.get_input(), value)
 }
 
 App.button_context = (button) => {
@@ -140,7 +140,7 @@ App.button_context = (button) => {
       items.push({
         text: opt,
         action: () => {
-          App.insert_text(App.focused.input, opt)
+          App.insert_text(App.get_input(), opt)
         },
       })
     }

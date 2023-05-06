@@ -1,7 +1,3 @@
-App.focused = {
-	input: null
-}
-
 App.get_first_input = () => {
 	return DOM.els(`.input`)[0]
 }
@@ -22,7 +18,7 @@ App.move_caret_to_end = (input) => {
 	input.setSelectionRange(input.value.length, input.value.length)
 }
 
-App.focus_input = (input = App.focused.input) => {
+App.focus_input = (input = App.get_input()) => {
   if (document.activeElement === input) {
     App.focus_line(input)
   }
@@ -40,11 +36,12 @@ App.save_backup = (input, value) => {
   DOM.dataset(input, `backup`, input.value || value)
 }
 
-App.get_backup = (input = App.focused.input) => {
+App.get_backup = (line = App.line) => {
+  let input = App.get_input()
   return DOM.dataset(input, `backup`)
 }
 
-App.undo = (input = App.focused.input) => {
+App.undo = (input = App.get_input()) => {
   let backup = App.get_backup(input)
 
   if (backup) {
@@ -78,7 +75,7 @@ App.replace_text = (input, s, focus = true) => {
 }
 
 App.erase = () => {
-  let input = App.focused.input
+  let input = App.get_input()
 	let ss = input.selectionStart
 	let se = input.selectionEnd
 	let value = input.value
@@ -106,16 +103,16 @@ App.erase = () => {
 
 App.copy_input_down = () => {
 	let og_var = App.get_var()
-	let og_val = App.focused.input.value
+	let og_val = App.get_input().value
 
 	App.focus_next_or_add()
 
 	if (og_var !== App.get_var()) {
-		App.replace_text(App.focused.input, og_val)
+		App.replace_text(App.get_input(), og_val)
 	}
 }
 
-App.clear_input = (input = App.focused.input) => {
+App.clear_input = (input = App.get_input()) => {
 	if (input.value === ``) {
 		return
 	}
@@ -123,13 +120,12 @@ App.clear_input = (input = App.focused.input) => {
 	App.replace_text(input, ``)
 }
 
-App.focus_if_isnt = (input = App.focused.input) => {
+App.focus_if_isnt = (input = App.get_input()) => {
 	if (input !== document.activeElement) {
 		App.focus_input(input)
 	}
 }
 
-App.get_input = (vr) => {
-  let letter = App.get_letter(vr)
-  return DOM.el(`#${letter}`)
+App.get_input = (line = App.line) => {
+  return DOM.el(`.input`, line)
 }

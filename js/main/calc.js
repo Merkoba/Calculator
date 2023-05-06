@@ -289,7 +289,7 @@ App.get_var_index = (vr) => {
 	return index
 }
 
-App.is_empty = (input = App.focused.input) => {
+App.is_empty = (input = App.get_input()) => {
 	return input.value.trim() === ``
 }
 
@@ -427,7 +427,8 @@ App.get_var_results = (input) => {
 	let items = []
 
 	for (let vr of vars) {
-		let val = App.expand_value(App.get_input(vr), false)
+		let line = App.get_line_by_var(vr)
+		let val = App.expand_value(App.get_input(line), false)
 		let res = App.get_result_string(vr)
 		items.push(`${vr} = ${val} = ${res}`)
 	}

@@ -17,7 +17,7 @@ App.move_line_up = () => {
 		return
 	}
 
-	let line = App.get_line_el(App.focused.input)
+	let line = App.get_line_el(App.get_input())
 	let inp1 = DOM.el(`.input`, line)
 	let inp2 = DOM.el(`.input`, line.previousElementSibling)
 	let cmt1 = DOM.el(`.comment`, line)
@@ -61,7 +61,7 @@ App.move_line_down = () => {
 		return
 	}
 
-	let line = App.get_line_el(App.focused.input)
+	let line = App.get_line_el(App.get_input())
 	let inp1 = DOM.el(`.input`, line)
 	let inp2 = DOM.el(`.input`, line.nextElementSibling)
 	let cmt1 = DOM.el(`.comment`, line)
@@ -111,7 +111,7 @@ App.remove_last_line = () => {
 	let line = App.get_last_line()
 	let input = App.get_last_input()
 
-	if (input === App.focused.input) {
+	if (input === App.get_input()) {
 		DOM.el(`.input`, line.previousElementSibling).focus()
 	}
 
@@ -158,8 +158,8 @@ App.add_line = (value = false) => {
 		value = ``
 	}
 
-	let line = DOM.create(`div`, `line`)
   let vr = `$` + letter
+	let line = DOM.create(`div`, `line`, `line_${letter}`)
 
   line.innerHTML = App.template_line({
     letter: letter,
@@ -170,20 +170,20 @@ App.add_line = (value = false) => {
 	let input = DOM.el(`.input`, line)
 	let comment = DOM.el(`.comment`, line)
 	let variable = DOM.el(`.variable`, line)
-	App.focused.input = input
+	App.line = line
 
 	DOM.ev(DOM.el(`.menu`, line), `click`, (e) => {
 		App.show_menu(e.target, input)
 	})
 
 	DOM.ev(input, `focus`, (e) => {
-		App.focused.input = e.target
+		App.line = line
 		App.change_borders(input)
     App.focus_line()
 	})
 
 	DOM.ev(comment, `focus`, (e) => {
-		App.focused.input = input
+		App.line = line
 		App.change_borders(comment)
     App.focus_line()
 	})
@@ -263,13 +263,13 @@ App.move_lines_up = () => {
 		return
 	}
 
-	let input = App.focused.input
+	let input = App.get_input()
 	let line = App.get_line_el(input)
 	let vr = App.get_var(input)
 	let index = DOM.index(line)
 
 	if (index === (line_length - 1)) {
-		if (input === App.focused.input) {
+		if (input === App.get_input()) {
 			DOM.el(`.input`, line.previousElementSibling).focus()
 		}
 
@@ -333,7 +333,7 @@ App.move_lines_down = (alt = false) => {
 		App.focus_next()
 	}
 
-	let input = App.focused.input
+	let input = App.get_input()
 	let line = App.get_line_el(input)
 	let comment = DOM.el(`.comment`, line)
 	let index = DOM.index(line)
@@ -395,11 +395,11 @@ App.new_sheet = () => {
 	})
 }
 
-App.get_result_el = (input = App.focused.input) => {
+App.get_result_el = (input = App.get_input()) => {
   return DOM.el(`.result`, input.closest(`.line`))
 }
 
-App.get_line_el = (el = App.focused.input) => {
+App.get_line_el = (el = App.get_input()) => {
   return el.closest(`.line`)
 }
 
@@ -488,7 +488,7 @@ App.show_menu = (button, input) => {
   NeedContext.show_on_element(button, items)
 }
 
-App.focus_line = (input = App.focused.input) => {
+App.focus_line = (input = App.get_input()) => {
   let line = App.get_line_el(input)
   line.scrollIntoView({block: `center`, behavior: `smooth`})
 }
@@ -547,13 +547,17 @@ App.set_comment = (comment, value) => {
 	comment.value = value
 }
 
-App.get_var = (el = App.focused.input) => {
+App.get_var = (el = App.get_input()) => {
 	return DOM.dataset(el.closest(`.line`), `variable`)
 }
 
 App.show_var_menu = (button) => {
-	let items = []
+	if (App.get_line_el(button) === App.get_line_el(App.get_input())) {
+		return
+	}
+
 	let vr = App.get_var(button)
+	let items = []
 
 	items.push({
     text: `+ (Add)`,
@@ -584,4 +588,8 @@ App.show_var_menu = (button) => {
   })
 
 	NeedContext.show_on_element(button, items)
+}
+
+App.get_line_by_var = (vr) => {
+	return DOM.el(`#line_${App.get_letter(vr)}`)
 }
