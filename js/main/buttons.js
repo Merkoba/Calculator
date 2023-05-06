@@ -204,14 +204,4 @@ App.button_context = (button) => {
   else if (value === `pi`) {
     insert([`tau`])
   }
-  else if (value === `Add Line`) {
-    action([
-      [`Add Line Before`, () => {
-        App.add_line_before()
-      }],
-      [`Add Line After`, () => {
-        App.add_line_after()
-      }],
-    ])
-  }
 }

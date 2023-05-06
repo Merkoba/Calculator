@@ -453,6 +453,20 @@ App.show_menu = (button, input) => {
   })
 
 	items.push({
+    text: `Add Line Up`,
+    action: () => {
+			App.add_line_before()
+    }
+  })
+
+	items.push({
+    text: `Add Line Down`,
+    action: () => {
+			App.add_line_after()
+    }
+  })
+
+	items.push({
     text: `Remove Line`,
     action: () => {
 			App.confirm(`Remove the line?`, () => {
