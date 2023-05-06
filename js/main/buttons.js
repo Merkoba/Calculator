@@ -47,7 +47,7 @@ App.draw_buttons = () => {
       App.button_context(e.target)
 		})
 
-		App.disable_context_menu(btn)
+    DOM.ev(btn, `contextmenu`, e => e.preventDefault())
 	}
 }
 
