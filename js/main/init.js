@@ -5,7 +5,7 @@ App.init = () => {
 	App.setup_lines()
 	App.setup_windows()
 	App.get_options()
-	App.get_state()
+	App.setup_state()
 	App.draw_buttons()
 	App.setup_infobar()
 	App.key_detection()

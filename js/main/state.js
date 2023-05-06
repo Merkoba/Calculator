@@ -1,4 +1,13 @@
-App.ls_state = `state_v1`
+App.ls_state = `state_v2`
+App.save_state_delay = 2500
+
+App.setup_state = () => {
+  App.get_state()
+
+  App.save_state_debouncer = App.create_debouncer(() => {
+    App.do_save_state()
+  }, App.save_state_delay)
+}
 
 App.get_state = () => {
 	App.state = JSON.parse(localStorage.getItem(App.ls_state))
@@ -16,15 +25,25 @@ App.get_state = () => {
 }
 
 App.save_state = () => {
+  App.save_state_debouncer.call()
+}
+
+App.do_save_state = () => {
   App.state.lines = {}
 
-	for (let input of DOM.els(`.input`)) {
-    let v = App.get_var(input)
-    let value = input.value.trim()
-    App.state.lines[v] = value
+	for (let line of DOM.els(`.line`)) {
+    let comment = DOM.el(`.comment`, line)
+    let input = DOM.el(`.input`, line)
+    let vr = App.get_var(input)
+
+    App.state.lines[vr] = {
+      comment: comment.value.trim(),
+      input: input.value.trim(),
+    }
   }
 
   App.update_state()
+  App.log(`State saved`)
 }
 
 App.update_state = () => {
@@ -44,14 +63,19 @@ App.apply_state = () => {
     let last_index = App.get_var_index(last_var)
 
     for (let i=0; i<=last_index; i++) {
-      let vr = App.add_line()
-      App.set_input(App.focused.input, App.state.lines[vr] || ``)
+      let line = App.add_line()
+      let comment = DOM.el(`.comment`, line)
+      let input = DOM.el(`.input`, line)
+      let vr = App.get_var(line)
+
+      App.set_comment(comment, App.state.lines[vr].comment || ``)
+      App.set_input(input, App.state.lines[vr].input || ``)
     }
 
     App.calc()
   }
   catch (err) {
-    console.error(err)
+    App.error(err, `error`)
     App.restore_state()
     App.new_sheet()
   }

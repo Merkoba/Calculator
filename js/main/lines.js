@@ -146,24 +146,24 @@ App.add_line = (value = false) => {
 		value = ``
 	}
 
-	let el = DOM.create(`div`, `line`)
+	let line = DOM.create(`div`, `line`)
   let vr = `$` + letter
 
-  el.innerHTML = App.templates[`template_line`]({
+  line.innerHTML = App.templates[`template_line`]({
     letter: letter,
     value: value,
   })
 
-	DOM.el(`#lines`).appendChild(el)
-	let input = DOM.el(`.input`, el)
-	let comment = DOM.el(`.comment`, el)
+	DOM.el(`#lines`).appendChild(line)
+	let input = DOM.el(`.input`, line)
+	let comment = DOM.el(`.comment`, line)
 	App.focused.input = input
 
-	DOM.ev(DOM.el(`.variable`, el), `click`, () => {
+	DOM.ev(DOM.el(`.variable`, line), `click`, () => {
 		App.press(vr)
 	})
 
-	DOM.ev(DOM.el(`.menu`, el), `click`, (e) => {
+	DOM.ev(DOM.el(`.menu`, line), `click`, (e) => {
 		App.show_menu(e.target, input)
 	})
 
@@ -183,17 +183,22 @@ App.add_line = (value = false) => {
 		App.calc()
 	})
 
+	DOM.ev(comment, `input`, () => {
+		App.save_state()
+	})
+
 	DOM.ev(input, `keydown`, (e) => {
 		if (e.key === `ArrowUp` || e.key === `ArrowDown`) {
 			e.preventDefault()
 		}
 	})
 
-	DOM.dataset(input, `variable`, vr)
+	DOM.dataset(line, `variable`, vr)
 	App.move_caret_to_end(input)
   App.show_result(input, `Empty`)
 	App.focus_input(input)
-  return vr
+
+  return line
 }
 
 App.add_line_before = () => {
@@ -262,33 +267,37 @@ App.move_lines_up = () => {
 		let inp = DOM.el(`.input`, ln)
 		let val = inp.value
 
-		if (val.trim() === ``) {
-			continue
+		if (val.trim()) {
+			val = val.replace(/\$[a-z]+/g, (match) => {
+				if (match === vr) {
+					return ``
+				}
+
+				let ni = App.get_var_index(match)
+
+				if (ni > index && ni < line_length) {
+					return App.decrease_var(match)
+				}
+
+				return match
+			})
+
+			App.set_input(inp, val)
 		}
-
-		val = val.replace(/\$[a-z]+/g, (match) => {
-			if (match === vr) {
-				return ``
-			}
-
-			let ni = App.get_var_index(match)
-
-			if (ni > index && ni < line_length) {
-				return App.decrease_var(match)
-			}
-
-			return match
-		})
-
-		App.set_input(inp, val)
 	}
 
 	for (let i=index+1; i<line_length; i++) {
-		let inp = DOM.el(`.input`, DOM.els(`.line`)[i])
-		let ninp = DOM.el(`.input`, App.get_line_el(inp).previousElementSibling)
+		let line = DOM.els(`.line`)[i]
 
-		App.set_input(ninp, inp.value)
-		App.set_input(inp, ``)
+		let inp1 = DOM.el(`.input`, line)
+		let inp2 = DOM.el(`.input`, App.get_line_el(inp1).previousElementSibling)
+		App.set_input(inp2, inp1.value)
+		App.set_input(inp1, ``)
+
+		let cmt1 = DOM.el(`.comment`, line)
+		let cmt2 = DOM.el(`.comment`, App.get_line_el(cmt1).previousElementSibling)
+		App.set_input(cmt2, cmt1.value)
+		App.set_comment(cmt1, ``)
 	}
 
 	App.get_last_line().remove()
@@ -308,6 +317,7 @@ App.move_lines_down = (alt = false) => {
 
 	let input = App.focused.input
 	let line = App.get_line_el(input)
+	let comment = DOM.el(`.comment`, line)
 	let index = DOM.index(line)
 	let lines = DOM.els(`.line`)
 
@@ -341,12 +351,17 @@ App.move_lines_down = (alt = false) => {
 	line_length = DOM.els(`.line`).length
 
 	for (let i=line_length-1; i>index; i--) {
-		let inp = DOM.el(`.input`, DOM.els(`.line`)[i])
-		let ninp = DOM.el(`.input`, App.get_line_el(inp).previousElementSibling)
-		App.set_input(inp, ninp.value)
+		let inp1 = DOM.el(`.input`, DOM.els(`.line`)[i])
+		let inp2 = DOM.el(`.input`, App.get_line_el(inp1).previousElementSibling)
+		App.set_input(inp1, inp2.value)
+
+		let cmt1 = DOM.el(`.comment`, DOM.els(`.line`)[i])
+		let cmt2 = DOM.el(`.comment`, App.get_line_el(cmt1).previousElementSibling)
+		App.set_comment(cmt1, cmt2.value)
 	}
 
 	App.set_input(input, ``)
+	App.set_comment(comment, ``)
 	App.focus_input(input)
 	App.calc()
 }
@@ -370,8 +385,8 @@ App.get_result_el = (input = App.focused.input) => {
   return DOM.el(`.result`, input.closest(`.line`))
 }
 
-App.get_line_el = (input = App.focused.input) => {
-  return input.closest(`.line`)
+App.get_line_el = (el = App.focused.input) => {
+  return el.closest(`.line`)
 }
 
 App.focus_next = (cls = `.input`) => {
@@ -488,4 +503,12 @@ App.change_borders = (el) => {
 	}
 
 	el.classList.add(`input_focus`)
+}
+
+App.set_comment = (comment, value) => {
+	comment.value = value
+}
+
+App.get_var = (el = App.focused.input) => {
+	return DOM.dataset(el.closest(`.line`), `variable`)
 }

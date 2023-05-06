@@ -23,7 +23,7 @@ App.calc = () => {
 }
 
 App.do_calc = () => {
-	console.info(`Calculating`)
+	App.log(`Calculating`)
 	App.undefine_variables()
 	let variables = {}
 
@@ -130,7 +130,7 @@ App.get_result = (input) => {
 		App.show_result(input, App.format_result(result))
 	}
 	catch (err) {
-    // console.error(err)
+    // App.log(err, `error`)
 		App.show_error(input)
 	}
 }
@@ -453,10 +453,6 @@ App.get_result_string = (vr) => {
 
 	result = App.math_normal.format(result, {notation: `fixed`})
 	return result
-}
-
-App.get_var = (input = App.focused.input) => {
-	return DOM.dataset(input, `variable`)
 }
 
 App.view_result = (input) => {
