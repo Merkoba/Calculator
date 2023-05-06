@@ -37,6 +37,10 @@ App.setup_windows = () => {
   })
 
   App.msg_confirm.set(c)
+
+  NeedContext.after_hide = () => {
+    App.focus_if_isnt()
+  }
 }
 
 App.on_confirm = () => {

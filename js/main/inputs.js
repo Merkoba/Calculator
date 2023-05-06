@@ -20,7 +20,7 @@ App.move_caret_to_end = (input) => {
 
 App.focus_input = (input = App.get_input()) => {
   if (document.activeElement === input) {
-    App.focus_line(input)
+    App.focus_line(App.get_line_parent(input))
   }
   else {
     input.focus()

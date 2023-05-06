@@ -399,7 +399,7 @@ App.get_result_el = (input = App.get_input()) => {
   return DOM.el(`.result`, input.closest(`.line`))
 }
 
-App.get_line = (el = App.get_input()) => {
+App.get_line = (el = App.line) => {
   return el.closest(`.line`)
 }
 
@@ -488,8 +488,7 @@ App.show_menu = (button, input) => {
   NeedContext.show_on_element(button, items)
 }
 
-App.focus_line = (input = App.get_input()) => {
-  let line = App.get_line(input)
+App.focus_line = (line = App.line) => {
   line.scrollIntoView({block: `center`, behavior: `smooth`})
 }
 
@@ -592,4 +591,8 @@ App.show_var_menu = (button) => {
 
 App.get_line_by_var = (vr) => {
 	return DOM.el(`#line_${App.get_letter(vr)}`)
+}
+
+App.get_line_parent = (el) => {
+	return el.closest(`.line`)
 }
