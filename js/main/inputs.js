@@ -36,8 +36,7 @@ App.save_backup = (input, value) => {
   DOM.dataset(input, `backup`, input.value || value)
 }
 
-App.get_backup = (line = App.line) => {
-  let input = App.get_input()
+App.get_backup = (input) => {
   return DOM.dataset(input, `backup`)
 }
 
