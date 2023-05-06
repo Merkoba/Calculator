@@ -31,14 +31,6 @@ App.focus_input = (input = App.focused.input) => {
   }
 }
 
-App.change_borders = () => {
-	for (let input of DOM.els(`.input`)) {
-		input.classList.remove(`input_focus`)
-	}
-
-	App.focused.input.classList.add(`input_focus`)
-}
-
 App.set_input = (input, value) => {
   App.save_backup(input, value)
   input.value = value

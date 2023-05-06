@@ -169,13 +169,13 @@ App.add_line = (value = false) => {
 
 	DOM.ev(input, `focus`, (e) => {
 		App.focused.input = e.target
-		App.change_borders()
+		App.change_borders(input)
     App.focus_line()
 	})
 
 	DOM.ev(comment, `focus`, (e) => {
 		App.focused.input = input
-		App.change_borders()
+		App.change_borders(comment)
     App.focus_line()
 	})
 
@@ -480,4 +480,12 @@ App.go_to_first_comment = () => {
 
 App.get_first_comment = () => {
 	return DOM.els(`.comment`)[0]
+}
+
+App.change_borders = (el) => {
+	for (let focused of DOM.els(`.input_focus`)) {
+		focused.classList.remove(`input_focus`)
+	}
+
+	el.classList.add(`input_focus`)
 }
