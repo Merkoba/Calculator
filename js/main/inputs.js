@@ -22,44 +22,6 @@ App.move_caret_to_end = (input) => {
 	input.setSelectionRange(input.value.length, input.value.length)
 }
 
-App.cycle_inputs = (direction) => {
-	if (DOM.els(`.input`).length === 1) {
-		return
-	}
-
-  let line = App.get_line_el()
-	let index = DOM.index(line)
-  let is_input = document.activeElement.classList.contains(`input`)
-  let is_comment = document.activeElement.classList.contains(`comment`)
-
-	if (direction === `down`) {
-    if (is_comment) {
-      DOM.el(`.input`, line).focus()
-    }
-    else {
-      if (index === (DOM.els(`.input`).length - 1)) {
-        App.go_to_first_input()
-      }
-      else {
-        App.focus_next()
-      }
-    }
-	}
-	else {
-    if (is_input) {
-      DOM.el(`.comment`, line).focus()
-    }
-    else {
-      if (index === 0) {
-        App.go_to_last_input()
-      }
-      else {
-        App.focus_prev()
-      }
-    }
-	}
-}
-
 App.focus_input = (input = App.focused.input) => {
   if (document.activeElement === input) {
     App.focus_line(input)

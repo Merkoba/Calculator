@@ -155,7 +155,8 @@ App.add_line = (value = false) => {
   })
 
 	DOM.el(`#lines`).appendChild(el)
-	let input = App.get_last_input()
+	let input = DOM.el(`.input`, el)
+	let comment = DOM.el(`.comment`, el)
 	App.focused.input = input
 
 	DOM.ev(DOM.el(`.variable`, el), `click`, () => {
@@ -168,6 +169,12 @@ App.add_line = (value = false) => {
 
 	DOM.ev(input, `focus`, (e) => {
 		App.focused.input = e.target
+		App.change_borders()
+    App.focus_line()
+	})
+
+	DOM.ev(comment, `focus`, (e) => {
+		App.focused.input = input
 		App.change_borders()
     App.focus_line()
 	})
@@ -367,11 +374,11 @@ App.get_line_el = (input = App.focused.input) => {
   return input.closest(`.line`)
 }
 
-App.focus_next = () => {
+App.focus_next = (cls = `.input`) => {
 	let line = App.get_line_el().nextElementSibling
 
 	if (line) {
-		DOM.el(`.input`, line).focus()
+		DOM.el(cls, line).focus()
 	}
 }
 
@@ -427,4 +434,50 @@ App.show_menu = (button, input) => {
 App.focus_line = (input = App.focused.input) => {
   let line = App.get_line_el(input)
   line.scrollIntoView({block: `center`, behavior: `smooth`})
+}
+
+App.cycle = (direction) => {
+	if (DOM.els(`.input`).length === 1) {
+		return
+	}
+
+  let line = App.get_line_el()
+	let index = DOM.index(line)
+  let is_input = document.activeElement.classList.contains(`input`)
+  let is_comment = document.activeElement.classList.contains(`comment`)
+
+	if (direction === `down`) {
+    if (is_comment) {
+      DOM.el(`.input`, line).focus()
+    }
+    else {
+      if (index === (DOM.els(`.input`).length - 1)) {
+        App.go_to_first_comment()
+      }
+      else {
+        App.focus_next(`.comment`)
+      }
+    }
+	}
+	else {
+    if (is_input) {
+      DOM.el(`.comment`, line).focus()
+    }
+    else {
+      if (index === 0) {
+        App.go_to_last_input()
+      }
+      else {
+        App.focus_prev()
+      }
+    }
+	}
+}
+
+App.go_to_first_comment = () => {
+	App.get_first_comment().focus()
+}
+
+App.get_first_comment = () => {
+	return DOM.els(`.comment`)[0]
 }

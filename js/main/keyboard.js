@@ -50,10 +50,10 @@ App.key_detection = () => {
 		}
 		else if (e.key === `Tab`) {
 			if (e.shiftKey) {
-				App.cycle_inputs(`up`)
+				App.cycle(`up`)
 			}
 			else {
-				App.cycle_inputs(`down`)
+				App.cycle(`down`)
 			}
 
 			e.preventDefault()
