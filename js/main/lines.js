@@ -437,6 +437,10 @@ App.show_menu = (button, input) => {
   })
 
 	items.push({
+		separator: true
+	})
+
+	items.push({
     text: `Move Line Up`,
     action: () => {
       App.move_line_up()
@@ -449,6 +453,10 @@ App.show_menu = (button, input) => {
       App.move_line_down()
     }
   })
+
+	items.push({
+		separator: true
+	})
 
 	items.push({
     text: `Add Line Up`,
@@ -465,6 +473,10 @@ App.show_menu = (button, input) => {
   })
 
 	items.push({
+		separator: true
+	})
+
+	items.push({
     text: `Remove Line`,
     action: () => {
 			App.confirm(`Remove the line?`, () => {
@@ -472,6 +484,10 @@ App.show_menu = (button, input) => {
 			})
     }
   })
+
+	items.push({
+		separator: true
+	})
 
   items.push({
     text: `View Result`,
