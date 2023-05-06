@@ -45,6 +45,15 @@ a:hover, a:visited, a:link {
 	color: #153c50;
 }
 
+#confirm_ok {
+	background-color: #3ab87b;
+	color: white;
+}
+
+#confirm_ok:hover {
+	background-color: rgb(53, 177, 199);
+}
+
 /* End of color theme */
 
 #buttons {
@@ -245,14 +254,8 @@ sup {
 }
 
 #confirm_ok {
-	background-color: #3ab87b;
-	color: rgb(255, 255, 255);
 	font-size: 1.1rem;
 	cursor: pointer;
-}
-
-#confirm_ok:hover {
-	background-color: rgb(53, 177, 199);
 }
 
 #confirm_cancel {
