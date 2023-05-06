@@ -236,6 +236,12 @@ sup {
 	margin-bottom: 1rem;
 }
 
+#confirm_buttons {
+	display: flex;
+	flex-direction: row;
+	gap: 0.7rem;
+}
+
 #confirm_ok {
 	background-color: #3ab87b;
 	color: rgb(255, 255, 255);

@@ -27,23 +27,36 @@ App.cycle_inputs = (direction) => {
 		return
 	}
 
-	let index = DOM.index(App.get_line_el())
+  let line = App.get_line_el()
+	let index = DOM.index(line)
+  let is_input = document.activeElement.classList.contains(`input`)
+  let is_comment = document.activeElement.classList.contains(`comment`)
 
 	if (direction === `down`) {
-		if (index === (DOM.els(`.input`).length - 1)) {
-			App.go_to_first_input()
-		}
-		else {
-			App.focus_next()
-		}
+    if (is_comment) {
+      DOM.el(`.input`, line).focus()
+    }
+    else {
+      if (index === (DOM.els(`.input`).length - 1)) {
+        App.go_to_first_input()
+      }
+      else {
+        App.focus_next()
+      }
+    }
 	}
 	else {
-		if (index === 0) {
-			App.go_to_last_input()
-		}
-		else {
-			App.focus_prev()
-		}
+    if (is_input) {
+      DOM.el(`.comment`, line).focus()
+    }
+    else {
+      if (index === 0) {
+        App.go_to_last_input()
+      }
+      else {
+        App.focus_prev()
+      }
+    }
 	}
 }
 
