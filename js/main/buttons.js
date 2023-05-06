@@ -148,19 +148,6 @@ App.button_context = (button) => {
     NeedContext.show_on_element(button, items)
   }
 
-  function action (opts) {
-    let items = []
-
-    for (let opt of opts) {
-      items.push({
-        text: opt[0],
-        action: opt[1],
-      })
-    }
-
-    NeedContext.show_on_element(button, items)
-  }
-
   if (!isNaN(num)) {
     if (num === 0) {
       insert([`0.`, `000`])
