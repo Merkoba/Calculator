@@ -439,6 +439,20 @@ App.show_menu = (button, input) => {
   })
 
 	items.push({
+    text: `Move Line Up`,
+    action: () => {
+      App.move_line_up()
+    }
+  })
+
+	items.push({
+    text: `Move Line Down`,
+    action: () => {
+      App.move_line_down()
+    }
+  })
+
+	items.push({
     text: `Remove Line`,
     action: () => {
 			App.confirm(`Remove the line?`, () => {
