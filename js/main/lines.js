@@ -180,21 +180,23 @@ App.add_line = (value = false) => {
 		App.line = line
 		App.change_borders(input)
     App.focus_line()
+		App.update_state()
 	})
 
 	DOM.ev(comment, `focus`, (e) => {
 		App.line = line
 		App.change_borders(comment)
     App.focus_line()
+		App.update_state()
 	})
 
 	DOM.ev(input, `input`, () => {
 		App.calc()
+		App.update_state()
 	})
 
 	DOM.ev(comment, `input`, () => {
-		App.snapshot
-		()
+		App.update_state()
 	})
 
 	DOM.ev(variable, `click`, () => {
@@ -387,7 +389,7 @@ App.get_max_line_length = () => {
 App.new_sheet = () => {
 	App.confirm(`Start again?`, () => {
 		App.remove_all_lines()
-		App.clear_snapshots()
+		App.reset_state()
 		App.add_line()
 		App.calc()
 	})
@@ -552,10 +554,6 @@ App.change_borders = (el) => {
 	el.classList.add(`input_focus`)
 }
 
-App.set_comment = (comment, value) => {
-	comment.value = value
-}
-
 App.get_var = (el = App.line) => {
 	return DOM.dataset(el.closest(`.line`), `variable`)
 }
@@ -631,6 +629,18 @@ App.get_result = (line = App.line) => {
 
 App.get_lines = () => {
 	return DOM.els(`.line`)
+}
+
+// Setters
+
+App.set_input = (input, value) => {
+  input.value = value
+	App.update_state()
+}
+
+App.set_comment = (comment, value) => {
+	comment.value = value
+	App.update_state()
 }
 
 //

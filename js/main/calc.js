@@ -103,8 +103,6 @@ App.do_calc = () => {
 		let line = App.get_line_by_var(sorted[i])
 		App.calc_result(line)
 	}
-
-	App.snapshot()
 }
 
 App.calc_result = (line) => {

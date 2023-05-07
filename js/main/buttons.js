@@ -32,7 +32,7 @@ App.draw_buttons = () => {
 	App.place_button_wider(`Add Line`)
 	App.place_button_wider(`Clear`)
 	App.place_button_wider(`Erase`)
-	App.place_button_wider(`Undo`)
+	App.place_button_wider(`Change Me`)
 	App.place_button(`log`)
 	App.place_button(`LN2`)
 	App.place_button(`e`)
