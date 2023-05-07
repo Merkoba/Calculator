@@ -10,5 +10,5 @@ App.init = () => {
 	App.setup_infobar()
 	App.key_detection()
 	App.title_click_events()
-	App.apply_state()
+	App.restore_state()
 }

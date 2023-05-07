@@ -10,7 +10,7 @@ App.math_fraction = math.create({
 	number: `Fraction`
 })
 
-App.update_delay = 200
+App.update_delay = 120
 
 App.setup_calc = () => {
   App.calc_debouncer = App.create_debouncer(() => {
@@ -105,7 +105,7 @@ App.do_calc = () => {
 	}
 
   App.focus_input()
-	App.save_state()
+	App.save_snapshot()
 }
 
 App.get_result = (line) => {

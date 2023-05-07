@@ -253,7 +253,6 @@ App.remove_line = () => {
 App.remove_all_lines = () => {
 	App.undefine_variables()
 	DOM.el(`#lines`).innerHTML = ``
-	App.add_line()
 }
 
 App.move_lines_up = () => {
@@ -387,6 +386,7 @@ App.get_max_line_length = () => {
 App.new_sheet = () => {
 	App.confirm(`Start again?`, () => {
 		App.remove_all_lines()
+		App.add_line()
 		App.calc()
 	})
 }

@@ -28,27 +28,7 @@ App.focus_input = (input = App.get_input()) => {
 }
 
 App.set_input = (input, value) => {
-  App.save_backup(input, value)
   input.value = value
-}
-
-App.save_backup = (input, value) => {
-  DOM.dataset(input, `backup`, input.value || value)
-}
-
-App.get_backup = (input) => {
-  return DOM.dataset(input, `backup`)
-}
-
-App.undo = (input = App.get_input()) => {
-  let backup = App.get_backup(input)
-
-  if (backup) {
-    input.value = backup
-    App.calc()
-  }
-
-  App.focus_if_isnt(input)
 }
 
 App.insert_text = (input, text) => {
