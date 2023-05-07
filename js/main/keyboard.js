@@ -65,7 +65,7 @@ App.key_detection = () => {
 				App.move_line_up()
 			}
 			else {
-				App.line_up()
+				App.cycle(`up`)
 			}
 
 			e.preventDefault()
@@ -76,7 +76,7 @@ App.key_detection = () => {
 				App.move_line_down()
 			}
 			else {
-				App.line_down()
+				App.cycle(`down`)
 			}
 
 			e.preventDefault()

@@ -2,14 +2,6 @@ App.setup_lines = () => {
   App.get_max_line_length()
 }
 
-App.line_up = () => {
-	App.focus_prev()
-}
-
-App.line_down = () => {
-	App.focus_next()
-}
-
 App.move_line_up = () => {
 	let index = DOM.index(App.get_line())
 
@@ -692,7 +684,7 @@ App.focus_comment = (comment = App.get_comment()) => {
 }
 
 App.focus_input = (input = App.get_input()) => {
-  input.focus()
+	input.focus()
 }
 
 //
@@ -705,12 +697,6 @@ App.input_empty = (line = App.line) => {
 App.comment_empty = (line = App.line) => {
 	let comment = App.get_comment(line)
 	return comment.value.trim() === ``
-}
-
-//
-
-App.focused_element = () => {
-
 }
 
 //
