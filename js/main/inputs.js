@@ -19,6 +19,7 @@ App.erase = () => {
 	let ss = input.selectionStart
 	let se = input.selectionEnd
 	let value = input.value
+	let highlighted
 
 	if (ss === se) {
 		if (ss === 0) {
@@ -28,16 +29,25 @@ App.erase = () => {
 
 		let new_value = value.substring(0, ss - 1) + value.substring(se, value.length)
     App.set_input(input, new_value)
+		highlighted = false
 	}
   else {
     let bt = input.value.slice(0, input.selectionStart)
     let at = input.value.slice(input.selectionEnd)
     App.set_input(input, bt + `` + at)
+		highlighted = true
   }
 
   App.focus_input(input)
-  input.selectionStart = ss
-  input.selectionEnd = ss
+
+	if (highlighted) {
+		input.selectionStart = ss
+		input.selectionEnd = ss
+	}
+	else {
+		input.selectionStart = ss - 1
+		input.selectionEnd = ss - 1
+	}
   App.calc()
 }
 
