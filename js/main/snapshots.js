@@ -1,5 +1,5 @@
 App.ls_snapshots = `snapshots_v1`
-App.snapshot_delay = 1000
+App.snapshot_delay = 800
 App.max_snapshots = 250
 App.snapshots = []
 
