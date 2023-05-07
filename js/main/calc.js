@@ -105,7 +105,7 @@ App.do_calc = () => {
 	}
 
   App.focus_input()
-	App.save_snapshot()
+	App.snapshot()
 }
 
 App.calc_result = (line) => {

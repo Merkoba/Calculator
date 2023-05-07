@@ -1,42 +1,42 @@
-App.ls_state = `state_v3`
-App.save_state_delay = 1000
+App.ls_snapshots = `snapshots_v1`
+App.snapshot_delay = 1000
 App.max_snapshots = 250
 App.snapshots = []
 
-App.setup_state = () => {
-  App.get_state()
+App.setup_snapshots = () => {
+  App.get_snapshots()
 
-  App.save_state_debouncer = App.create_debouncer(() => {
-    App.do_save_state()
-  }, App.save_state_delay)
+  App.snapshot_debouncer = App.create_debouncer(() => {
+    App.do_snapshot()
+  }, App.snapshot_delay)
 }
 
-App.get_state = () => {
+App.get_snapshots = () => {
   try {
-    App.state = JSON.parse(localStorage.getItem(App.ls_state))
+    App.snapshots = JSON.parse(localStorage.getItem(App.ls_snapshots))
   }
   catch (err) {
-    App.state = null
+    App.snapshots = null
   }
 
 	let mod = false
 
-	if (App.state === null) {
-		App.state = {}
+	if (App.snapshots === null) {
+		App.snapshots = []
 		mod = true
 	}
 
   if (mod) {
-		App.update_state()
+		App.save_snapshots()
 	}
 }
 
-App.save_state = () => {
-  App.save_state_debouncer.call()
+App.snapshot = () => {
+  App.snapshot_debouncer.call()
 }
 
 App.get_snapshot = () => {
-  let state = {}
+  let snapshot = {}
   let focused = App.get_line()
 
 	for (let line of DOM.els(`.line`)) {
@@ -44,17 +44,17 @@ App.get_snapshot = () => {
     let input = App.get_input(line)
     let vr = App.get_var(input)
 
-    state[vr] = {
+    snapshot[vr] = {
       comment: comment.value.trim(),
       input: input.value.trim(),
       focused: line === focused
     }
   }
 
-  return state
+  return snapshot
 }
 
-App.save_snapshot = () => {
+App.do_snapshot = () => {
   let snapshot = App.get_snapshot()
 
   if (!snapshot) {
@@ -74,26 +74,29 @@ App.save_snapshot = () => {
     App.snapshots.shift()
   }
 
-  App.save_state()
+  App.save_snapshots()
 }
 
 App.clear_snapshots = () => {
   App.snapshots = []
+  App.save_snapshots()
 }
 
-App.do_save_state = () => {
-  App.state = App.snapshots.slice(-1)[0]
-  App.update_state()
-  App.log(`State saved`)
+App.save_snapshots = () => {
+  localStorage.setItem(App.ls_snapshots, JSON.stringify(App.snapshots))
+  App.log(`Snapshots saved`)
 }
 
-App.update_state = () => {
-	localStorage.setItem(App.ls_state, JSON.stringify(App.state))
-}
+App.load_last_snapshot = () => {
+  if (App.snapshots.length === 0) {
+    App.add_line()
+    return
+  }
 
-App.restore_state = () => {
-  if ((Object.keys(App.state)).length > 0) {
-    App.apply_snapshot(App.state)
+  let last = App.snapshots.slice(-1)[0]
+
+  if ((Object.keys(last)).length > 0) {
+    App.apply_snapshot(last)
   }
   else {
     App.add_line()
@@ -102,7 +105,6 @@ App.restore_state = () => {
 
 App.apply_snapshot = (snapshot) => {
   try {
-    App.remove_all_lines()
     let num_lines = Object.keys(snapshot).length
     let to_focus
 
@@ -113,12 +115,17 @@ App.apply_snapshot = (snapshot) => {
 
     let last_var = Object.keys(snapshot).sort().slice(-1)[0]
     let last_index = App.get_var_index(last_var)
+    let vr = `$a`
 
     for (let i=0; i<=last_index; i++) {
-      let line = App.add_line()
+      let line = App.get_line_by_var(vr)
+
+      if (!line) {
+        line = App.add_line()
+      }
+
       let comment = App.get_comment(line)
       let input = App.get_input(line)
-      let vr = App.get_var(line)
 
       App.set_comment(comment, snapshot[vr].comment || ``)
       App.set_input(input, snapshot[vr].input || ``)
@@ -126,24 +133,27 @@ App.apply_snapshot = (snapshot) => {
       if (snapshot[vr].focused) {
         to_focus = input
       }
+
+      vr = App.increase_var(vr)
     }
 
     if (to_focus) {
       App.focus_input(to_focus)
     }
 
+    App.trim_lines()
     App.calc()
   }
   catch (err) {
     console.error(err)
-    App.reset_state()
+    App.reset_snapshots()
     App.new_sheet()
   }
 }
 
-App.reset_state = () => {
-  App.state = {}
-  App.update_state()
+App.reset_snapshots = () => {
+  App.snapshots = {}
+  App.save_snapshots()
 }
 
 App.undo = () => {

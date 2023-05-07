@@ -57,7 +57,7 @@ App.move_line_up = () => {
 App.move_line_down = () => {
 	let index = DOM.index(App.get_line())
 
-	if (index === (DOM.els(`.line`).length - 1)) {
+	if (index === (App.get_lines().length - 1)) {
 		return
 	}
 
@@ -99,11 +99,11 @@ App.move_line_down = () => {
 }
 
 App.get_last_line = () => {
-	return DOM.els(`.line`).slice(-1)[0]
+	return App.get_lines().slice(-1)[0]
 }
 
 App.remove_last_line = () => {
-	if (DOM.els(`.line`).length === 1) {
+	if (App.get_lines().length === 1) {
 		App.clear_input()
 		return
 	}
@@ -139,7 +139,7 @@ App.focus_next_or_add = () => {
 }
 
 App.add_line = (value = false) => {
-	let num_lines = DOM.els(`.line`).length
+	let num_lines = App.get_lines().length
 	let letter
 
 	if (num_lines === App.max_line_length) {
@@ -168,7 +168,7 @@ App.add_line = (value = false) => {
 
 	DOM.el(`#lines`).appendChild(line)
 	let input = App.get_input(line)
-	let comment = App.get_input(line)
+	let comment = App.get_comment(line)
 	let variable = App.get_variable(line)
 	App.line = line
 
@@ -193,7 +193,8 @@ App.add_line = (value = false) => {
 	})
 
 	DOM.ev(comment, `input`, () => {
-		App.save_state()
+		App.snapshot
+		()
 	})
 
 	DOM.ev(variable, `click`, () => {
@@ -226,7 +227,7 @@ App.add_line_before = () => {
 App.add_line_after = () => {
 	let index = DOM.index(App.get_line())
 
-	if (index === DOM.els(`.line`).length - 1) {
+	if (index === App.get_lines().length - 1) {
 		App.add_line()
 	}
 	else {
@@ -237,10 +238,10 @@ App.add_line_after = () => {
 App.remove_line = () => {
 	let index = DOM.index(App.get_line())
 
-	if (DOM.els(`.line`).length === 1) {
+	if (App.get_lines().length === 1) {
 		App.clear_input()
 	}
-	else if (index === DOM.els(`.line`).length - 1) {
+	else if (index === App.get_lines().length - 1) {
 		App.remove_last_line()
 	}
 	else {
@@ -256,7 +257,7 @@ App.remove_all_lines = () => {
 }
 
 App.move_lines_up = () => {
-	let line_length = DOM.els(`.line`).length
+	let line_length = App.get_lines().length
 
 	if (line_length === 1) {
 		return
@@ -277,7 +278,7 @@ App.move_lines_up = () => {
 		return
 	}
 
-	let lines = DOM.els(`.line`)
+	let lines = App.get_lines()
 
 	for (let i=0; i<line_length; i++) {
 		let ln = lines[i]
@@ -304,7 +305,7 @@ App.move_lines_up = () => {
 	}
 
 	for (let i=index+1; i<line_length; i++) {
-		let line = DOM.els(`.line`)[i]
+		let line = App.get_lines()[i]
 
 		let inp1 = App.get_input(line)
 		let inp2 = App.get_input(App.get_line(inp1).previousElementSibling)
@@ -322,7 +323,7 @@ App.move_lines_up = () => {
 }
 
 App.move_lines_down = (alt = false) => {
-	let line_length = DOM.els(`.line`).length
+	let line_length = App.get_lines().length
 
 	if (line_length === App.max_line_length) {
 		return
@@ -336,7 +337,7 @@ App.move_lines_down = (alt = false) => {
 	let line = App.get_line(input)
 	let comment = App.get_comment(line)
 	let index = DOM.index(line)
-	let lines = DOM.els(`.line`)
+	let lines = App.get_lines()
 
 	for (let i=0; i<line_length; i++) {
 		let ln = lines[i]
@@ -361,14 +362,14 @@ App.move_lines_down = (alt = false) => {
 	}
 
 	App.add_line()
-	line_length = DOM.els(`.line`).length
+	line_length = App.get_lines().length
 
 	for (let i=line_length-1; i>index; i--) {
-		let inp1 = App.get_input(DOM.els(`.line`)[i])
+		let inp1 = App.get_input(App.get_lines()[i])
 		let inp2 = App.get_input(App.get_line(inp1).previousElementSibling)
 		App.set_input(inp1, inp2.value)
 
-		let cmt1 = App.get_comment(DOM.els(`.line`)[i])
+		let cmt1 = App.get_comment(App.get_lines()[i])
 		let cmt2 = App.get_comment(App.get_line(cmt1).previousElementSibling)
 		App.set_comment(cmt1, cmt2.value)
 	}
@@ -628,4 +629,39 @@ App.get_result = (line = App.line) => {
   return DOM.el(`.result`, line)
 }
 
+App.get_lines = () => {
+	return DOM.els(`.line`)
+}
+
 //
+
+App.trim_lines = () => {
+	let lines = App.get_lines()
+
+	if (lines.length > 1) {
+		let last_with_content
+
+		for (let line of lines) {
+			if (App.get_comment(line).value.trim() || App.get_input(line).value.trim()) {
+				last_with_content = line
+			}
+		}
+
+		if (!last_with_content) {
+			return
+		}
+
+		let reached = false
+
+		for (let line of lines) {
+			if (line === last_with_content) {
+				reached = true
+				continue
+			}
+
+			if (reached) {
+				line.remove()
+			}
+		}
+	}
+}
