@@ -170,6 +170,8 @@ App.reset_snapshots = () => {
 }
 
 App.undo = () => {
+  App.snapshot_debouncer.cancel()
+
   if (App.snapshots.length > 1) {
     App.snapshots.pop()
     App.apply_snapshot(App.snapshots.pop())
