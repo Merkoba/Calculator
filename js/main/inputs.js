@@ -64,5 +64,10 @@ App.format_all = () => {
 }
 
 App.format_input_string = (value) => {
-	return App.math_normal.parse(value).toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
+	try {
+		return App.math_normal.parse(value).toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
+	}
+	catch (err) {
+		return value
+	}
 }
