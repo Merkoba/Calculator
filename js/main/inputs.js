@@ -18,15 +18,6 @@ App.move_caret_to_end = (input) => {
 	input.setSelectionRange(input.value.length, input.value.length)
 }
 
-App.focus_input = (input = App.get_input()) => {
-  if (document.activeElement === input) {
-    App.focus_line(App.get_line_parent(input))
-  }
-  else {
-    input.focus()
-  }
-}
-
 App.set_input = (input, value) => {
   input.value = value
 }

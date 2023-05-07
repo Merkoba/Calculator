@@ -37,17 +37,24 @@ App.snapshot = () => {
 
 App.get_snapshot = () => {
   let snapshot = {}
-  let focused = App.get_line()
+  let focused_line = App.get_line()
 
 	for (let line of DOM.els(`.line`)) {
     let comment = App.get_comment(line)
     let input = App.get_input(line)
     let vr = App.get_var(input)
+    let focused = line === focused_line
+    let focused_element = `input`
+
+    if (document.activeElement === comment) {
+      focused_element = `comment`
+    }
 
     snapshot[vr] = {
       comment: comment.value.trim(),
       input: input.value.trim(),
-      focused: line === focused
+      focused: focused,
+      focused_element: focused_element,
     }
   }
 
@@ -106,7 +113,7 @@ App.load_last_snapshot = () => {
 App.apply_snapshot = (snapshot) => {
   try {
     let num_lines = Object.keys(snapshot).length
-    let to_focus
+    let to_focus, to_focus_element
 
     if (num_lines === 0) {
       App.add_line()
@@ -131,14 +138,20 @@ App.apply_snapshot = (snapshot) => {
       App.set_input(input, snapshot[vr].input || ``)
 
       if (snapshot[vr].focused) {
-        to_focus = input
+        to_focus = line
+        to_focus_element = snapshot[vr].focused_element
       }
 
       vr = App.increase_var(vr)
     }
 
     if (to_focus) {
-      App.focus_input(to_focus)
+      if (to_focus_element === `comment`) {
+        App.focus_comment(App.get_comment(to_focus))
+      }
+      else {
+        App.focus_input(App.get_input(to_focus))
+      }
     }
 
     App.trim_lines()

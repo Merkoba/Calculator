@@ -665,3 +665,15 @@ App.trim_lines = () => {
 		}
 	}
 }
+
+// Focus
+
+App.focus_comment = (comment = App.get_comment()) => {
+	comment.focus()
+}
+
+App.focus_input = (input = App.get_input()) => {
+  input.focus()
+}
+
+//
