@@ -50,7 +50,7 @@ App.move_line_up = () => {
 	App.set_comment(cmt1, nval)
 	App.set_comment(cmt2, val)
 
-	App.focus_if_isnt(inp2)
+	App.focus_input(inp2)
 	App.calc()
 }
 
@@ -94,7 +94,7 @@ App.move_line_down = () => {
 	App.set_comment(cmt1, nval)
 	App.set_comment(cmt2, val)
 
-	App.focus_if_isnt(inp2)
+	App.focus_input(inp2)
 	App.calc()
 }
 
@@ -173,7 +173,7 @@ App.add_line = (value = false, focus = true) => {
 	App.line = line
 
 	DOM.ev(App.get_menu(line), `click`, (e) => {
-		App.show_menu(e.target, input)
+		App.show_menu(e.target, line)
 	})
 
 	DOM.ev(input, `focus`, (e) => {
@@ -259,7 +259,7 @@ App.remove_line = () => {
 		App.move_lines_up()
 	}
 
-	App.focus_if_isnt()
+	App.focus_input()
 }
 
 App.remove_all_lines = () => {
@@ -424,8 +424,9 @@ App.focus_prev = () => {
 	}
 }
 
-App.show_menu = (button, input) => {
+App.show_menu = (button, line) => {
   let items = []
+	let input = App.get_input(line)
 
   items.push({
     text: `Expand Results`,
@@ -503,7 +504,7 @@ App.show_menu = (button, input) => {
     }
   })
 
-  App.focus_input(input)
+  App.focus_line(line)
   NeedContext.show_on_element(button, items)
 }
 
@@ -662,4 +663,102 @@ App.focus_comment = (comment = App.get_comment()) => {
 
 App.focus_input = (input = App.get_input()) => {
   input.focus()
+}
+
+//
+
+App.input_empty = (line = App.line) => {
+	let input = App.get_input(line)
+	return input.value.trim() === ``
+}
+
+App.comment_empty = (line = App.line) => {
+	let comment = App.get_comment(line)
+	return comment.value.trim() === ``
+}
+
+//
+
+App.focused_element = () => {
+
+}
+
+//
+
+App.check_clear = () => {
+	let ce = App.comment_empty()
+	let ie = App.input_empty()
+
+	if (ce && ie) {
+		App.ask_remove_line()
+	}
+	else {
+		let name = App.get_focused_name()
+
+		if (name === `comment`) {
+			App.clear_comment()
+		}
+		else if (name === `input`) {
+			App.clear_input()
+		}
+	}
+}
+
+//
+
+App.clear_comment = (comment = App.get_comment()) => {
+	if (comment.value !== ``) {
+		App.change_comment(comment, ``)
+	}
+}
+
+App.clear_input = (input = App.get_input()) => {
+	if (input.value !== ``) {
+		App.change_input(input, ``)
+	}
+}
+
+//
+
+App.change_comment = (comment, s, focus = true) => {
+  App.set_comment(comment, s)
+
+  if (focus) {
+    App.focus_comment(comment)
+  }
+}
+
+App.change_input = (input, s, focus = true) => {
+  App.set_input(input, s)
+
+  if (focus) {
+    App.focus_input(input)
+  }
+
+	App.calc()
+}
+
+//
+
+App.get_focused_name = (line = App.line) => {
+	if (App.get_comment(line).classList.contains(`input_focus`)) {
+		return `comment`
+	}
+	else if (App.get_input(line).classList.contains(`input_focus`)) {
+		return `input`
+	}
+	else {
+		return `none`
+	}
+}
+
+App.focus = () => {
+	let name = App.get_focused_name()
+
+	if (name === `comment`) {
+		App.focus_comment()
+	}
+	else if (name === `input`) {
+		App.focus_input()
+	}
 }

@@ -26,17 +26,7 @@ App.insert_text = (input, text) => {
   App.set_input(input, new_value)
 	input.selectionStart = ss + text.length
 	input.selectionEnd = ss + text.length
-	App.focus_if_isnt(input)
-	App.calc()
-}
-
-App.replace_text = (input, s, focus = true) => {
-  App.set_input(input, s)
-
-  if (focus) {
-    App.focus_if_isnt(input)
-  }
-
+	App.focus_input(input)
 	App.calc()
 }
 
@@ -61,7 +51,7 @@ App.erase = () => {
     App.set_input(input, bt + `` + at)
   }
 
-  App.focus_if_isnt(input)
+  App.focus_input(input)
   input.selectionStart = ss
   input.selectionEnd = ss
   App.calc()
@@ -75,29 +65,6 @@ App.copy_input_down = () => {
 
 	if (og_var !== App.get_var()) {
 		App.replace_text(App.get_input(), og_val)
-	}
-}
-
-App.clear_input = (input = App.get_input()) => {
-	if (input.value === ``) {
-		return
-	}
-
-	App.replace_text(input, ``)
-}
-
-App.check_clear_input = () => {
-	if (App.get_input().value.trim()) {
-		App.clear_input()
-	}
-	else {
-		App.ask_remove_line()
-	}
-}
-
-App.focus_if_isnt = (input = App.get_input()) => {
-	if (input !== document.activeElement) {
-		App.focus_input(input)
 	}
 }
 

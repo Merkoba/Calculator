@@ -9,7 +9,7 @@ App.setup_windows = () => {
 		center_titlebar: true,
     close_on_escape: false,
     after_close: (instance) => {
-      App.focus_if_isnt()
+      App.focus()
     },
 	})
 
@@ -21,7 +21,7 @@ App.setup_windows = () => {
     window_x: `none`,
     after_close: (instance) => {
       App.confirm_action = () => {}
-      App.focus_if_isnt()
+      App.focus()
     },
 	})
 
@@ -39,7 +39,7 @@ App.setup_windows = () => {
   App.msg_confirm.set(c)
 
   NeedContext.after_hide = () => {
-    App.focus_if_isnt()
+    App.focus()
   }
 }
 

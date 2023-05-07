@@ -11,7 +11,7 @@ App.key_detection = () => {
         App.msg.close_all()
       }
       else {
-        App.check_clear_input()
+        App.check_clear()
       }
 		}
 

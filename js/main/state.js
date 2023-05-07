@@ -96,6 +96,7 @@ App.apply_state = (state) => {
       App.set_input(input, state[vr].input || ``)
     }
 
+    App.calc()
     App.focus_input(App.get_first_input())
   }
   catch (err) {

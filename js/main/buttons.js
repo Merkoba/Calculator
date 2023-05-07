@@ -88,7 +88,7 @@ App.press = (value) => {
 		value = `log(`
 	}
 	else if (value === `Clear`) {
-    App.check_clear_input()
+    App.check_clear()
 		return
 	}
 	else if (value === `Erase`) {
