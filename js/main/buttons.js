@@ -32,7 +32,7 @@ App.draw_buttons = () => {
 	App.place_button_wider(`Add Line`)
 	App.place_button_wider(`Clear`)
 	App.place_button_wider(`Erase`)
-	App.place_button_wider(`Change Me`)
+	App.place_button_wider(`Format`)
 	App.place_button(`log`)
 	App.place_button(`LN2`)
 	App.place_button(`e`)
@@ -88,15 +88,11 @@ App.press = (value) => {
 		value = `log(`
 	}
 	else if (value === `Clear`) {
-    App.clear_input()
+    App.check_clear_input()
 		return
 	}
 	else if (value === `Erase`) {
 		App.erase()
-		return
-	}
-  else if (value === `Undo`) {
-		App.undo()
 		return
 	}
 	else if (value === `Add Line`) {
@@ -111,6 +107,11 @@ App.press = (value) => {
 	}
 	else if (value === `Down`) {
 		App.line_down()
+		App.focus_input()
+		return
+	}
+	else if (value === `Format`) {
+		App.format_all()
 		App.focus_input()
 		return
 	}

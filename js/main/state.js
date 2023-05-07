@@ -31,24 +31,15 @@ App.get_state = () => {
 
 App.get_state_lines = () => {
   let state = {}
-  let focused_line = App.get_line()
 
 	for (let line of DOM.els(`.line`)) {
     let comment = App.get_comment(line)
     let input = App.get_input(line)
     let vr = App.get_var(input)
-    let focused = line === focused_line
-    let focused_element = `input`
-
-    if (document.activeElement === comment) {
-      focused_element = `comment`
-    }
 
     state[vr] = {
       comment: comment.value.trim(),
       input: input.value.trim(),
-      focused: focused,
-      focused_element: focused_element,
     }
   }
 
@@ -86,7 +77,6 @@ App.restore_state = () => {
 App.apply_state = (state) => {
   try {
     let num_lines = Object.keys(state).length
-    let to_focus, to_focus_element
 
     if (num_lines === 0) {
       App.add_line()
@@ -95,40 +85,18 @@ App.apply_state = (state) => {
 
     let last_var = Object.keys(state).sort().slice(-1)[0]
     let last_index = App.get_var_index(last_var)
-    let vr = `$a`
 
     for (let i=0; i<=last_index; i++) {
-      let line = App.get_line_by_var(vr)
-
-      if (!line) {
-        line = App.add_line()
-      }
-
+      let line = App.add_line(undefined, false)
+      let vr = App.get_var(line)
       let comment = App.get_comment(line)
       let input = App.get_input(line)
 
       App.set_comment(comment, state[vr].comment || ``)
       App.set_input(input, state[vr].input || ``)
-
-      if (state[vr].focused) {
-        to_focus = line
-        to_focus_element = state[vr].focused_element
-      }
-
-      vr = App.increase_var(vr)
     }
 
-    if (to_focus) {
-      if (to_focus_element === `comment`) {
-        App.focus_comment(App.get_comment(to_focus))
-      }
-      else {
-        App.focus_input(App.get_input(to_focus))
-      }
-    }
-
-    App.trim_lines(last_index)
-    App.calc()
+    App.focus_input(App.get_first_input())
   }
   catch (err) {
     console.error(err)

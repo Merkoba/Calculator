@@ -86,8 +86,32 @@ App.clear_input = (input = App.get_input()) => {
 	App.replace_text(input, ``)
 }
 
+App.check_clear_input = () => {
+	if (App.get_input().value.trim()) {
+		App.clear_input()
+	}
+	else {
+		App.ask_remove_line()
+	}
+}
+
 App.focus_if_isnt = (input = App.get_input()) => {
 	if (input !== document.activeElement) {
 		App.focus_input(input)
 	}
+}
+
+App.format_all = () => {
+	for (let input of App.get_inputs()) {
+		let inp = input.value.trim()
+
+		if (inp) {
+			let value = App.format_input_string(inp)
+			input.value = value
+		}
+	}
+}
+
+App.format_input_string = (value) => {
+	return App.math_normal.parse(value).toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
 }

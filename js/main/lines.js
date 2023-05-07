@@ -138,7 +138,7 @@ App.focus_next_or_add = () => {
 	}
 }
 
-App.add_line = (value = false) => {
+App.add_line = (value = false, focus = true) => {
 	let num_lines = App.get_lines().length
 	let letter
 
@@ -217,7 +217,10 @@ App.add_line = (value = false) => {
 	DOM.dataset(line, `variable`, vr)
 	App.move_caret_to_end(input)
   App.show_result(line, `Empty`)
-	App.focus_input(input)
+
+	if (focus) {
+		App.focus_input(input)
+	}
 
   return line
 }
@@ -235,6 +238,12 @@ App.add_line_after = () => {
 	else {
 		App.move_lines_down(true)
 	}
+}
+
+App.ask_remove_line = () => {
+	App.confirm(`Remove the line?`, (line) => {
+		App.remove_line()
+	})
 }
 
 App.remove_line = () => {
@@ -479,9 +488,7 @@ App.show_menu = (button, input) => {
 	items.push({
     text: `Remove Line`,
     action: () => {
-			App.confirm(`Remove the line?`, () => {
-				App.remove_line()
-			})
+			App.ask_remove_line()
     }
   })
 
@@ -501,7 +508,7 @@ App.show_menu = (button, input) => {
 }
 
 App.focus_line = (line = App.line) => {
-  line.scrollIntoView({block: `center`, behavior: `instant`})
+  line.scrollIntoView({block: `center`, behavior: `smooth`})
 }
 
 App.cycle = (direction) => {
@@ -631,6 +638,10 @@ App.get_lines = () => {
 	return DOM.els(`.line`)
 }
 
+App.get_inputs = () => {
+	return DOM.els(`.input`)
+}
+
 // Setters
 
 App.set_input = (input, value) => {
@@ -643,23 +654,6 @@ App.set_comment = (comment, value) => {
 	App.update_state()
 }
 
-//
-
-App.trim_lines = (index) => {
-	let reached = false
-
-	for (let [i, line] of App.get_lines().entries()) {
-		if (i === index) {
-			reached = true
-			continue
-		}
-
-		if (reached) {
-			line.remove()
-		}
-	}
-}
-
 // Focus
 
 App.focus_comment = (comment = App.get_comment()) => {
@@ -669,5 +663,3 @@ App.focus_comment = (comment = App.get_comment()) => {
 App.focus_input = (input = App.get_input()) => {
   input.focus()
 }
-
-//

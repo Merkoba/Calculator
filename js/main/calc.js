@@ -431,10 +431,6 @@ App.get_var_results = (input) => {
 	return items
 }
 
-App.format_input_string = (value) => {
-	return App.math_normal.parse(value).toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
-}
-
 App.get_result_string = (vr) => {
 	let result = App.math_normal.bignumber(App.linevars[vr])
 
