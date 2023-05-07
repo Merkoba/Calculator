@@ -48,6 +48,7 @@ App.erase = () => {
 		input.selectionStart = ss - 1
 		input.selectionEnd = ss - 1
 	}
+
   App.calc()
 }
 
