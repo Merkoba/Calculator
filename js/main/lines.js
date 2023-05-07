@@ -635,33 +635,17 @@ App.get_lines = () => {
 
 //
 
-App.trim_lines = () => {
-	let lines = App.get_lines()
+App.trim_lines = (index) => {
+	let reached = false
 
-	if (lines.length > 1) {
-		let last_with_content
-
-		for (let line of lines) {
-			if (App.get_comment(line).value.trim() || App.get_input(line).value.trim()) {
-				last_with_content = line
-			}
+	for (let [i, line] of App.get_lines().entries()) {
+		if (i === index) {
+			reached = true
+			continue
 		}
 
-		if (!last_with_content) {
-			return
-		}
-
-		let reached = false
-
-		for (let line of lines) {
-			if (line === last_with_content) {
-				reached = true
-				continue
-			}
-
-			if (reached) {
-				line.remove()
-			}
+		if (reached) {
+			line.remove()
 		}
 	}
 }

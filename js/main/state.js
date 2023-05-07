@@ -154,7 +154,7 @@ App.apply_snapshot = (snapshot) => {
       }
     }
 
-    App.trim_lines()
+    App.trim_lines(last_index)
     App.calc()
   }
   catch (err) {
