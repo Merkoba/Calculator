@@ -104,7 +104,3 @@ App.focus_if_isnt = (input = App.get_input()) => {
 		App.focus_input(input)
 	}
 }
-
-App.get_input = (line = App.line) => {
-  return DOM.el(`.input`, line)
-}

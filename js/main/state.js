@@ -40,8 +40,8 @@ App.get_snapshot = () => {
   let focused = App.get_line()
 
 	for (let line of DOM.els(`.line`)) {
-    let comment = DOM.el(`.comment`, line)
-    let input = DOM.el(`.input`, line)
+    let comment = App.get_comment(line)
+    let input = App.get_input(line)
     let vr = App.get_var(input)
 
     state[vr] = {
@@ -116,8 +116,8 @@ App.apply_snapshot = (snapshot) => {
 
     for (let i=0; i<=last_index; i++) {
       let line = App.add_line()
-      let comment = DOM.el(`.comment`, line)
-      let input = DOM.el(`.input`, line)
+      let comment = App.get_comment(line)
+      let input = App.get_input(line)
       let vr = App.get_var(line)
 
       App.set_comment(comment, snapshot[vr].comment || ``)

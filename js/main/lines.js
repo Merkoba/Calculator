@@ -18,10 +18,10 @@ App.move_line_up = () => {
 	}
 
 	let line = App.get_line(App.get_input())
-	let inp1 = DOM.el(`.input`, line)
-	let inp2 = DOM.el(`.input`, line.previousElementSibling)
-	let cmt1 = DOM.el(`.comment`, line)
-	let cmt2 = DOM.el(`.comment`, line.previousElementSibling)
+	let inp1 = App.get_input(line)
+	let inp2 = App.get_input(line.previousElementSibling)
+	let cmt1 = App.get_comment(line)
+	let cmt2 = App.get_comment(line.previousElementSibling)
 
 	let vr1 = App.get_var(inp1)
 	let vr2 = App.get_var(inp2)
@@ -62,10 +62,10 @@ App.move_line_down = () => {
 	}
 
 	let line = App.get_line(App.get_input())
-	let inp1 = DOM.el(`.input`, line)
-	let inp2 = DOM.el(`.input`, line.nextElementSibling)
-	let cmt1 = DOM.el(`.comment`, line)
-	let cmt2 = DOM.el(`.comment`, line.nextElementSibling)
+	let inp1 = App.get_input(line)
+	let inp2 = App.get_input(line.nextElementSibling)
+	let cmt1 = App.get_comment(line)
+	let cmt2 = App.get_comment(line.nextElementSibling)
 
 	let vr1 = App.get_var(inp1)
 	let vr2 = App.get_var(inp2)
@@ -112,7 +112,7 @@ App.remove_last_line = () => {
 	let input = App.get_last_input()
 
 	if (input === App.get_input()) {
-		DOM.el(`.input`, line.previousElementSibling).focus()
+		App.get_input(line.previousElementSibling).focus()
 	}
 
 	line.remove()
@@ -124,7 +124,7 @@ App.focus_next_or_add = () => {
 	let found_line = false
 
 	for (let item of next_all) {
-		let inp = DOM.el(`.input`, item)
+		let inp = App.get_input(item)
 
 		if (inp.value === ``) {
 			App.focus_input(inp)
@@ -167,12 +167,12 @@ App.add_line = (value = false) => {
   })
 
 	DOM.el(`#lines`).appendChild(line)
-	let input = DOM.el(`.input`, line)
-	let comment = DOM.el(`.comment`, line)
-	let variable = DOM.el(`.variable`, line)
+	let input = App.get_input(line)
+	let comment = App.get_input(line)
+	let variable = App.get_variable(line)
 	App.line = line
 
-	DOM.ev(DOM.el(`.menu`, line), `click`, (e) => {
+	DOM.ev(App.get_menu(line), `click`, (e) => {
 		App.show_menu(e.target, input)
 	})
 
@@ -269,7 +269,7 @@ App.move_lines_up = () => {
 
 	if (index === (line_length - 1)) {
 		if (input === App.get_input()) {
-			DOM.el(`.input`, line.previousElementSibling).focus()
+			App.get_input(line.previousElementSibling).focus()
 		}
 
 		line.remove()
@@ -281,7 +281,7 @@ App.move_lines_up = () => {
 
 	for (let i=0; i<line_length; i++) {
 		let ln = lines[i]
-		let inp = DOM.el(`.input`, ln)
+		let inp = App.get_input(ln)
 		let val = inp.value
 
 		if (val.trim()) {
@@ -306,13 +306,13 @@ App.move_lines_up = () => {
 	for (let i=index+1; i<line_length; i++) {
 		let line = DOM.els(`.line`)[i]
 
-		let inp1 = DOM.el(`.input`, line)
-		let inp2 = DOM.el(`.input`, App.get_line(inp1).previousElementSibling)
+		let inp1 = App.get_input(line)
+		let inp2 = App.get_input(App.get_line(inp1).previousElementSibling)
 		App.set_input(inp2, inp1.value)
 		App.set_input(inp1, ``)
 
-		let cmt1 = DOM.el(`.comment`, line)
-		let cmt2 = DOM.el(`.comment`, App.get_line(cmt1).previousElementSibling)
+		let cmt1 = App.get_comment(line)
+		let cmt2 = App.get_comment(App.get_line(cmt1).previousElementSibling)
 		App.set_input(cmt2, cmt1.value)
 		App.set_comment(cmt1, ``)
 	}
@@ -334,13 +334,13 @@ App.move_lines_down = (alt = false) => {
 
 	let input = App.get_input()
 	let line = App.get_line(input)
-	let comment = DOM.el(`.comment`, line)
+	let comment = App.get_comment(line)
 	let index = DOM.index(line)
 	let lines = DOM.els(`.line`)
 
 	for (let i=0; i<line_length; i++) {
 		let ln = lines[i]
-		let inp = DOM.el(`.input`, ln)
+		let inp = App.get_input(ln)
 		let val = inp.value
 
 		if (val.trim() === ``) {
@@ -364,12 +364,12 @@ App.move_lines_down = (alt = false) => {
 	line_length = DOM.els(`.line`).length
 
 	for (let i=line_length-1; i>index; i--) {
-		let inp1 = DOM.el(`.input`, DOM.els(`.line`)[i])
-		let inp2 = DOM.el(`.input`, App.get_line(inp1).previousElementSibling)
+		let inp1 = App.get_input(DOM.els(`.line`)[i])
+		let inp2 = App.get_input(App.get_line(inp1).previousElementSibling)
 		App.set_input(inp1, inp2.value)
 
-		let cmt1 = DOM.el(`.comment`, DOM.els(`.line`)[i])
-		let cmt2 = DOM.el(`.comment`, App.get_line(cmt1).previousElementSibling)
+		let cmt1 = App.get_comment(DOM.els(`.line`)[i])
+		let cmt2 = App.get_comment(App.get_line(cmt1).previousElementSibling)
 		App.set_comment(cmt1, cmt2.value)
 	}
 
@@ -390,10 +390,6 @@ App.new_sheet = () => {
 		App.add_line()
 		App.calc()
 	})
-}
-
-App.get_result_el = (line = App.line) => {
-  return DOM.el(`.result`, line)
 }
 
 App.get_line = (el = App.line) => {
@@ -526,7 +522,7 @@ App.cycle = (direction) => {
 	}
 	else {
     if (is_input) {
-      DOM.el(`.comment`, line).focus()
+      App.get_comment(line).focus()
     }
     else {
       if (index === 0) {
@@ -609,3 +605,27 @@ App.get_line_by_var = (vr) => {
 App.get_line_parent = (el) => {
 	return el.closest(`.line`)
 }
+
+// Getters
+
+App.get_input = (line = App.line) => {
+  return DOM.el(`.input`, line)
+}
+
+App.get_comment = (line = App.line) => {
+  return DOM.el(`.comment`, line)
+}
+
+App.get_variable = (line = App.line) => {
+  return DOM.el(`.variable`, line)
+}
+
+App.get_menu = (line = App.line) => {
+  return DOM.el(`.menu`, line)
+}
+
+App.get_result = (line = App.line) => {
+  return DOM.el(`.result`, line)
+}
+
+//

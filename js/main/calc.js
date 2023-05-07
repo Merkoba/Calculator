@@ -84,7 +84,7 @@ App.do_calc = () => {
 				let vr = App.get_var(line)
 
 				if (sorted.indexOf(vr) !== -1) {
-					App.get_result(line)
+					App.calc_result(line)
 				}
 				else {
 					App.show_result(line, `Not Acyclical`)
@@ -101,16 +101,16 @@ App.do_calc = () => {
 
 	for (let i=0; i<sorted.length; i++) {
 		let line = App.get_line_by_var(sorted[i])
-		App.get_result(line)
+		App.calc_result(line)
 	}
 
   App.focus_input()
 	App.save_snapshot()
 }
 
-App.get_result = (line) => {
+App.calc_result = (line) => {
 	let input = App.get_input(line)
-	let result = App.get_result_el(line)
+	let result = App.get_result(line)
 	result.innerHTML = ``
 
 	try {
@@ -136,7 +136,7 @@ App.get_result = (line) => {
 }
 
 App.show_result = (line, s) => {
-	App.get_result_el(line).innerHTML = s
+	App.get_result(line).innerHTML = s
 }
 
 App.update_variable = (input, val) => {
