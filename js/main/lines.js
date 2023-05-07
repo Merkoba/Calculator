@@ -412,7 +412,7 @@ App.focus_prev = () => {
 	let line = App.get_line().previousElementSibling
 
 	if (line) {
-		DOM.el(`.input`, line).focus()
+		App.focus_input(App.get_input(line))
 	}
 }
 
@@ -502,7 +502,7 @@ App.show_menu = (button, input) => {
 }
 
 App.focus_line = (line = App.line) => {
-  line.scrollIntoView({block: `center`, behavior: `smooth`})
+  line.scrollIntoView({block: `center`, behavior: `instant`})
 }
 
 App.cycle = (direction) => {
@@ -513,7 +513,7 @@ App.cycle = (direction) => {
 
 	if (direction === `down`) {
     if (is_comment) {
-      DOM.el(`.input`, line).focus()
+      App.focus_input(App.get_input(line))
     }
     else {
       if (index === (DOM.els(`.input`).length - 1)) {
