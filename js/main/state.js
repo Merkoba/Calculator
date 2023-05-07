@@ -77,6 +77,10 @@ App.save_snapshot = () => {
   App.save_state()
 }
 
+App.clear_snapshots = () => {
+  App.snapshots = []
+}
+
 App.do_save_state = () => {
   App.state = App.snapshots.slice(-1)[0]
   App.update_state()

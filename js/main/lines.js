@@ -386,6 +386,7 @@ App.get_max_line_length = () => {
 App.new_sheet = () => {
 	App.confirm(`Start again?`, () => {
 		App.remove_all_lines()
+		App.clear_snapshots()
 		App.add_line()
 		App.calc()
 	})
