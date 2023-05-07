@@ -97,22 +97,11 @@ App.press = (value) => {
 	}
 	else if (value === `Add Line`) {
 		App.focus_next_or_add()
-		App.focus_input()
-		return
-	}
-	else if (value === `Up`) {
-		App.line_up()
-		App.focus_input()
-		return
-	}
-	else if (value === `Down`) {
-		App.line_down()
-		App.focus_input()
 		return
 	}
 	else if (value === `Format`) {
 		App.format_all()
-		App.focus_input()
+		App.focus()
 		return
 	}
 

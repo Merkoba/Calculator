@@ -546,13 +546,43 @@ App.cycle = (direction) => {
 	}
 }
 
-App.go_to_first_comment = () => {
-	App.get_first_comment().focus()
-}
+//
 
 App.get_first_comment = () => {
 	return DOM.els(`.comment`)[0]
 }
+
+App.get_last_comment = () => {
+	return DOM.els(`.comment`).slice(-1)[0]
+}
+
+App.go_to_first_comment = () => {
+	App.focus_comment(App.get_first_comment())
+}
+
+App.go_to_last_comment = () => {
+	App.focus_comment(App.get_last_comment())
+}
+
+//
+
+App.get_first_input = () => {
+	return DOM.els(`.input`)[0]
+}
+
+App.get_last_input = () => {
+	return DOM.els(`.input`).slice(-1)[0]
+}
+
+App.go_to_first_input = () => {
+	App.focus_input(App.get_first_input())
+}
+
+App.go_to_last_input = () => {
+	App.focus_input(App.get_last_input())
+}
+
+//
 
 App.change_borders = (el) => {
 	for (let focused of DOM.els(`.input_focus`)) {

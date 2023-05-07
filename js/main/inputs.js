@@ -1,19 +1,3 @@
-App.get_first_input = () => {
-	return DOM.els(`.input`)[0]
-}
-
-App.get_last_input = () => {
-	return DOM.els(`.input`).slice(-1)[0]
-}
-
-App.go_to_first_input = () => {
-	App.focus_input(App.get_first_input())
-}
-
-App.go_to_last_input = () => {
-	App.focus_input(App.get_last_input())
-}
-
 App.move_caret_to_end = (input) => {
 	input.setSelectionRange(input.value.length, input.value.length)
 }
