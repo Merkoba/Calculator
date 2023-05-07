@@ -49,17 +49,6 @@ App.key_detection = () => {
         return
 			}
 		}
-		else if (e.key === `Tab`) {
-			if (e.shiftKey) {
-				App.cycle(`up`)
-			}
-			else {
-				App.cycle(`down`)
-			}
-
-			e.preventDefault()
-      return
-		}
 		else if (e.key === `ArrowUp`) {
 			if (e.shiftKey) {
 				App.move_line_up()
