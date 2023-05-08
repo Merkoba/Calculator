@@ -298,7 +298,7 @@ App.expand_value = (input, replace = true, full = true) => {
 	}
 
 	if (val.indexOf(`$`) === -1) {
-		return App.format_input_string(val)
+		return App.calc_string(val)
 	}
 
 	let vr = App.get_var(input)
@@ -345,7 +345,7 @@ App.expand_value = (input, replace = true, full = true) => {
 	}
 
 	try {
-		val = App.format_input_string(val)
+		val = App.calc_string(val)
 	}
 	catch (err) {
 		return
@@ -453,7 +453,7 @@ App.view_result = (input) => {
   let result = App.get_result_string(vr)
 
   if (value && result) {
-    let normal = App.format_input_string(input.value)
+    let normal = App.calc_string(input.value)
     let exp_res = App.expand_value(input, false, false)
     let exp_full = App.expand_value(input, false)
     let variables = App.get_var_results(input)
@@ -503,4 +503,13 @@ App.view_result = (input) => {
 
 App.show_error = (line) => {
 	App.show_result(line, `Error`)
+}
+
+App.calc_string = (value) => {
+	try {
+		return App.math_normal.parse(value).toString({parenthesis: `auto`, implicit: `show`, notation: `fixed`})
+	}
+	catch (err) {
+		return value
+	}
 }

@@ -662,6 +662,10 @@ App.get_lines = () => {
 	return DOM.els(`.line`)
 }
 
+App.get_comments = () => {
+	return DOM.els(`.comment`)
+}
+
 App.get_inputs = () => {
 	return DOM.els(`.input`)
 }
@@ -769,6 +773,28 @@ App.get_focused_name = (line = App.line) => {
 	}
 }
 
+App.get_el_name = (el) => {
+	if (el.classList.contains(`comment`)) {
+		return `comment`
+	}
+	else if (el.classList.contains(`input`)) {
+		return `input`
+	}
+}
+
+//
+
+App.get_focused_element = (line = App.line) => {
+	let name = App.get_focused_name(line)
+
+	if (name === `comment`) {
+		return App.get_comment(line)
+	}
+	else if (name === `input`) {
+		return App.get_input(line)
+	}
+}
+
 App.focus = () => {
 	let name = App.get_focused_name()
 
@@ -777,5 +803,109 @@ App.focus = () => {
 	}
 	else if (name === `input`) {
 		App.focus_input()
+	}
+}
+
+App.focus_el = (el) => {
+	let name = App.get_el_name(el)
+
+	if (name === `comment`) {
+		App.focus_comment()
+	}
+	else if (name === `input`) {
+		App.focus_input()
+	}
+}
+
+App.set = (el, value) => {
+	let name = App.get_el_name(el)
+
+	if (name === `comment`) {
+		App.set_comment(el, value)
+	}
+	else if (name === `input`) {
+		App.set_input(el, value)
+	}
+}
+
+App.erase = () => {
+  let el = App.get_focused_element()
+
+	if (!el) {
+		return
+	}
+
+	let ss = el.selectionStart
+	let se = el.selectionEnd
+	let value = el.value
+	let highlighted
+
+	if (ss === se) {
+		if (ss === 0) {
+			App.focus()
+			return
+		}
+
+		let new_value = value.substring(0, ss - 1) + value.substring(se, value.length)
+    App.set(el, new_value)
+		highlighted = false
+	}
+  else {
+    let bt = el.value.slice(0, el.selectionStart)
+    let at = el.value.slice(el.selectionEnd)
+    App.set(el, bt + `` + at)
+		highlighted = true
+  }
+
+  App.focus()
+
+	if (highlighted) {
+		el.selectionStart = ss
+		el.selectionEnd = ss
+	}
+	else {
+		el.selectionStart = ss - 1
+		el.selectionEnd = ss - 1
+	}
+
+  App.calc()
+}
+
+App.format_all = () => {
+	for (let input of App.get_inputs()) {
+		let inp = input.value.trim()
+
+		for (let comment of App.get_comments()) {
+			let value = App.single_space(comment.value)
+			comment.value = value
+		}
+
+		if (inp) {
+			let value = App.calc_string(inp)
+			input.value = value
+		}
+	}
+}
+
+App.insert_text = (el, text) => {
+	let ss = el.selectionStart
+	let se = el.selectionEnd
+	let value = el.value
+	let new_value = value.substring(0, ss) + text + value.substring(se, value.length)
+  App.set(el, new_value)
+	el.selectionStart = ss + text.length
+	el.selectionEnd = ss + text.length
+	App.focus_el(el)
+	App.calc()
+}
+
+App.copy_input_down = () => {
+	let og_var = App.get_var()
+	let og_val = App.get_input().value
+
+	App.focus_next_or_add()
+
+	if (og_var !== App.get_var()) {
+		App.replace_text(App.get_input(), og_val)
 	}
 }

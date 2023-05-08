@@ -74,3 +74,7 @@ App.log = (message, mode = `normal`) => {
 App.move_caret_to_end = (el) => {
 	el.setSelectionRange(el.value.length, el.value.length)
 }
+
+App.single_space = (s) => {
+  return s.replace(/\s+/g, ` `).trim()
+}
