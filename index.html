@@ -132,11 +132,11 @@
 		</script>
 
 		<script id="template_line" type="text/x-handlebars-template" class="template">
-			<input type="text" class="comment" id="{{letter}}_title" placeholder="Comment">
+			<input type="text" class="comment" id="{{letter}}_title" placeholder="Comment" spellcheck="true">
 
 			<div class="line_top">
 				<button class="button variable">${{letter}}</button>
-				<input type="text" class="input" id="input_{{letter}}" value="{{value}}">
+				<input type="text" class="input" id="input_{{letter}}" value="{{value}}" spellcheck="false">
 				<button class="button menu">...</button>
 			</div>
 
