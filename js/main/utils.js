@@ -70,3 +70,7 @@ App.log = (message, mode = `normal`) => {
 
   console.info(`${icon} ${message}`)
 }
+
+App.move_caret_to_end = (el) => {
+	el.setSelectionRange(el.value.length, el.value.length)
+}

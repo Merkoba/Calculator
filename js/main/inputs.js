@@ -1,7 +1,3 @@
-App.move_caret_to_end = (input) => {
-	input.setSelectionRange(input.value.length, input.value.length)
-}
-
 App.insert_text = (input, text) => {
 	let ss = input.selectionStart
 	let se = input.selectionEnd
