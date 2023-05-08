@@ -494,7 +494,10 @@ App.show_menu = (button, line) => {
     }
   })
 
-  App.focus_line(line)
+	if (App.line !== line) {
+		App.focus_input(App.get_input(line))
+	}
+
   NeedContext.show_on_element(button, items)
 }
 
