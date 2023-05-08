@@ -1,8 +1,5 @@
-App.capitalize_string = (text) => {
-	return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
-}
+// For testing:
 
-// For testing
 App.fill_sheet = (x = false) => {
 	let n
 
@@ -16,6 +13,12 @@ App.fill_sheet = (x = false) => {
 	for (let i=0; i<n; i++) {
 		App.add_line()
 	}
+}
+
+//
+
+App.capitalize_string = (text) => {
+	return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
 }
 
 App.create_debouncer = (func, delay) => {
