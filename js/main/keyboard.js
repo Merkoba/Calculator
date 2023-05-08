@@ -71,5 +71,16 @@ App.key_detection = () => {
 			e.preventDefault()
       return
 		}
+		else if (e.key === `Tab`) {
+			if (e.shiftKey) {
+				App.cycle(`up`)
+			}
+			else {
+				App.cycle(`down`)
+			}
+
+			e.preventDefault()
+      return
+		}
 	})
 }
