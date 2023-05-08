@@ -84,7 +84,7 @@ App.apply_state = (state) => {
     }
 
     let last_var = Object.keys(state).sort().slice(-1)[0]
-    let last_index = App.get_var_index(last_var)
+    let last_index = math.min(App.get_var_index(last_var), App.max_line_length - 1)
 
     for (let i=0; i<=last_index; i++) {
       let line = App.add_line(undefined, false)

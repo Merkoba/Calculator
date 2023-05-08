@@ -4,7 +4,7 @@
 - Multi-line, simulataneous, linked, operations.
 - Instant results.
 - Acyclicity check.
-- Over 700 lines of calculations (Arbitrary limit that can be increased later).
+- Up to 700 lines of calculations (Arbitrary limit that can be increased later).
 - Input using on screen buttons or keyboard.
 - Keyboard and mouse shortcuts.
 - Normal or Fraction mode.
