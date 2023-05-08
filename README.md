@@ -5,7 +5,7 @@
 - Instant results.
 - Acyclicity check.
 - Up to 700 lines of calculations (Arbitrary limit that can be increased later).
-- Input using on screen buttons or keyboard.
+- Input using on-screen buttons or keyboard.
 - Keyboard and mouse shortcuts.
 - Normal or Fraction mode.
 - Mixed or normal fractions.
