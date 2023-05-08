@@ -172,14 +172,12 @@ App.add_line = (value = false, focus = true) => {
 		App.line = line
 		App.change_borders(input)
     App.focus_line()
-		App.update_state()
 	})
 
 	DOM.ev(comment, `focus`, (e) => {
 		App.line = line
 		App.change_borders(comment)
     App.focus_line()
-		App.update_state()
 	})
 
 	DOM.ev(input, `input`, () => {
