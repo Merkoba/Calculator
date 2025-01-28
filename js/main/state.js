@@ -1,5 +1,5 @@
 App.ls_state = `state_v5`
-App.state_delay = 1000
+App.state_delay = 500
 
 App.setup_state = () => {
   App.get_state()
@@ -62,7 +62,6 @@ App.reset_state = () => {
 
 App.save_state = () => {
   localStorage.setItem(App.ls_state, JSON.stringify(App.state))
-  App.log(`State saved`)
 }
 
 App.restore_state = () => {

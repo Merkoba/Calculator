@@ -180,6 +180,10 @@ App.add_line = (value = false, focus = true) => {
     App.focus_line()
   })
 
+  DOM.ev(comment, `blur`, (e) => {
+    App.check_comment(comment)
+  })
+
   DOM.ev(input, `input`, () => {
     App.calc()
     App.update_state()
@@ -417,6 +421,17 @@ App.focus_prev = () => {
 App.show_menu = (button, line) => {
   let items = []
   let input = App.get_input(line)
+
+  items.push({
+    text: `Comment`,
+    action: () => {
+      App.show_comment(input)
+    },
+  })
+
+  items.push({
+    separator: true,
+  })
 
   items.push({
     text: `Expand Results`,
@@ -672,6 +687,12 @@ App.set_input = (input, value) => {
 }
 
 App.set_comment = (comment, value) => {
+  value = value.trim()
+
+  if (value) {
+    DOM.show(comment)
+  }
+
   comment.value = value
   App.update_state()
 }
@@ -900,5 +921,18 @@ App.copy_input_down = () => {
 
   if (og_var !== App.get_var()) {
     App.replace_text(App.get_input(), og_val)
+  }
+}
+
+App.show_comment = (input) => {
+  let line = App.get_line(input)
+  let comment = App.get_comment(line)
+  DOM.show(comment)
+  comment.focus()
+}
+
+App.check_comment = (comment) => {
+  if (!comment.value.trim()) {
+    DOM.hide(comment)
   }
 }
