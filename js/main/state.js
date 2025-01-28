@@ -17,22 +17,22 @@ App.get_state = () => {
     App.state = null
   }
 
-	let mod = false
+  let mod = false
 
-	if (App.state === null) {
-		App.state = {}
-		mod = true
-	}
+  if (App.state === null) {
+    App.state = {}
+    mod = true
+  }
 
   if (mod) {
-		App.save_state()
-	}
+    App.save_state()
+  }
 }
 
 App.get_state_lines = () => {
   let state = {}
 
-	for (let line of DOM.els(`.line`)) {
+  for (let line of DOM.els(`.line`)) {
     let comment = App.get_comment(line)
     let input = App.get_input(line)
     let vr = App.get_var(input)
@@ -66,7 +66,7 @@ App.save_state = () => {
 }
 
 App.restore_state = () => {
-  if ((Object.keys(App.state)).length > 0) {
+  if (Object.keys(App.state).length > 0) {
     App.apply_state(App.state)
   }
   else {
@@ -86,7 +86,7 @@ App.apply_state = (state) => {
     let last_var = Object.keys(state).sort().slice(-1)[0]
     let last_index = math.min(App.get_var_index(last_var), App.max_line_length - 1)
 
-    for (let i=0; i<=last_index; i++) {
+    for (let i = 0; i <= last_index; i++) {
       let line = App.add_line(undefined, false)
       let vr = App.get_var(line)
       let comment = App.get_comment(line)

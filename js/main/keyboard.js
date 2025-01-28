@@ -1,19 +1,19 @@
 App.key_detection = () => {
-	DOM.ev(document, `keydown`, (e) => {
+  DOM.ev(document, `keydown`, (e) => {
     if (NeedContext.open) {
       return
     }
 
     let modal_open = App.msg.any_open()
 
-		if (e.key === `Escape`) {
+    if (e.key === `Escape`) {
       if (modal_open) {
         App.msg.close_all()
       }
       else {
         App.check_clear()
       }
-		}
+    }
 
     if (modal_open) {
       if (App.msg_confirm.is_open()) {
@@ -27,60 +27,59 @@ App.key_detection = () => {
       return
     }
 
-		if (e.key === `Enter`) {
-			if (e.shiftKey && e.ctrlKey) {
-				App.expand_value(App.get_input())
+    if (e.key === `Enter`) {
+      if (e.shiftKey && e.ctrlKey) {
+        App.expand_value(App.get_input())
         e.preventDefault()
         return
-			}
-			else if (e.shiftKey) {
-				App.press(App.get_var())
+      }
+      else if (e.shiftKey) {
+        App.press(App.get_var())
         e.preventDefault()
         return
-			}
-			else if (e.ctrlKey) {
-				App.copy_input_down()
+      }
+      else if (e.ctrlKey) {
+        App.copy_input_down()
         e.preventDefault()
         return
-			}
-			else {
-				App.focus_next_or_add()
-        e.preventDefault()
-        return
-			}
-		}
-		else if (e.key === `ArrowUp`) {
-			if (e.shiftKey) {
-				App.move_line_up()
-			}
-			else {
-				App.cycle(`up`)
-			}
-
-			e.preventDefault()
+      }
+			
+      App.focus_next_or_add()
+      e.preventDefault()
       return
-		}
-		else if (e.key === `ArrowDown`) {
-			if (e.shiftKey) {
-				App.move_line_down()
-			}
-			else {
-				App.cycle(`down`)
-			}
+    }
+    else if (e.key === `ArrowUp`) {
+      if (e.shiftKey) {
+        App.move_line_up()
+      }
+      else {
+        App.cycle(`up`)
+      }
 
-			e.preventDefault()
+      e.preventDefault()
       return
-		}
-		else if (e.key === `Tab`) {
-			if (e.shiftKey) {
-				App.cycle(`up`)
-			}
-			else {
-				App.cycle(`down`)
-			}
+    }
+    else if (e.key === `ArrowDown`) {
+      if (e.shiftKey) {
+        App.move_line_down()
+      }
+      else {
+        App.cycle(`down`)
+      }
 
-			e.preventDefault()
+      e.preventDefault()
       return
-		}
-	})
+    }
+    else if (e.key === `Tab`) {
+      if (e.shiftKey) {
+        App.cycle(`up`)
+      }
+      else {
+        App.cycle(`down`)
+      }
+
+      e.preventDefault()
+      return
+    }
+  })
 }

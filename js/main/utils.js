@@ -1,35 +1,35 @@
 // For testing:
 
 App.fill_sheet = (x = false) => {
-	let n
+  let n
 
-	if (x) {
-		n = x
-	}
-	else {
-		n = App.max_line_length - DOM.els(`.line`).length
-	}
+  if (x) {
+    n = x
+  }
+  else {
+    n = App.max_line_length - DOM.els(`.line`).length
+  }
 
-	for (let i=0; i<n; i++) {
-		App.add_line()
-	}
+  for (let i = 0; i < n; i++) {
+    App.add_line()
+  }
 }
 
 //
 
 App.capitalize_string = (text) => {
-	return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
 }
 
 App.create_debouncer = (func, delay) => {
   let timer
   let obj = {}
 
-  function clear () {
+  function clear() {
     clearTimeout(timer)
   }
 
-  function run (...args) {
+  function run(...args) {
     func(...args)
   }
 
@@ -75,7 +75,7 @@ App.log = (message, mode = `normal`) => {
 }
 
 App.move_caret_to_end = (el) => {
-	el.setSelectionRange(el.value.length, el.value.length)
+  el.setSelectionRange(el.value.length, el.value.length)
 }
 
 App.single_space = (s) => {
