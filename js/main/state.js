@@ -100,6 +100,7 @@ App.apply_state = (state) => {
     App.focus_input(App.get_first_input())
   }
   catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err)
     App.new_sheet()
   }

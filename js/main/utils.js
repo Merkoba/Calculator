@@ -54,7 +54,7 @@ App.create_debouncer = (func, delay) => {
 }
 
 App.make_html_safe = (text) => {
-  return text.replace(/\</g, `&lt;`).replace(/\>/g, `&gt;`)
+  return text.replace(/</g, `&lt;`).replace(/>/g, `&gt;`)
 }
 
 App.get_letter = (vr) => {
@@ -71,6 +71,7 @@ App.log = (message, mode = `normal`) => {
     icon = `🔴`
   }
 
+  // eslint-disable-next-line no-console
   console.info(`${icon} ${message}`)
 }
 

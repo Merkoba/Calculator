@@ -199,7 +199,7 @@ App.add_line = (value = false, focus = true) => {
   })
 
   DOM.ev(input, `keydown`, (e) => {
-    if (e.key === `ArrowUp` || e.key === `ArrowDown`) {
+    if ((e.key === `ArrowUp`) || (e.key === `ArrowDown`)) {
       e.preventDefault()
     }
   })
@@ -294,7 +294,7 @@ App.move_lines_up = () => {
 
         let ni = App.get_var_index(match)
 
-        if (ni > index && ni < line_length) {
+        if ((ni > index) && (ni < line_length)) {
           return App.decrease_var(match)
         }
 
@@ -352,7 +352,7 @@ App.move_lines_down = (alt = false) => {
     val = val.replace(/\$[a-z]+/g, (match) => {
       let ni = App.get_var_index(match)
 
-      if (ni >= index && ni < line_length) {
+      if ((ni >= index) && (ni < line_length)) {
         return App.increase_var(match)
       }
 
@@ -762,7 +762,7 @@ App.get_focused_name = (line = App.line) => {
   else if (App.get_input(line).classList.contains(`input_focus`)) {
     return `input`
   }
-	
+
   return `none`
 }
 

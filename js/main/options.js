@@ -62,7 +62,7 @@ App.show_options = () => {
   let els = DOM.els(`option`, DOM.el(`#sel_round_places`))
 
   for (let el of els) {
-    if (el.value == App.options.round_places) {
+    if (parseInt(el.value) === App.options.round_places) {
       el.selected = true
     }
   }

@@ -104,6 +104,7 @@ export default [
         Buffer: "readonly",
         AColorPicker: "readonly",
         require: "readonly",
+        math: "readonly",
       }
     }
   }

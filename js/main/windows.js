@@ -54,8 +54,6 @@ App.show_modal = (title, html, callback = () => {}) => {
 }
 
 App.setup_templates = () => {
-  Handlebars.registerHelper(`eq`, (a, b) => a == b)
-
   for (let el of DOM.els(`.template`)) {
     App[el.id] = Handlebars.compile(DOM.el(`#${el.id}`).innerHTML)
   }

@@ -141,7 +141,7 @@ App.update_variable = (input, val) => {
 }
 
 App.improper_to_mixed = (n, d) => {
-  i = parseInt(n / d)
+  let i = parseInt(n / d)
   n -= i * d
   return [i, n, d]
 }
@@ -157,11 +157,11 @@ App.format_result = (n, f = false) => {
       let nsup = parseInt(sup)
       let nsub = parseInt(sub)
 
-      if (App.options.mixed && nsup >= nsub) {
+      if (App.options.mixed && (nsup >= nsub)) {
         let mixed = App.improper_to_mixed(nsup, nsub)
         let mwhole = mixed[0]
 
-        if (mixed[1] !== 0 && mixed[2] !== 0) {
+        if ((mixed[1] !== 0) && (mixed[2] !== 0)) {
           sup = mixed[1]
           sub = mixed[2]
         }
@@ -171,13 +171,13 @@ App.format_result = (n, f = false) => {
 
         return `<span class="resolved"><span class="mwhole">${mwhole}</span><span class="fraction"><sup>${sup}</sup><sub>${sub}</sub></span></span>`
       }
-			
+
       return `<span class="resolved"><span class="fraction"><sup>${sup}</sup><sub>${sub}</sub></span></span>`
     }
-		
+
     return App.format_result(n, true)
   }
-	
+
   if (App.options.round) {
     n = App.math_normal.round(n, App.options.round_places)
   }
@@ -242,7 +242,7 @@ App.increase_var = (vr) => {
         res += App.letters[0]
         increase_next = true
 
-        if (i == 0) {
+        if (i === 0) {
           res += `a`
         }
       }
@@ -318,10 +318,10 @@ App.expand_value = (input, replace = true, full = true) => {
         v = App.get_result_string(match)
       }
 
-      if (v !== undefined && v.trim() !== ``) {
+      if ((v !== undefined) && (v.trim() !== ``)) {
         return `(${v})`
       }
-			
+
       return match
     })
 
