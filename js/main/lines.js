@@ -951,3 +951,10 @@ App.check_comment = (comment) => {
     DOM.hide(comment)
   }
 }
+
+App.replace_text = (input, s) => {
+	input.value = s
+  input.focus()
+	App.calc()
+  App.update_state()
+}
