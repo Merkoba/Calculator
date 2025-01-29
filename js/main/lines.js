@@ -231,8 +231,7 @@ App.add_line = (value = false, focus = true) => {
 
   DOM.ev(variable, `auxclick`, (e) => {
     if (e.button === 1) {
-      App.line = line
-      App.ask_remove_line()
+      App.result_down(vr)
     }
   })
 
@@ -1019,4 +1018,44 @@ App.focus_last = () => {
   let input = App.get_input(line)
   App.focus_line(line)
   input.focus()
+}
+
+App.var_down = (value) => {
+  let vr = App.get_var()
+
+  if (value === vr) {
+    App.focus_next_or_add()
+    vr = App.get_var()
+
+    if (value === vr) {
+      return
+    }
+  }
+
+  App.insert_text(App.get_input(), value)
+}
+
+App.result_down = (value) => {
+  let result
+
+  try {
+    result = math.number(App.linevars[value]).toString()
+  }
+  catch (e) {
+    return
+  }
+
+  let vr = App.get_var()
+
+  if (value === vr) {
+    App.focus_next_or_add()
+    vr = App.get_var()
+
+    if (value === vr) {
+      return
+    }
+  }
+
+  let next = App.get_input()
+  App.insert_text(next, result)
 }

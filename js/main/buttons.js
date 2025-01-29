@@ -105,18 +105,7 @@ App.press = (value) => {
     return
   }
 
-  let vr = App.get_var()
-
-  if (value === vr) {
-    App.focus_next_or_add()
-    vr = App.get_var()
-
-    if (value === vr) {
-      return
-    }
-  }
-
-  App.insert_text(App.get_input(), value)
+  App.var_down(value)
 }
 
 App.button_context = (button) => {
