@@ -992,3 +992,16 @@ App.replace_text = (input, s) => {
   App.calc()
   App.update_state()
 }
+
+App.focus_first = () => {
+  let line = App.get_lines()[0]
+  let input = App.get_input(line)
+  App.focus_line(line)
+  input.focus()
+}
+
+App.focus_last = () => {
+  let line = App.get_lines().at(-1)
+  let input = App.get_input(line)
+  input.focus()
+}

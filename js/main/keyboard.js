@@ -43,7 +43,7 @@ App.key_detection = () => {
         e.preventDefault()
         return
       }
-			
+
       App.focus_next_or_add()
       e.preventDefault()
       return
@@ -80,6 +80,18 @@ App.key_detection = () => {
 
       e.preventDefault()
       return
+    }
+    else if (e.key === `Home`) {
+      if (e.ctrlKey) {
+        App.focus_first()
+        e.preventDefault()
+      }
+    }
+    else if (e.key === `End`) {
+      if (e.ctrlKey) {
+        App.focus_last()
+        e.preventDefault()
+      }
     }
   })
 }
