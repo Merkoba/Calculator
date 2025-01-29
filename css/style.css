@@ -5,56 +5,9 @@ body, html {
 	padding: 0;
 	font-family: sans-serif;
 	font-size: 17px;
-}
-
-/* Color Theme */
-
-body, html {
 	background-color: #c1c1c1;
 	color: black;
 }
-
-.button {
-	background-color: #bdbdbd;
-	border-color: #c5c5c5;
-	color: black;
-}
-
-#infobar {
-	background-color: #adadad;
-	color: black;
-}
-
-#title {
-	color: black;
-}
-
-.input {
-	box-shadow: 0 0 0 2px #4E4E4E;
-}
-
-.input_focus {
-	box-shadow: 0 0 0 6px #7c7c7c !important;
-}
-
-.ps__thumb-y {
-	background-color: black !important;
-}
-
-a:hover, a:visited, a:link {
-	color: #153c50;
-}
-
-#confirm_ok {
-	background-color: #3ab87b;
-	color: white;
-}
-
-#confirm_ok:hover {
-	background-color: rgb(53, 177, 199);
-}
-
-/* End of color theme */
 
 #buttons {
 	user-select: none;
@@ -67,6 +20,9 @@ a:hover, a:visited, a:link {
 	cursor: pointer;
 	outline: none;
 	white-space: nowrap;
+	background-color: #bdbdbd;
+	border-color: #c5c5c5;
+	color: black;
 }
 
 .button:hover {
@@ -97,6 +53,8 @@ a:hover, a:visited, a:link {
 	width: 42rem;
 	text-align: center;
 	cursor: pointer;
+	background-color: #adadad;
+	color: black;
 }
 
 #lines {
@@ -144,6 +102,11 @@ a:hover, a:visited, a:link {
 	outline: none;
 	letter-spacing: 0.1rem;
 	word-spacing: 0.1rem;
+	box-shadow: 0 0 0 2px #4E4E4E;
+}
+
+.input_focus {
+	box-shadow: 0 0 0 6px #7c7c7c !important;
 }
 
 .result_container {
@@ -171,6 +134,7 @@ a:hover, a:visited, a:link {
 
 a:hover, a:visited, a:link {
 	text-decoration: underline;
+	color: #153c50;
 }
 
 b {
@@ -230,6 +194,7 @@ sup {
 .ps__thumb-y {
 	right: 0 !important;
 	width: 8px !important;
+	background-color: black !important;
 }
 
 .ps__rail-y {
@@ -256,6 +221,12 @@ sup {
 #confirm_ok {
 	font-size: 1.1rem;
 	cursor: pointer;
+	background-color: #3ab87b;
+	color: white;
+}
+
+#confirm_ok:hover {
+	background-color: rgb(53, 177, 199);
 }
 
 #confirm_cancel {
@@ -266,4 +237,8 @@ sup {
 
 .hidden {
 	display: none !important;
+}
+
+#title {
+	color: black;
 }
