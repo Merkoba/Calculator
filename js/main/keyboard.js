@@ -49,7 +49,7 @@ App.key_detection = () => {
       return
     }
     else if (e.key === `ArrowUp`) {
-      if (e.shiftKey) {
+      if (e.shiftKey || e.ctrlKey) {
         App.move_line_up()
       }
       else {
@@ -60,7 +60,7 @@ App.key_detection = () => {
       return
     }
     else if (e.key === `ArrowDown`) {
-      if (e.shiftKey) {
+      if (e.shiftKey || e.ctrlKey) {
         App.move_line_down()
       }
       else {
