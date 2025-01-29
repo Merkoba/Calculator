@@ -434,6 +434,20 @@ App.get_line = (el = App.line) => {
   return el.closest(`.line`)
 }
 
+App.focus_next_comment_or_input = () => {
+  let line = App.get_line().nextElementSibling
+  let comment = App.get_comment(line)
+  let input = App.get_input(line)
+  let comment_visible = !DOM.is_hidden(comment)
+
+  if (comment_visible) {
+    App.focus_comment(comment)
+  }
+  else {
+    App.focus_input(input)
+  }
+}
+
 App.focus_next = (cls = `.input`) => {
   let line = App.get_line().nextElementSibling
 
@@ -555,8 +569,10 @@ App.focus_line = (line = App.line) => {
 App.cycle = (direction) => {
   let line = App.get_line()
   let index = DOM.index(line)
+  let comment = App.get_comment(line)
   let is_input = document.activeElement.classList.contains(`input`)
   let is_comment = document.activeElement.classList.contains(`comment`)
+  let comment_visible = !DOM.is_hidden(comment)
 
   if (direction === `down`) {
     if (is_comment) {
@@ -566,11 +582,11 @@ App.cycle = (direction) => {
       App.go_to_first_comment()
     }
     else {
-      App.focus_next(`.comment`)
+      App.focus_next_comment_or_input()
     }
   }
-  else if (is_input) {
-    App.get_comment(line).focus()
+  else if (is_input && comment_visible) {
+    comment.focus()
   }
   else if (index === 0) {
     App.go_to_last_input()
