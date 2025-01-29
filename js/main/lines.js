@@ -175,8 +175,13 @@ App.add_line = (value = false, focus = true) => {
   DOM.el(`#lines`).appendChild(line)
   let input = App.get_input(line)
   let comment = App.get_comment(line)
+
   let variable = App.get_variable(line)
+  variable.title = `Click to use variable\nRight Click to show menu\nMiddle Click to use result`
+
   let menu = App.get_menu(line)
+  menu.title = `Click to show menu\nMiddle Click to remove line`
+
   App.line = line
 
   DOM.ev(menu, `click`, (e) => {
