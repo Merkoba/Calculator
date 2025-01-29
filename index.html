@@ -62,12 +62,12 @@
 			Version {{version}}<br><br>
 			This is a calculator that aims to empower users through a different workflow than what is found in most common calculator programs.<br><br>
 			It's based around multiple "line" of calculations which can be reused and edited anytime.<br><br>
-			Calculations are done by the <a href='http://mathjs.org/docs/index.html' target=_blank>math.js</a> library, with high precision settings enabled.<br><br>
+			Calculations are done by the <a href="http://mathjs.org/docs/index.html" target=_blank>math.js</a> library, with high precision settings enabled.<br><br>
 			Calculations are done automatically in real time using topological sorting.<br><br>
 			Since it needs to by acyclical, some variables can't be used in some places. For example you can't make $b depend on $a and $a depend on $b at the same time, since it can't be resolved.<br><br>
 			Note: Formatting and rounding are only applied to the displayed results, not to internal calculations.
 
-			<br><br><br><span class='b2'>Shortcuts</span><br><br>
+			<br><br><br><span class="b2"><br>Shortcuts</b></span><br><br>
 			Enter will focus the next available empty line or create a new one.<br><br>
 			Shift + Enter adds the previous line's variable into the new one.<br><br>
 			Control + Enter does the same but also copies the line's input into the new one.<br><br>
@@ -82,50 +82,51 @@
 		<script id="template_options" type="text/x-handlebars-template" class="template">
 			<div id="options_container">
 				<div class="options_item">
-				Add Commas
-				<div class="vseparator2"></div>
-
-				{{#if commas}}
+					Add Commas
+					<div class="vseparator2"></div>
+					{{#if commas}}
 					<input id="chk_commas" type="checkbox" checked>
-				{{else}}
+					{{else}}
 					<input id="chk_commas" type="checkbox">
-				{{/if}}
-
+					{{/if}}
 				</div>
-				<div class="vseparator"></div>
-				<div class="options_item">
-				Mixed Fractions
-				<div class="vseparator2"></div>
 
-				{{#if mixed}}
+				<div class="vseparator"></div>
+
+				<div class="options_item">
+					Mixed Fractions
+					<div class="vseparator2"></div>
+					{{#if mixed}}
 					<input id="chk_mixed" type="checkbox" checked>
-				{{else}}
+					{{else}}
 					<input id="chk_mixed" type="checkbox">
-				{{/if}}
-
+					{{/if}}
 				</div>
+
 				<div class="vseparator"></div>
+
 				<div class="options_item">
-				Round Results
-				<div class="vseparator2"></div>
+					Round Results
+					<div class="vseparator2"></div>
 
-				{{#if round}}
+					{{#if round}}
 					<input id="chk_round" type="checkbox" checked>
-				{{else}}
+					{{else}}
 					<input id="chk_round" type="checkbox">
-				{{/if}}
-
+					{{/if}}
 				</div>
+
 				<div class="vseparator"></div>
 				<div class="options_item">
 				Round Places
 				<div class="vseparator2"></div>
-				<select id="sel_round_places">
 
+				<select id="sel_round_places">
 				{{#each places}}
 					<option value="{{this}}">{{this}}</option>
 				{{/each}}
 				</select>
+
 				</div>
 			</div>
 		</script>
@@ -146,6 +147,7 @@
 
 		<script id="template_confirm" type="text/x-handlebars-template" class="template">
 			<div id="confirm_message"></div>
+
 			<div id="confirm_buttons">
 				<button id="confirm_cancel">Cancel</button>
 				<button value="Cancel" id="confirm_ok">Confirm</button>
