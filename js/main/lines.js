@@ -749,6 +749,9 @@ App.set_comment = (comment, value) => {
   if (value) {
     DOM.show(comment)
   }
+  else {
+    DOM.hide(comment)
+  }
 
   comment.value = value
   App.update_state()
