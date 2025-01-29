@@ -176,10 +176,21 @@ App.add_line = (value = false, focus = true) => {
   let input = App.get_input(line)
   let comment = App.get_comment(line)
   let variable = App.get_variable(line)
+  let menu = App.get_menu(line)
   App.line = line
 
-  DOM.ev(App.get_menu(line), `click`, (e) => {
+  DOM.ev(menu, `click`, (e) => {
     App.show_menu(e.target, line)
+  })
+
+  DOM.ev(menu, `contextmenu`, (e) => {
+    App.show_menu(e.target, line)
+    e.preventDefault()
+  })
+
+  DOM.ev(menu, `auxclick`, (e) => {
+    App.line = line
+    App.ask_remove_line()
   })
 
   DOM.ev(input, `focus`, (e) => {
@@ -960,8 +971,8 @@ App.check_comment = (comment) => {
 }
 
 App.replace_text = (input, s) => {
-	input.value = s
+  input.value = s
   input.focus()
-	App.calc()
+  App.calc()
   App.update_state()
 }
