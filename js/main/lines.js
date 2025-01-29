@@ -216,6 +216,13 @@ App.add_line = (value = false, focus = true) => {
     e.preventDefault()
   })
 
+  DOM.ev(variable, `auxclick`, (e) => {
+    if (e.button === 1) {
+      App.line = line
+      App.ask_remove_line()
+    }
+  })
+
   DOM.ev(input, `keydown`, (e) => {
     if ((e.key === `ArrowUp`) || (e.key === `ArrowDown`)) {
       e.preventDefault()
