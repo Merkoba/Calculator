@@ -112,7 +112,21 @@ App.remove_last_line = () => {
 }
 
 App.focus_next_or_add = () => {
-  let next_all = DOM.next_all(App.get_line(), `.line`)
+  let current = App.get_line()
+  let parent = current.parentElement
+  let next_all = []
+  let found_current = false
+
+  for (let child of parent.children) {
+    if (found_current) {
+      next_all.push(child)
+    }
+
+    if (child === current) {
+      found_current = true
+    }
+  }
+
   let found_line = false
 
   for (let item of next_all) {
@@ -933,6 +947,7 @@ App.show_comment = (input) => {
 
 App.check_comment = (comment) => {
   if (!comment.value.trim()) {
+    comment.value = ``
     DOM.hide(comment)
   }
 }
